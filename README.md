@@ -5,7 +5,7 @@
 #### Notificationsystem
 Table: notifications
 id (integer) | user_id (integer)  | notifi_type (enum) | timestamp (date)
---- | --- | ---
+--- | --- | --- | ---
 1 | 2 | "doodle_liked" | "1603557837052"
 
 Notfi_type: 
@@ -18,6 +18,7 @@ Example Query:
 SELECT * FROM notifications WHERE user_id = 6356 ORDER BY timestamp DESC;
 ```
 
+Source:
 [https://www.quora.com/What-is-the-best-way-to-store-notifications-in-the-database-MySQL-of-a-web-application-It-seems-as-though-the-amount-of-notifications-each-user-of-the-site-would-receive-will-total-to-a-very-large-number-in-the-database](source)
 
 #### Followersystem
@@ -36,6 +37,7 @@ Example query to get followers from a user:
 ```sql
 SELECT * FROM users INNER JOIN followers ON id = followed_id WHERE id = 2;
 ```
+Source:
 [https://stackoverflow.com/questions/19734154/followers-following-database-structure/19734232](source)
 
 
