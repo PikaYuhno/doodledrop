@@ -42,3 +42,24 @@ Source:
 [https://stackoverflow.com/questions/19734154/followers-following-database-structure/19734232](source)
 
 
+#### Authenticationsystem
+
+Auth routes:
+- `/api/auth/login`
+- `/api/auth/register`
+
+##### Hitting `/login` route
+
+1. Check if the input is valid
+2. Check if the user exists
+3. Check if the password is correct
+4. Generate a JWT Token and set it to the response headers
+
+##### Hitting `/register` route
+
+1. Check if the input is valid
+2. Check if the user doesnt already exist
+3. Hash the password
+4. Insert it to the database
+
+
