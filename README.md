@@ -5,7 +5,7 @@
 #### Notificationsystem
 Table: notifications
 id (integer) | user_id (integer)  | notifi_type (enum) | timestamp (date)
---- | --- |
+--- | --- | ---
 1 | 2 | "doodle_liked" | "1603557837052"
 
 Notfi_type: 
