@@ -9,10 +9,11 @@ id (integer) | user_id (integer)  | notifi_type (enum) | timestamp (date)
 1 | 2 | "doodle_liked" | "1603557837052"
 
 Notfi_type: 
-- doodle_liked 
-- doodle_dislike 
-- doodle_commented
-- ...
+- `doodle_liked`
+- `doodle_dislike` 
+- `doodle_commented`
+- `...` <br>
+
 Example Query: 
 ```sql
 SELECT * FROM notifications WHERE user_id = 6356 ORDER BY timestamp DESC;
