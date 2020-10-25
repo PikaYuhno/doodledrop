@@ -62,4 +62,74 @@ Auth routes:
 3. Hash the password
 4. Insert it to the database
 
+##### Useful Links
+- [https://medium.com/better-programming/building-basic-react-authentication-e20a574d5e71](React Authentication)
+- [https://medium.appbase.io/how-to-implement-authentication-for-your-react-app-cf09eef3bb0b](React Authentication)
 
+#### Creating the client
+
+##### Packages needed (Dev Dependencies)
+- `webpack`
+- `webpack-cli`
+- `webpack-dev-server`
+- `@babel/core`
+- `babel-loader (the webpack loader responseible for talking to Babel)`
+- `@babel/preset-env (for compiling modern Javascript down to ES5)`
+- `@babel/preset-react (for compiling JSX and other stuff down to Javascript)`
+- `react`
+- `react-dom`
+- `html-webpack-plugin`
+- `html-loader`
+
+##### Configuring Babel
+`.babelrc`
+```js
+{
+    "presets": ["@babel/preset-env", "@babel/preset-react"]
+}
+```
+
+##### Configuring Webpack
+`webpack.config.js`
+```js
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader"
+        }
+      },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: "html-loader"
+          }
+        ]
+      }
+    ]
+  },
+  plugins: [
+    new HtmlWebPackPlugin({
+      template: "./src/index.html",
+      filename: "./index.html"
+    })
+  ]
+};
+```
+
+##### Configuring Dev Server
+`package.json`
+```json
+"scripts": {
+  "start": "webpack-dev-server --open --mode development",
+  "build": "webpack --mode production"
+}
+```
+
+Source: [https://www.valentinog.com/blog/babel/](Setting up Webpack)
