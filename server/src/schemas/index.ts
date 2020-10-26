@@ -26,11 +26,13 @@ export const userPatchSchema = Joi.object({
 });
 
 export const userRegisterSchema = Joi.object({
-    username: "",
-    first_name: "",
-    last_name: "",
-    password: "",
-    email: "",
+    username: Joi.string().max(15).min(3).required(),
+    first_name: Joi.string().alphanum().max(15).min(3).required(),
+    last_name: Joi.string().alphanum().max(15).min(3).required(),
+    password: Joi.string()
+        .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+        .required(),
+    email: Joi.string().email().required(),
 });
 
 export const userLoginSchema = Joi.object({
