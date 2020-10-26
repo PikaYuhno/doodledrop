@@ -111,3 +111,6 @@ router.delete("/:id", async (req: Request, res: Response) => {
         });
     }
 });
+
+//TODO:
+// GET /api/users/:id/doodles

@@ -62,6 +62,11 @@ Auth routes:
 3. Hash the password
 4. Insert it to the database
 
+##### Node packages 
+
+- `bycrypt`
+- `jsonwebtoken`
+
 ##### Useful Links
 - [https://medium.com/better-programming/building-basic-react-authentication-e20a574d5e71](React Authentication)
 - [https://medium.appbase.io/how-to-implement-authentication-for-your-react-app-cf09eef3bb0b](React Authentication)

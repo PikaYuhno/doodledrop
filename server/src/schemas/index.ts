@@ -34,6 +34,8 @@ export const userRegisterSchema = Joi.object({
 });
 
 export const userLoginSchema = Joi.object({
-    username: "",
-    password: "",
+    username: Joi.string().max(15).min(3).required(),
+    password: Joi.string()
+        .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+        .required(),
 });
