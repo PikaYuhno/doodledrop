@@ -1,21 +1,22 @@
 # Server
 
 ## Models
-- Posts
-- Users
+- Doodle
+- User
+- Comment
 
 ## Routes
 
-### Users Routes 
-- "Prefix: /api/users"
-- "GET /"
-- "GET /:id"
-- "POST /:id"
-- "PUT /:id"
-- "PATCH /:id (Optional)"
-- "DELETE /:id"
+### Users Routes (/api/users)
+- `GET /`
+- `GET /:id`
+- `POST /:id`
+- `PUT /:id`
+- `PATCH /:id (Optional)`
+- `DELETE /:id`
 
-### Auth Routes
-- "Prefix: /api/auth/"
-- "POST /login"
-- "POST /register"
+
+
+### Auth Routes (/api/auth/)
+- `POST /login`
+- `POST /register`

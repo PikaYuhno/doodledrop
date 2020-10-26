@@ -133,3 +133,14 @@ module.exports = {
 ```
 
 Source: [https://www.valentinog.com/blog/babel/](Setting up Webpack)
+
+## Ideas
+- `Show followers in a network using https://visjs.org/`
+
+## Documentation
+Comming soon.
+## Setup Server
+Comming soon.
+## Setup Client
+Comming soon.
+

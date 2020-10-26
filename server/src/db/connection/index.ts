@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
 
 export const createConnection = () => {
-    const conn = new Sequelize("postgres", "postgre", "postgres", {
+    const conn = new Sequelize("postgres", "postgres", "postgres", {
         host: "localhost",
         dialect: "postgres",
     });

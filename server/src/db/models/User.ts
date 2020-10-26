@@ -44,7 +44,7 @@ User.init(
         },
         created_doodles: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             defaultValue: 0,
         },
         pfp_pic_path: {
