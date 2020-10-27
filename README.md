@@ -32,11 +32,11 @@ id (integer) | user_id (integer) | followed_id (integer)
 
 Example query to get following users from a user: 
 ```sql
-SELECT * FROM users INNER JOIN followers ON id = user_id WHERE id = 2;
+SELECT followers.user_id, followers.follower_id, users.* FROM users INNER JOIN followers ON users.id = followers.follower_id WHERE followers.user_id = 3;
 ```
 Example query to get followers from a user: 
 ```sql
-SELECT * FROM users INNER JOIN followers ON id = followed_id WHERE id = 2;
+SELECT followers.user_id, followers.follower_id, users.* FROM users INNER JOIN followers ON users.id = followers.user_id WHERE followers.follower_id = 3;
 ```
 Source:
 [https://stackoverflow.com/questions/19734154/followers-following-database-structure/19734232](source)
@@ -141,6 +141,9 @@ Source: [https://www.valentinog.com/blog/babel/](Setting up Webpack)
 
 ## Ideas
 - `Show followers in a network using https://visjs.org/`
+
+## Todo
+- [ ] ``
 
 ## Documentation
 Comming soon.

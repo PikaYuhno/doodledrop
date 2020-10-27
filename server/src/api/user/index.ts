@@ -1,7 +1,9 @@
 import { Request, Response, Router } from "express";
+import Comment from "../../db/models/Comment";
+import Doodle from "../../db/models/Doodle";
 export const router = Router();
 import User from "../../db/models/User";
-import { userPostSchema, userPatchSchema } from "../../schemas/";
+import { userPostSchema, userPatchSchema } from "../../schemas/userSchemas";
 
 // GET /api/users/
 router.get("/", async (req: Request, res: Response) => {
@@ -9,6 +11,22 @@ router.get("/", async (req: Request, res: Response) => {
     return res.status(200).json({ data: users, message: "", success: true });
 });
 
+//TODO:
+// GET /api/users/doodles
+router.get("/doodles", async (req: Request, res: Response) => {
+    console.log("HERE");
+    let user = req.user;
+    let doodles: Doodle[] = await Doodle.findAll({
+        where: { id: user!.id },
+        include: [
+            {
+                model: Comment,
+                required: true,
+            },
+        ],
+    });
+    return res.status(200).json({ data: doodles, message: "", success: true });
+});
 // GET /api/users/:id
 router.get("/:id", async (req: Request, res: Response) => {
     let userId = req.params.id;
@@ -111,6 +129,3 @@ router.delete("/:id", async (req: Request, res: Response) => {
         });
     }
 });
-
-//TODO:
-// GET /api/users/:id/doodles

@@ -40,4 +40,4 @@ Comment.init(
     }
 );
 
-Comment.sync({ force: true });
+Comment.sync();

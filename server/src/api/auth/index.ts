@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import User from "../../db/models/User";
 export const router = Router();
-import { userLoginSchema, userRegisterSchema } from "../../schemas/";
+import { userLoginSchema, userRegisterSchema } from "../../schemas/userSchemas";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";

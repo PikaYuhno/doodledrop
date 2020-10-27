@@ -1,5 +1,7 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../connection";
+import Doodle from "./Doodle";
+import Comment from "./Comment";
 
 export default class User extends Model {
     public id!: number;
@@ -67,4 +69,12 @@ User.init(
     }
 );
 
-User.sync({ force: true });
+User.hasMany(Doodle, {
+    foreignKey: "user_id",
+});
+Doodle.belongsTo(User, { foreignKey: "user_id" });
+User.hasMany(Comment, {
+    foreignKey: "user_id",
+});
+Comment.belongsTo(User, { foreignKey: "user_id" });
+User.sync();
