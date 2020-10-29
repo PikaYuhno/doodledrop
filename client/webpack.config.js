@@ -1,5 +1,4 @@
 const path = require("path");
-const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 module.exports = {
     entry: "./src/index.jsx",
@@ -27,7 +26,16 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                use: ["style-loader", "css-loader", "sass-loader"],
+                use: [
+                    "style-loader",
+                    "css-loader",
+                    {
+                        loader: "sass-loader",
+                        options: {
+                            implementation: require("sass"),
+                        },
+                    },
+                ],
             },
         ],
     },
@@ -35,8 +43,11 @@ module.exports = {
         extensions: [".js", ".jsx"],
     },
     devServer: {
-        contentBase: path.join(__dirname, "dist"),
-        port: 3000,
+        contentBase: [
+            path.join(__dirname, "/public/"),
+            path.join(__dirname, "/dist/"),
+        ],
+        compress: true,
+        port: 9000,
     },
-    plugins: [new HtmlWebPackPlugin()],
 };

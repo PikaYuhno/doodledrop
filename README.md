@@ -137,7 +137,13 @@ module.exports = {
 }
 ```
 
-Source: [https://www.valentinog.com/blog/babel/](Setting up Webpack)
+Source: [https://www.valentinog.com/blog/babel/](Webpack)
+#### Webdesign
+##### Useful links
+- `https://undraw.co/illustrations`
+- `https://www.flaticon.com/`
+- `https://www.vecteezy.com/browse`
+- `https://www.vectorstock.com/royalty-free-vector/social-media-and-news-tips-landing-page-vector-21638743`
 
 ## Ideas
 - `Show followers in a network using https://visjs.org/`
