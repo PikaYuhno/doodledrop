@@ -1,0 +1,21 @@
+
+
+.container:after {
+  content:"";
+  position:absolute;
+  width: 100vw;
+  height: 100vw;
+  background:#fb2444;
+  left:20%;
+  top: 90%;
+  border-radius:40%;
+  animation:fill 5s linear infinite;
+}
+@keyframes fill {
+  from {
+    transform:translateX(-50%) rotate(0deg);
+  }
+  to {
+    transform:translateX(-50%) rotate(360deg);
+  }
+}

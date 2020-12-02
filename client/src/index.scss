@@ -1,5 +1,8 @@
-$body-color: red;
+@import url("https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
 
-#root {
-    background-color: $body-color;
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
