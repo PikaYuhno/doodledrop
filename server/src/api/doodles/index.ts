@@ -2,7 +2,7 @@ import {Request, Response, Router} from "express";
 export const router = Router();
 import Doodle from "../../db/models/Doodle";
 import {doodlePostSchema} from "../../schemas/doodleSchemas";
-import {commentPostSchema} from "../../schemas/commentSchemas";
+import {commentSchema} from "../../schemas/commentSchemas";
 import Comment from '../../db/models/Comment';
 
 
@@ -10,7 +10,16 @@ import Comment from '../../db/models/Comment';
 router.patch("/:id/comments/:c_id", async (req: Request, res: Response) => {
     const id = req.params.id;
     const cId = req.params.c_id;
-
+    const body = req.body;
+    const doodle: Doodle | null = await Doodle.findOne({where: {id}});
+    if (!doodle) return res.status(404).json({data: null, message: 'Doodle not found!', success: false})
+    try {
+        const value = await commentSchema.validateAsync(body); 
+        const updated = await Comment.update(value, {where: {id: cId, doodle_id: doodle.id}});
+        return res.status(200).json({data: updated, message: 'Successfully updated comment!', success: true});
+    } catch (error) {
+        return res.status(400).json({data: null, message: error.details[0].message, success: false}); 
+    }
 });
 
 // DELETE /api/doodles/:id/comments/:c_id
@@ -32,11 +41,11 @@ router.post("/:id/comments", async (req: Request, res: Response) => {
     const doodle: Doodle | null = await Doodle.findOne({where: {id}});
     if (!doodle) return res.status(404).json({data: null, message: 'Doodle not found!', success: false})
     try {
-        const value = await commentPostSchema.validateAsync(body); 
+        const value = await commentSchema.validateAsync(body); 
         const created = await Comment.create({doodle_id: doodle.id, user_id: req.user!.id, content: value.content, created_at: new Date()});
         return res.status(200).json({data: created, message: 'Successfully created Comment!', success:true});
     } catch (error) {
-        return res.status(400).json({data: null, message: error, success: false}); 
+        return res.status(400).json({data: null, message: error.details[0].message, success: false}); 
     }    
 
 

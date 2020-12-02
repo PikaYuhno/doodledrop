@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
 import Comment from "../../db/models/Comment";
 import Doodle from "../../db/models/Doodle";
+import Follower from "../../db/models/Follower";
 export const router = Router();
 import User from "../../db/models/User";
 import { userPostSchema, userPatchSchema } from "../../schemas/userSchemas";
@@ -128,4 +129,22 @@ router.delete("/:id", async (req: Request, res: Response) => {
             success: false,
         });
     }
+});
+
+//POST /api/users/follow/:id
+router.post("/follow/:id", async (req: Request, res: Response) => {
+    const id = req.params.id; 
+    const curId = req.user!.id;
+    const count = await User.count({where: {id}});
+    if (count === 0) return res.status(404).json({data: null, message: 'User not found', success: false});
+    const followEntry = await Follower.create({user_id: curId, follower_id: id});
+    return res.status(200).json({data: followEntry, message: 'Successfully followed user!', success: true});
+});
+
+// DELETE /api/users/unfollow/:id
+router.delete("/unfollow/:id", async (req: Request, res: Response) => {
+    const id = req.params.id; 
+    const curId = req.user!.id;
+    const deleted = await Follower.destroy({where: {user_id: curId, follower_id: id}});
+    return res.status(200).json({data: null, message: 'Successfully unfollowed user!', success: true});
 });

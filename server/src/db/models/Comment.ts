@@ -1,4 +1,4 @@
-import {Model, DataTypes} from "sequelize";
+import {Model, DataTypes, NOW} from "sequelize";
 import {sequelize} from "../connection";
 
 export default class Comment extends Model {
@@ -34,7 +34,7 @@ Comment.init(
         created_at: {
             type: DataTypes.DATE,
             allowNull: false,
-            // TODO: default = new date
+            defaultValue: NOW
         },
         likes: {
             type: DataTypes.ARRAY(DataTypes.INTEGER),
