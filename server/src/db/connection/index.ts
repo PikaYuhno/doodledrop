@@ -10,6 +10,9 @@ export const createConnection = () => {
         {
             host: "localhost",
             dialect: "postgres",
+            define: {
+                timestamps: false
+            }
         }
     );
     return conn;

@@ -1,9 +1,10 @@
-import express, { Request, Response } from "express";
+import express, {Request, Response} from "express";
 import cors from "cors";
-import { createConnection } from "./db/connection";
-import { router as userRouter } from "./api/user/";
-import { router as authRouter } from "./api/auth";
-import { verifyToken } from "./utils/verifyToken";
+import {createConnection, sequelize} from "./db/connection";
+import {router as userRouter} from "./api/user/";
+import {router as authRouter} from "./api/auth";
+import {router as doodleRouter} from "./api/doodles";
+import {verifyToken} from "./utils/verifyToken";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 app.use("/api/users", verifyToken, userRouter);
+app.use("/api/doodles", verifyToken, doodleRouter);
 app.use("/api/auth", authRouter);
 
 const testConnection = async () => {
@@ -27,5 +29,7 @@ const testConnection = async () => {
     }
 };
 
-testConnection();
+testConnection().then(async () => {
+    await sequelize.sync();
+});
 app.listen(PORT, () => console.log(`Starting Server on port: ${PORT}`));

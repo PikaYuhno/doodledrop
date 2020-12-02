@@ -1,5 +1,5 @@
-import { Model, DataTypes } from "sequelize";
-import { sequelize } from "../connection";
+import {Model, DataTypes} from "sequelize";
+import {sequelize} from "../connection";
 
 export default class Comment extends Model {
     public id!: number;
@@ -7,6 +7,8 @@ export default class Comment extends Model {
     public user_id!: number;
     public content!: string;
     public created_at!: Date;
+    public likes!: number[];
+    public dislikes!: number[];
 }
 
 Comment.init(
@@ -32,6 +34,15 @@ Comment.init(
         created_at: {
             type: DataTypes.DATE,
             allowNull: false,
+            // TODO: default = new date
+        },
+        likes: {
+            type: DataTypes.ARRAY(DataTypes.INTEGER),
+            defaultValue: [],
+        },
+        dislikes: {
+            type: DataTypes.ARRAY(DataTypes.INTEGER),
+            defaultValue: [],
         },
     },
     {
@@ -40,4 +51,4 @@ Comment.init(
     }
 );
 
-Comment.sync();
+//Comment.sync();
