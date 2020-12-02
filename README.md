@@ -84,7 +84,7 @@ Auth routes:
 - `react`
 - `react-dom`
 - `html-webpack-plugin`
-- `html-loader`
+- `~~html-loader~~ don't need this sh** only caused problems`
 
 ##### Configuring Babel
 `.babelrc`
@@ -97,34 +97,56 @@ Auth routes:
 ##### Configuring Webpack
 `webpack.config.js`
 ```js
+const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  module: {
-    rules: [
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader"
-        }
-      },
-      {
-        test: /\.html$/,
-        use: [
-          {
-            loader: "html-loader"
-          }
-        ]
-      }
-    ]
-  },
-  plugins: [
-    new HtmlWebPackPlugin({
-      template: "./src/index.html",
-      filename: "./index.html"
-    })
-  ]
+    entry: "./src/index.jsx",
+    output: {
+        path: path.resolve(__dirname, "dist"),
+        filename: "bundle.js",
+    },
+    module: {
+        rules: [
+            {
+                test: /\.(js|jsx)$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: "babel-loader",
+                },
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    "style-loader",
+                    "css-loader",
+                    {
+                        loader: "sass-loader",
+                        options: {
+                            implementation: require("sass"),
+                        },
+                    },
+                ],
+            },
+        ],
+    },
+    resolve: {
+        extensions: [".js", ".jsx"],
+    },
+    devServer: {
+        contentBase: [
+            path.join(__dirname, "/public/"),
+            path.join(__dirname, "/dist/"),
+        ],
+        compress: true,
+        port: 9000,
+    },
+    plugins: [
+        new HtmlWebPackPlugin({
+            template: "./public/index.html",
+            filename: "./index.html",
+        }),
+    ],
 };
 ```
 
