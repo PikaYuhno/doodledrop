@@ -1,11 +1,20 @@
 import React from "react";
 import "./App.css";
-import LandingPage from "./components/pages/Landing";
+import Login from './components/pages/Login';
+import Register from './components/pages/Register';
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import Landing from "./components/pages/Landing";
 
 const App = () => {
     return (
         <React.Fragment>
-            <LandingPage />
+            <Router>
+                <Switch>
+                    <Route path="/auth/login" exact component={Login} />
+                    <Route path="/auth/register" exact component={Register} />
+                    <Route path="/" exact component={Landing} />
+                </Switch>
+            </Router>
         </React.Fragment>
     );
 };
