@@ -180,3 +180,16 @@ Comming soon.
 ## Setup Client
 Comming soon.
 
+## Pages
+### Landing
+- `Landing`
+- `Register`
+- `Login`
+- `About`
+- `Contributors`
+- `Blank`
+### Main
+- `Dashboard`
+- `Global Chat`
+- `Private Chat`
+- `Profile`
