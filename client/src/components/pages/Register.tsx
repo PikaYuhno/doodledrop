@@ -1,9 +1,15 @@
 import React, {useState} from 'react';
 import '../../styles/landing/register.scss';
 import PressPlay from '../../assets/press_play.png';
-import {APIResponse} from '../../global';
+import {Link, Redirect, withRouter} from 'react-router-dom';
+import {register} from '../../store/auth/actions';
+import {connect} from 'react-redux';
+import {RootReducer} from '../../store/root-reducer';
+import {History} from 'history';
+import {alert} from '../../store/alert/actions';
+import {AlertType} from '../../store/alert/types';
 
-type UserRegister = {
+export type UserRegister = {
     username: string,
     email: string,
     first_name: string,
@@ -11,7 +17,19 @@ type UserRegister = {
     password: string,
     confirmPassword?: string,
 }
-const Register = () => {
+
+
+type DispatchProps = {
+    register: (user: UserRegister) => void;
+    alert: (...args: Parameters<typeof alert>) => void;
+}
+
+type RegisterProps = {
+    isAuthenticated: boolean;
+    history?: History;
+}
+
+const Register: React.FC<RegisterProps & DispatchProps> = (props) => {
     const [user, setUser] = useState<UserRegister>({
         username: '',
         email: '',
@@ -20,8 +38,6 @@ const Register = () => {
         password: '',
         confirmPassword: ''
     });
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUser((prevUser: UserRegister): UserRegister => {
@@ -35,50 +51,24 @@ const Register = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (user.password !== user.confirmPassword) {
-            setError("Password didn't match. Try again.");
+            props.alert("Password didn't match. Try again.", AlertType.FAIL, 3);
             return;
         }
-        console.log(user);
-        delete user.confirmPassword;
-        const response = await fetch('/api/auth/register', {
-            method: 'POST',
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(user)
-        });
-        const jsonRes: APIResponse = await response.json();
-        if (!jsonRes.success) {
-            setError(jsonRes.message);
-            return;
-        } else {
-            setSuccess(jsonRes.message);
-        }
-
+        let newUser = {...user};
+        delete newUser.confirmPassword
+        props.register(newUser);
     }
 
-    const handleNotfiClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        if (e.currentTarget.name === "error")
-            setError("");
-        else
-            setSuccess("");
+    if (props.isAuthenticated) {
+        return <Redirect to="/dashboard" />
     }
+
     return (
         <React.Fragment>
             <div className="columns" id="columns-wrapper">
                 <div className="column" id="login-column">
                     <form className="login-container" onSubmit={handleSubmit}>
                         <h1 className="title" style={{textAlign: 'center'}}>Sign up</h1>
-                        {error && <div className="field">
-                            <div className="notification is-danger is-light">
-                                <button className="delete" name="error" onClick={handleNotfiClose}></button>
-                                {error}
-                            </div>
-                        </div>}
-                        {success && <div className="field">
-                            <div className="notification is-success is-light">
-                                <button className="delete" name="success" onClick={handleNotfiClose}></button>
-                                {success}
-                            </div>
-                        </div>}
                         <div className="field is-horizontal">
                             <div className="field-body">
                                 <div className="field">
@@ -148,7 +138,9 @@ const Register = () => {
                             <h1 className="title" style={{color: 'white'}}>Already have an Account?</h1>
                             <p className="content" style={{width: '35vw', textAlign: 'center'}}>Lorem, ipsum dolor sit amet consectetur
                         adipisicing elit. </p>
-                            <input type="button" className="button is-danger is-outlined is-inverted" style={{width: '100px'}} value="Login" />
+                            <Link to="/auth/login">
+                                <input type="button" className="button is-danger is-outlined is-inverted" style={{width: '100px'}} value="Login" />
+                            </Link>
                         </div>
                         <img src={PressPlay} alt="press_play" id="register-img" />
                     </div>
@@ -157,4 +149,10 @@ const Register = () => {
         </React.Fragment >
     );
 }
-export default Register;
+
+const mapStateToProps = (state: RootReducer) => {
+    return {
+        isAuthenticated: state.auth.isAuthenticated,
+    }
+}
+export default withRouter(connect(mapStateToProps, {register, alert})(Register));

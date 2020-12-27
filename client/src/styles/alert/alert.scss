@@ -1,0 +1,25 @@
+.alerts {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: auto;
+    width: 500px;
+    z-index: 5;
+    padding: .75rem 1.25rem;
+}
+
+.notification {
+    transform: translateY(0);
+    animation: notfi 0.5s cubic-bezier(0.58, 0.38, 0, 1.41) 1;
+}
+
+@keyframes notfi {
+    from {
+        opacity: 0.3;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
