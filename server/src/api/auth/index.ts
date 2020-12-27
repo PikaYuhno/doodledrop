@@ -5,6 +5,7 @@ import { userLoginSchema, userRegisterSchema } from "../../schemas/userSchemas";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import {verifyToken, JWTPayload} from '../../utils/verifyToken';
 dotenv.config();
 
 router.post("/login", async (req: Request, res: Response) => {
@@ -14,7 +15,7 @@ router.post("/login", async (req: Request, res: Response) => {
         const value = await userLoginSchema.validateAsync(body);
         // Check if the user exists
         let foundUser: User | null = await User.findOne({
-            where: { username: value.username },
+            where: { email: value.email },
         });
         if (!foundUser)
             return res.status(400).json({
@@ -49,9 +50,10 @@ router.post("/login", async (req: Request, res: Response) => {
             success: true,
         });
     } catch (error) {
+        console.log("Error", error);
         return res.status(400).json({
             data: null,
-            message: error.details[0].message,
+            message: error.details ? error.details[0].message : error,
             success: false,
         });
     }
@@ -64,7 +66,7 @@ router.post("/register", async (req: Request, res: Response) => {
         // Check if the input is valid
         const value = await userRegisterSchema.validateAsync(body);
         // Check if the user doesn't already exist
-        const count = await User.count({ where: { username: value.username } });
+        const count = await User.count({ where: { email: value.email } });
         if (count !== 0)
             return res.status(400).json({
                 data: null,
@@ -87,8 +89,24 @@ router.post("/register", async (req: Request, res: Response) => {
         console.error(error);
         return res.status(400).json({
             data: null,
-            message: error.details[0].message,
+            message: error.details ? error.details[0].message : error,
             success: false,
         });
     }
 });
+
+
+router.post(
+    "/validateToken",
+    verifyToken,
+    async (req: Request, res: Response) => {
+        let token = req.body.token;
+        if (!token) return res.status(400).json({data: null, message: 'Token not found!', success: false});
+        try {
+            let decoded = jwt.verify(token, process.env.SECRET!) as JWTPayload;
+            return res.status(200).json({data: decoded, message: 'Successfully verified', success: true});
+        } catch (error) {
+            return res.status(400).json({data: null, message: 'Please log in!', success: false});
+        }
+    }
+);

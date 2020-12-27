@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-type JWTPayload = {
+export type JWTPayload = {
     id: number;
     username: string;
     iat: number;
