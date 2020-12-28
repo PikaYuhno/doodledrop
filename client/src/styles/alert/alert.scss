@@ -11,6 +11,7 @@
 .notification {
     transform: translateY(0);
     animation: notfi 0.5s cubic-bezier(0.58, 0.38, 0, 1.41) 1;
+    transition: all 0.5s inherit 0;
 }
 
 @keyframes notfi {

@@ -37,13 +37,11 @@ const Login: React.FC<LoginProps & DispatchProps> = (props) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        validations();
-        props.login(user);
-    }
-    const validations = () => {
         if (user.email === '' || user.password === '') {
             props.alert("Email or password can't be empty!", AlertType.FAIL, 3);
+            return;
         }
+        props.login(user);
     }
 
     if (props.isAuthenticated) {

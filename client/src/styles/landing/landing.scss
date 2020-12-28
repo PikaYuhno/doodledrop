@@ -1,5 +1,3 @@
-
-
 .container:after {
   content:"";
   position:absolute;
@@ -11,6 +9,7 @@
   border-radius:40%;
   animation:fill 5s linear infinite;
 }
+
 @keyframes fill {
   from {
     transform:translateX(-50%) rotate(0deg);
