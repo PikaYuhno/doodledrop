@@ -1,6 +1,7 @@
 import React from "react";
 import "../../../styles/landing/navbar.scss";
 import Logo from "../../../assets/logo.png";
+import {Link} from 'react-router-dom';
 
 type NavbarState = {};
 
@@ -47,18 +48,22 @@ class Navbar extends React.Component<{}, NavbarState> {
                                 <li className="nav-bar-item">About</li>
                                 <li className="nav-bar-item">Contributers</li>
                                 <li className="nav-bar-item" id="sign-up-div">
-                                    <input
-                                        type="button"
-                                        value="Sign up"
-                                        className="button"
-                                    />
+                                    <Link to="/auth/register">
+                                        <input
+                                            type="button"
+                                            value="Sign up"
+                                            className="button"
+                                        />
+                                    </Link>
                                 </li>
                                 <li className="nav-bar-item" id="sign-in-div">
-                                    <input
-                                        type="button"
-                                        value="Log in"
-                                        className="button"
-                                    />
+                                    <Link to="/auth/login">
+                                        <input
+                                            type="button"
+                                            value="Log in"
+                                            className="button"
+                                        />
+                                    </Link>
                                 </li>
                             </ul>
                             <div className="nav-bar-icons-container">

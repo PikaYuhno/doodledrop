@@ -28,6 +28,7 @@ router.get("/doodles", async (req: Request, res: Response) => {
     });
     return res.status(200).json({ data: doodles, message: "", success: true });
 });
+
 // GET /api/users/:id
 router.get("/:id", async (req: Request, res: Response) => {
     let userId = req.params.id;

@@ -21,7 +21,7 @@ class Landing extends React.Component {
                     <div className="columns">
                         <div
                             className="column is-one-third"
-                            style={{ display: "flex", alignItems: "center" }}
+                            style={{display: "flex", alignItems: "center"}}
                         >
                             <div className="content">
                                 <h1 className="title">Social Media Platform</h1>
