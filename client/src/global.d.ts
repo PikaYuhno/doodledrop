@@ -16,3 +16,26 @@ export type Action<T extends string, P = undefined> = {
     payload: P;
 };
 
+export type Channel = {
+    id: number;
+    room_id: string;
+    last_message: string; 
+    date: Date;
+    recipients: Recipient[];
+};
+
+export type Message = {
+    id: number | undefined;
+    channel_id: number;
+    room_id: string;
+    user_id: number;
+    body: string;
+    read: boolean;
+    created_at: Date;
+}
+
+export type Recipient = {
+    id: number;
+    avatar: string;
+    username: string;
+}

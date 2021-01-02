@@ -9,14 +9,10 @@ import {Provider} from 'react-redux';
 import store from './store/store';
 import ProtectedRoute from './components/pages/ProtectedRoute';
 import Alert from "./components/layouts/alert/Alert";
-import jwtDecode from 'jwt-decode';
-import {JWTPayload} from "./global";
-import {loadUser, logout} from "./store/auth/actions";
+import ChatBase from "./components/pages/ChatBase";
 
 const App = () => {
     useEffect(() => {
-        console.log("AÖSLFKJAÖLFKJ");
-        checkAuth();
     }, []);
 
     return (
@@ -29,26 +25,12 @@ const App = () => {
                         <Route path="/auth/login" exact component={Login} />
                         <Route path="/auth/register" exact component={Register} />
                         <ProtectedRoute path="/dashboard" exact component={Dashboard} />
+                        <ProtectedRoute path="/chat" exact component={ChatBase} />
                     </Switch>
                 </Router>
             </Provider>
         </React.Fragment>
     );
 };
-
-const checkAuth = () => {
-    let token = localStorage.getItem("token");
-    if (token) {
-        let decoded = jwtDecode<JWTPayload>(token);
-        if (decoded.exp && decoded.exp * 1000 < Date.now()) {
-            // TODO: FIX THIS TYPE ERROR
-            let logOut: any = logout();
-            store.dispatch(logOut);
-        } else {
-            let load: any = loadUser();
-            store.dispatch(load);
-        }
-    }
-}
 
 export default App;

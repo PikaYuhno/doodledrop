@@ -7,7 +7,9 @@ class Dashboard extends React.Component {
         return (
             <React.Fragment>
                 <Navbar />
-                <h1>Dashbaord</h1>
+                <main>
+                    <h1>Dashbaord</h1>
+                </main>
             </React.Fragment>
         );
     }

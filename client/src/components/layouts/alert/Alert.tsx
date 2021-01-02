@@ -20,7 +20,7 @@ class Alert extends React.Component<AlertProps> {
                 <div className="alerts">
                     {alerts.length !== 0 && alerts.map(el => {
                         return (
-                            <div id={el.id} className={`notification is-${el.alertType} is-light`}>
+                            <div key={el.id} id={el.id} className={`notification is-${el.alertType} is-light`}>
                                 {el.msg}
                             </div>
                         )

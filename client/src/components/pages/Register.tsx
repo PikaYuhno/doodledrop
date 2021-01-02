@@ -75,7 +75,7 @@ const Register: React.FC<RegisterProps & DispatchProps> = (props) => {
                                     <p className="control has-icons-left">
                                         <input name="username" className="input" type="text" placeholder="Username" onChange={handleChange} />
                                         <span className="icon is-small is-left">
-                                            <i className="fa fa-envelope"></i>
+                                            <i className="fa fa-user"></i>
                                         </span>
                                     </p>
                                 </div>
@@ -95,7 +95,7 @@ const Register: React.FC<RegisterProps & DispatchProps> = (props) => {
                                     <p className="control has-icons-left">
                                         <input name="first_name" className="input" type="text" placeholder="First Name" onChange={handleChange} />
                                         <span className="icon is-small is-left">
-                                            <i className="fa fa-envelope"></i>
+                                            <i className="fa fa-paper-plane"></i>
                                         </span>
                                     </p>
                                 </div>
@@ -103,7 +103,7 @@ const Register: React.FC<RegisterProps & DispatchProps> = (props) => {
                                     <p className="control has-icons-left">
                                         <input name="last_name" className="input" type="text" placeholder="Last Name" onChange={handleChange} />
                                         <span className="icon is-small is-left">
-                                            <i className="fa fa-envelope"></i>
+                                            <i className="fa fa-paper-plane"></i>
                                         </span>
                                     </p>
                                 </div>
