@@ -3,6 +3,8 @@ import {sequelize} from "../connection";
 import Doodle from "./Doodle";
 import Comment from "./Comment";
 import Follower from './Follower';
+import Message from "./Message";
+import Channel from "./Channel";
 
 export default class User extends Model {
     public id!: number;
@@ -12,7 +14,7 @@ export default class User extends Model {
     public password!: string;
     public email!: string;
     public created_doodles!: number;
-    public pfp_pic_path!: string;
+    public avatar!: string;
     public bio!: string;
     public location!: string;
 }
@@ -50,10 +52,10 @@ User.init(
             allowNull: false,
             defaultValue: 0,
         },
-        pfp_pic_path: {
+        avatar: {
             type: DataTypes.STRING(255),
             allowNull: false,
-            defaultValue: "path/to/default/pfp",
+            defaultValue: "default-1.png",
         },
         bio: {
             type: DataTypes.TEXT,
@@ -89,4 +91,9 @@ Follower.belongsTo(User, {foreignKey: "follower_id"});
 User.hasMany(Follower, {foreignKey: "follower_id"});
 Follower.belongsTo(User, {foreignKey: "user_id"});
 
+User.hasMany(Message, {foreignKey: 'user_id'});
+Message.belongsTo(User, {foreignKey: 'user_id'});
+
+User.hasMany(Channel, {foreignKey: 'user_id'});
+Channel.belongsTo(User, {foreignKey: 'user_id'});
 //User.sync();

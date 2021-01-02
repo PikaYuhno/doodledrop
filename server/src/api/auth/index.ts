@@ -66,7 +66,7 @@ router.post("/register", async (req: Request, res: Response) => {
         // Check if the input is valid
         const value = await userRegisterSchema.validateAsync(body);
         // Check if the user doesn't already exist
-        const count = await User.count({ where: { email: value.email } });
+        const count = await User.count({ where: { email: value.email, username: value.username } });
         if (count !== 0)
             return res.status(400).json({
                 data: null,

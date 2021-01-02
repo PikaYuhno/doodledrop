@@ -1,10 +1,14 @@
 import { Request, Response, Router } from "express";
+import Channel from "../../db/models/Channel";
 import Comment from "../../db/models/Comment";
 import Doodle from "../../db/models/Doodle";
 import Follower from "../../db/models/Follower";
+import Recipient from '../../db/models/Recipient';
 export const router = Router();
 import User from "../../db/models/User";
 import { userPostSchema, userPatchSchema } from "../../schemas/userSchemas";
+import {v4 as uuid} from 'uuid';
+
 
 // GET /api/users/
 router.get("/", async (req: Request, res: Response) => {
@@ -40,7 +44,7 @@ router.get("/:id", async (req: Request, res: Response) => {
     }
     return res.status(200).json({
         data: user,
-        message: "Successfully found Uesr!",
+        message: "Successfully found User!",
         success: true,
     });
 });
@@ -148,4 +152,55 @@ router.delete("/unfollow/:id", async (req: Request, res: Response) => {
     const curId = req.user!.id;
     const deleted = await Follower.destroy({where: {user_id: curId, follower_id: id}});
     return res.status(200).json({data: null, message: 'Successfully unfollowed user!', success: true});
+});
+
+// TODO: Input validiations
+// GET /api/users/@me/channels
+router.get("/@me/channels", async (req: Request, res: Response) => {
+    const id = req.user!.id; 
+    let channels: Channel[] | null = await Channel.findAll({where: {user_id: id},
+        include: [{
+            model: Recipient,
+            required: true,
+            as: 'recipients'
+        }],
+    });
+
+    if(!channels) 
+        return res.status(400).json({data: null, message: 'No channels found!', success: false});
+
+    return res.status(200).json({data: channels, message: '', success: true});
+});
+
+// POST /api/users/@me/channels
+router.post("/@me/channels", async (req: Request, res: Response) => {
+    const id = req.user!.id;
+    const recipientId = req.body.recipientId;
+    
+    if(id === recipientId)
+        return res.status(400).json({data: null, message: 'Cannot create a channel with your self!', success: false});
+
+    const me: User | null = await User.findOne({where: {id}, attributes: ['id', 'username', 'avatar']});
+    const recipient: User | null = await User.findOne({where: {id: recipientId}, attributes: ['id', 'username', 'avatar']});
+    if (!recipient || !me) 
+        return res
+            .status(404)
+            .json({ data: null, message: "User not found!", success: false });
+
+        try {
+            const room_id = uuid();
+            let channelMe = await Channel.create({user_id: id, type: 1, room_id});
+            let channelRec = await Channel.create({user_id: recipient.id, type: 1, room_id});
+            console.log(me);
+            console.log(recipient);
+            let cR = await Recipient.create({user_id: recipient.id, avatar: recipient.avatar, channel_id: channelMe.id, username: recipient.username}) 
+            let cM = await Recipient.create({user_id: me.id, avatar: me.avatar, channel_id: channelRec.id, username: me.username}) 
+            console.log(cR);
+            console.log(cM);
+            return res.status(200).json({data: null, message: 'Successfully created DM Channel!', success: true});
+        } catch (error) {
+            console.error(error);
+            return res.status(400).json({data: null, message: error, success: false});
+        }
+
 });

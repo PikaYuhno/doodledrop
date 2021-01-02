@@ -15,14 +15,14 @@ module.exports = {
          *
          */
         let users = [];
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 5; i++) {
             let username = faker.name.findName();
             let user = {
                 username: username,
                 first_name: faker.name.firstName(),
                 last_name: faker.name.lastName(),
                 password: await bcrypt.hash("1234", 10),
-                email: username + "_" + Math.floor(Math.random() * Math.floor(10000)) + "@gmail.com",
+                email: username.split(" ").join("") + "_" + Math.floor(Math.random() * Math.floor(10000)) + "@gmail.com",
                 bio: faker.lorem.sentences(),
                 location: faker.address.city()
             };
