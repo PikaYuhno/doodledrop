@@ -43,10 +43,10 @@ class Navbar extends React.Component<{}, NavbarState> {
                         {/*<div className="column is-one-fifth"></div>*/}
                         <div className="column" id="navbar-elements">
                             <ul className="nav-bar-list">
-                                <li className="nav-bar-item">Home</li>
+                                <a href="/"><li className="nav-bar-item">Home</li></a>
                                 <li className="nav-bar-item">Blank</li>
-                                <li className="nav-bar-item">About</li>
-                                <li className="nav-bar-item">Contributers</li>
+                                <a href="About"><li className="nav-bar-item">About</li></a>
+                                <a href="/coutributors"><li className="nav-bar-item">Contributors</li></a>
                                 <li className="nav-bar-item" id="sign-up-div">
                                     <Link to="/auth/register">
                                         <input
