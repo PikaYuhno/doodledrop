@@ -2,6 +2,8 @@ import React, {useEffect} from "react";
 import "./App.css";
 import Login from './components/pages/Login';
 import Register from './components/pages/Register';
+import About from './components/pages/About';
+import Contributers from './components/pages/Contributors';
 import Dashboard from './components/pages/Dashboard';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import Landing from "./components/pages/Landing";
@@ -28,6 +30,8 @@ const App = () => {
                         <Route path="/" exact component={Landing} />
                         <Route path="/auth/login" exact component={Login} />
                         <Route path="/auth/register" exact component={Register} />
+                        <Route path="/about" exact component={About}/>
+                        <Route path="/coutributors" exact component={Contributers}/>
                         <ProtectedRoute path="/dashboard" exact component={Dashboard} />
                     </Switch>
                 </Router>
