@@ -27,6 +27,22 @@ export const channelDisconnected = () => {
     };
 }
 
+export const channelUpdated = (message: Message) => {
+    return {
+        type: "CHANNEL_UPDATE_LATEST_MSG",
+        payload: {message}
+    };
+}
+
+export const channelUpdatedNotfi = (roomId: string) => {
+    return {
+        type: "CHANNEL_UPDATE_NOTFI",
+        payload: {
+            room_id: roomId
+        }
+    }
+}
+
 export const socketConnected = (socket: SocketIOClient.Socket) => {
     return {
         type: "SOCKET_CONNECTED",
@@ -91,20 +107,19 @@ export const disconnectSocket = (socket: SocketIOClient.Socket) => async (dispat
     dispatch(socketDisconnected());
 }
 
-export const recieveMessages = (channelId: number) => async (dispatch: (arg: ReturnType<typeof messagesRecieved | typeof alert>) => void) => {
+export const recieveMessages = (roomId: string) => async (dispatch: (arg: ReturnType<typeof messagesRecieved | typeof alert>) => void) => {
     let token = localStorage.getItem("token");
     if(!token) {
         dispatch(alert("Failed to load messages", AlertType.FAIL, 3));
         return;
     }
-    const promise = await fetch(`/api/channels/${channelId}/messages`, {
+    const promise = await fetch(`/api/channels/${roomId}/messages`, {
         headers: {
             "Authorization": token 
         }
     });
     const jsonRes = await promise.json();
-    if(jsonRes.success) {
-        console.log("Mesages", jsonRes.data.messages);
-        dispatch(messagesRecieved(jsonRes.data.messages)); 
+    if(jsonRes.success ) {
+        dispatch(messagesRecieved(jsonRes.data)); 
     }
 }

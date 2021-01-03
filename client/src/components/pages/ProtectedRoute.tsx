@@ -25,7 +25,6 @@ const ProtectedRoute: React.FC<Props> = (props) => {
     }, []);
 
     if (props.isAuthenticated) {
-        console.log("IS AUTHENTICATED");
         return (
             <Route exact={props.exact} component={props.component} path={props.path} />
         );
@@ -40,12 +39,9 @@ const checkAuth = (props: Props) => {
     let token = localStorage.getItem("token");
     if (token) {
         let decoded = jwtDecode<JWTPayload>(token);
-        console.log(decoded);
         if (decoded.exp && decoded.exp * 1000 < Date.now()) {
-            console.log("LOGOUT");
             props.logout();
         } else {
-            console.log("LOADUSER");
             props.loadUser();
         }
     }

@@ -1,4 +1,5 @@
 import {ChatState, ChatActionTypes} from "./types";
+import {Channel} from '../../global';
 
 
 // TODO: Implement messagse, maybe add isLoaded
@@ -25,6 +26,26 @@ export default (state = initialState, action: ChatActionTypes): ChatState => {
             return {
                 ...state,
                 currentChannel: null
+            }
+        case "CHANNEL_UPDATE_LATEST_MSG":
+            let setNotfi = !state.currentChannel? true : false;
+            return {
+                ...state,
+                channels: state.channels.map((channel: Channel) => channel.room_id === action.payload.message.room_id ? {
+                    ...channel, 
+                    last_message: action.payload.message.body,
+                    date: action.payload.message.created_at,
+                    notfi: setNotfi
+                } : channel)
+            }
+
+        case "CHANNEL_UPDATE_NOTFI":
+            return {
+                ...state,
+                channels: state.channels.map((channel: Channel) => channel.room_id === action.payload.room_id ? {
+                    ...channel, 
+                    notfi: false
+                } : channel)
             }
         case "SOCKET_CONNECTED":
             return {

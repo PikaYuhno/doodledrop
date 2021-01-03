@@ -21,12 +21,12 @@ export type Channel = {
     room_id: string;
     last_message: string; 
     date: Date;
+    notfi: boolean;
     recipients: Recipient[];
 };
 
 export type Message = {
     id: number | undefined;
-    channel_id: number;
     room_id: string;
     user_id: number;
     body: string;

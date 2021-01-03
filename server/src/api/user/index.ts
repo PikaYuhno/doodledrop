@@ -16,7 +16,6 @@ router.get("/", async (req: Request, res: Response) => {
     return res.status(200).json({ data: users, message: "", success: true });
 });
 
-//TODO:
 // GET /api/users/doodles
 router.get("/doodles", async (req: Request, res: Response) => {
     console.log("HERE");

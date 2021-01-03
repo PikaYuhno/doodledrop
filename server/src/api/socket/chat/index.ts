@@ -12,11 +12,10 @@ export default (server: Server) => {
             socket.join(channel.channelId); 
         });
 
-        //TODO: Sending message to room doesn't work
         socket.on('message', (message: any) => {
             console.log("Got data - ", message);
             console.log(socket.rooms);
-            socket.broadcast.to(message.channelId).emit("message", message.data);
+            socket.broadcast.to(message.room_id).emit("message", message);
             /*socket.broadcast.emit("message", message.data);
             socket.broadcast.emit("test", "Hello");
             io.sockets.emit("message", message.data);*/

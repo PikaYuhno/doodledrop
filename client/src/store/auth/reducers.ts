@@ -1,5 +1,4 @@
 import {AuthActionTypes, AuthState} from "./types";
-// TODO: Make alert global?
 
 const initialState: AuthState = {
     isAuthenticated: localStorage.getItem("token") ? true : false,

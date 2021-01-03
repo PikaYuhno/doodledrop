@@ -172,14 +172,29 @@
   margin-top: auto;
 }
 
+#message-input {
+    width: 100%;
+}
+
 .input-container .input {
   padding: 1rem;
 }
 
-.input-container i {
-  color: #3aa8f5;
-}
-
 .input-container span:hover {
   background-color: #6a6c85;
+}
+
+.info .icons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.info .icons .notfi {
+  background-color: #f04744;
+  border-radius: 100%;
+  width: 22px;
+  height: 22px;
+  text-align: center;
+  color: white;
+  font-weight: bold;
 }

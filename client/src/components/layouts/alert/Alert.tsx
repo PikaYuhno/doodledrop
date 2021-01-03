@@ -13,7 +13,6 @@ class Alert extends React.Component<AlertProps> {
         super(props);
     }
     render() {
-        console.log("New Props", this.props.alerts);
         let alerts = this.props.alerts;
         return (
             <React.Fragment>

@@ -1,6 +1,5 @@
 import {Model, DataTypes} from 'sequelize';
 import {sequelize} from '../connection';
-import Message from './Message';
 import Recipient from './Recipient';
 
 export default class Channel extends Model {
@@ -9,6 +8,7 @@ export default class Channel extends Model {
     public room_id!: string;
     public type!: number;
     public name!: string;
+    public notfi!: boolean;
     public last_message!: string;
     public recipients!: string[];
 }
@@ -36,15 +36,17 @@ Channel.init({
         type: DataTypes.STRING,
         allowNull: true,
     },
+    notfi: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+    },
     last_message: {
         type: DataTypes.STRING,
         allowNull: true,
     }, 
 
 }, {tableName: 'channels', sequelize});
-
-Channel.hasMany(Message, {foreignKey: 'channel_id', as: 'messages'});
-Message.belongsTo(Channel, {foreignKey: 'channel_id', as: 'messages'});
 
 Channel.hasMany(Recipient, {foreignKey: 'channel_id', as: 'recipients'});
 Recipient.belongsTo(Channel, {foreignKey: 'channel_id', as: 'recipients'});

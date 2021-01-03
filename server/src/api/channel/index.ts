@@ -4,30 +4,35 @@ import Channel from "../../db/models/Channel";
 export const router = Router();
 
 // TODO: Input validiations
-// TODO: Look on room id instead of channel id
-// GET /channels/:channelId/messages
-router.get("/:channelId/messages", async (req: Request, res: Response) => {
+// GET /api/channels/:roomId/messages
+router.get("/:roomId/messages", async (req: Request, res: Response) => {
     const id = req.user!.id;
-    const channelId = req.params.channelId; 
-    const messages: Channel | null = await Channel.findOne({where: {id: channelId, user_id: id}, include: [
-        {
-            model: Message,
-            required: true,
-            as: 'messages'
-        }
-    ]});
+    const roomId = req.params.roomId; 
+    const messages: Message[] | null = await Message.findAll({where: {room_id: roomId}})
     if(!messages) {
         return res.status(400).json({data: null, messages: 'No messages found', success: false});
     }
-    return res.status(200).json({data: messages, message: '', success: true});
+    return res.status(200).json({data: messages, message: 'Successfully found data', success: true});
 });
 
-// POST /channels/:channelId/messages
-router.post("/:channelId/messages", async (req: Request, res: Response) => {
+// POST /api/channels/:roomId/messages
+router.post("/:roomId/messages", async (req: Request, res: Response) => {
     const id = req.user!.id; 
-    const channelId = req.params.channelId;
+    const roomId = req.params.roomId;
     const body = req.body;
 
-    const createdMessage = await Message.create({user_id: id, channel_id: channelId, body: body.content, room_id: body.room_id});
-    return res.status(200).json({data: null, message: 'Successfully created Message!', success: true});
+    const createdMessage = await Message.create({user_id: id, body: body.content, room_id: roomId});
+    return res.status(200).json({data: createdMessage, message: 'Successfully created Message!', success: true});
+});
+
+// PATCH /api/channels/:roomId/latestMessage
+router.patch(":/roomId/latestMessage", async (req: Request, res: Response) => {
+    const id = req.user!.id;
+    const roomId = req.params.roomId;
+    const latestMessage = req.body.latest_message;
+    const count = await Channel.count({where: {room_id: roomId, user_id: id}});
+    if(count === 0) return res.status(404).json({data: null, message: 'Channel not found!', success: false});
+
+    await Channel.update({latest_message: latestMessage}, {where: {room_id: roomId, user_id: id}});
+    return res.status(200).json({data: null, message: 'Successfully updated channel', success: true});
 });

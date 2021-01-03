@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 import {RootReducer} from '../../store/root-reducer';
 import Empty from '../../assets/empty.png';
 import {Channel} from '../../global';
-import {connectSocket, disconnectSocket, messageAdded} from '../../store/chat/actions';
+import {connectSocket, disconnectSocket, messageAdded, channelUpdated} from '../../store/chat/actions';
 
 type ChatBaseProps = {
     currentChannel?: Channel | null,
@@ -15,37 +15,14 @@ type ChatBaseProps = {
 } & DispatchProps;
 
 type DispatchProps = {
-    connectSocket: () => void;
-    disconnectSocket: (...args: Parameters<typeof disconnectSocket>) => void;
     messageAdded: (...args: Parameters<typeof messageAdded>) => void;
+    channelUpdated: (...args: Parameters<typeof channelUpdated>) => void;
 }
 class ChatBase extends React.Component<ChatBaseProps> {
     constructor(props: ChatBaseProps) {
         super(props);
     }
 
-    componentDidMount() {
-        this.props.connectSocket();
-        const {socket} = this.props;
-        if (!socket) return;
-        console.log("HERE");
-        socket.on('connect', () => {
-            console.log("CONNECT CALLBACK");
-            socket.on("message", (m: any) => {
-                console.log("Got data -", m);
-                this.props.messageAdded(m);
-            });
-        })
-    }
-
-    componentWillUnmount() {
-        console.log("ChatBase - WillUnmount");
-        console.log(this.props.socket === undefined);
-        if (this.props.socket)
-            this.props.disconnectSocket(this.props.socket);
-    }
-
-    // TODO: Filter channel and get infos about recipient
     render() {
         return (
             <React.Fragment>
@@ -75,9 +52,8 @@ const mapStateToProps = (state: RootReducer) => {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        disconnectSocket: (...args: Parameters<typeof disconnectSocket>) => {dispatch(disconnectSocket(...args))},
-        connectSocket: () => {dispatch(connectSocket())},
-        messageAdded: (...args: Parameters<typeof messageAdded>) => {dispatch(messageAdded(...args))}
+        messageAdded: (...args: Parameters<typeof messageAdded>) => {dispatch(messageAdded(...args))},
+        channelUpdated: (...args: Parameters<typeof channelUpdated>) => {dispatch(channelUpdated(...args))}
     }
 }
 

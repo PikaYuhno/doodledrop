@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {Channel} from '../../../../global';
-import {channelConnected} from '../../../../store/chat/actions';
+import {channelConnected, channelUpdatedNotfi} from '../../../../store/chat/actions';
 import {RootReducer} from '../../../../store/root-reducer';
 
 
@@ -11,6 +11,7 @@ type DMChannelProps = {
     name: string;
     date: string;
     latestMessage: string;
+    notfi: boolean;
     channels: Channel[];
     socket: SocketIOClient.Socket | null;
     currentChannel: Channel | null;
@@ -19,6 +20,7 @@ type DMChannelProps = {
 
 type DispatchProps = {
     channelConnected: (...args: Parameters<typeof channelConnected>) => void;
+    channelUpdatedNotfi: (...args: Parameters<typeof channelUpdatedNotfi>) => void;
 }
 
 class DMChannel extends React.Component<DMChannelProps> {
@@ -27,14 +29,11 @@ class DMChannel extends React.Component<DMChannelProps> {
     }
 
     handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        const {socket} = this.props;
         e.preventDefault();
         let channel = this.props.channels.find(channel => channel.id === this.props.id);
         if (!channel) return;
         this.props.channelConnected(channel);
-        if (!socket) return;
-        console.log("Joining - ", channel.room_id);
-        socket.emit("channel-join", {channelId: channel.room_id});
+        this.props.channelUpdatedNotfi(channel.room_id);
     }
 
 
@@ -53,6 +52,9 @@ class DMChannel extends React.Component<DMChannelProps> {
                         <span className="latest-message">{this.props.latestMessage}</span>
                         <div className="icons">
                             <i className="fa fa-tv"></i>
+                            {this.props.notfi && <div className="notfi">
+                                !
+                            </div>}
                         </div>
                     </div>
                 </div>
@@ -71,7 +73,8 @@ const mapStateToProps = (state: RootReducer) => {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        channelConnected: (id: Channel) => {dispatch(channelConnected(id))}
+        channelConnected: (id: Channel) => {dispatch(channelConnected(id))},
+        channelUpdatedNotfi: (...args: Parameters<typeof channelUpdatedNotfi>) => {dispatch(channelUpdatedNotfi(...args))}
     }
 }
 

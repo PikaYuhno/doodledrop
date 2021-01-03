@@ -17,11 +17,8 @@ Message.init({
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
-    }, channel_id: {
-         type: DataTypes.INTEGER,
-         allowNull: false,
     }, room_id: {
-         type: DataTypes.STRING,
+         type: DataTypes.UUID,
          allowNull: false,
     }, user_id: {
         type: DataTypes.INTEGER,
