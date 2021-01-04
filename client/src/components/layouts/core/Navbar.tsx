@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import styles from '../../../styles/core/navbar.module.scss';
 import {logout} from '../../../store/auth/actions';
 import {connect} from 'react-redux';
-import {connectSocket, disconnectSocket, messageAdded, channelUpdated, channelLogout} from '../../../store/chat/actions';
+import {disconnectSocket, channelLogout} from '../../../store/chat/actions';
 import {RootReducer} from '../../../store/root-reducer';
 
 type NavbarProps = {

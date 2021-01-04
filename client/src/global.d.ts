@@ -42,3 +42,5 @@ export type Recipient = {
     avatar: string;
     username: string;
 }
+
+export type ActionCreator<T, R> = (...args: Parameters<T>) => R;

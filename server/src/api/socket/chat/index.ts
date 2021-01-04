@@ -14,12 +14,6 @@ export default (server: Server) => {
             console.log("Joined room - ", room);
         });
 
-        // FIX: Channel has to be a string
-        /*socket.on('channel-join', (channel: any) => {
-            console.log("Joined Channel - ", channel);
-            socket.join(channel.channelId); 
-        });*/
-
         socket.on('message', (message: any) => {
             console.log("Got data - ", message);
             console.log(socket.rooms);

@@ -1,6 +1,5 @@
 import React, {RefObject} from 'react';
 import Message from './Message';
-import Pfp from '../../../../assets/pfp/pfp3.png';
 import moment from 'moment';
 import {connect} from 'react-redux';
 import {channelDisconnected, recieveMessages, messageAdded, channelUpdated} from '../../../../store/chat/actions';
