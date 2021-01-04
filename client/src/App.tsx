@@ -11,6 +11,7 @@ import ChatBase from "./components/pages/ChatBase";
 import {connectSocket, disconnectSocket} from './store/chat/actions';
 import {connect} from 'react-redux';
 import {RootReducer} from "./store/root-reducer";
+import Search from "./components/pages/Search";
 
 type AppProps = {
     socket?: SocketIOClient.Socket | null
@@ -29,6 +30,7 @@ const App: React.FC<AppProps> = (props) => {
         }
         }, []);*/
 
+        
     return (
         <React.Fragment>
             <Alert />
@@ -37,6 +39,9 @@ const App: React.FC<AppProps> = (props) => {
                     <Route path="/" exact component={Landing} />
                     <Route path="/auth/login" exact component={Login} />
                     <Route path="/auth/register" exact component={Register} />
+                    <Route path="/search" exact component={Search} />
+                    {// <ProtectedRoute path="/search" exact component={Search} />
+                    }                        
                     <ProtectedRoute path="/dashboard" exact component={Dashboard} />
                     <ProtectedRoute path="/chat" exact component={ChatBase} />
                 </Switch>
