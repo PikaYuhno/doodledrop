@@ -17,6 +17,7 @@ class Landing extends React.Component {
                         alignItems: "center",
                         display: "flex",
                     }}
+                    id="container"
                 >
                     <div className="columns">
                         <div

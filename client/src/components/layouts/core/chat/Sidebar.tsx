@@ -21,19 +21,10 @@ type DispatchProps = {
 }
 
 class Sidebar extends React.Component<SidebarProps> {
-    roomJoined: boolean;
-    listeningOnMessages: boolean;
     constructor(props: SidebarProps) {
         super(props);
-        this.roomJoined = false;
-        this.listeningOnMessages = false;
     }
 
-    componentDidUpdate(prevProps: SidebarProps, prevState: any) {
-        console.log("Room joined?", this.roomJoined);
-        if (this.roomJoined) return;
-        this.joinRooms();
-    }
 
     componentDidMount() {
         this.props.loadChannels();
@@ -43,24 +34,6 @@ class Sidebar extends React.Component<SidebarProps> {
         console.log("HERE");
     }
 
-    joinRooms = () => {
-        console.log("Socket?", this.props.socket ? true : false);
-        this.props.channels.forEach((channel: Channel) => {
-            if (this.props.socket) {
-                this.props.socket.emit("channel-join", {channelId: channel.room_id});
-                console.log("Joining - ", channel.room_id);
-                this.roomJoined = true;
-            }
-        });
-        if (this.props.socket && !this.listeningOnMessages) {
-            this.listeningOnMessages = true;
-            this.props.socket.on("message", async (m: Message) => {
-                console.log("Got data -", m);
-                this.props.addMessage(m, this.props.channels);
-                this.props.channelUpdated(m);
-            });
-        }
-    }
 
     updateChannel = async (message: Message) => {
         await fetch(`/api/channels/${message.room_id}/latestMessage`, {

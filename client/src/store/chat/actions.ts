@@ -143,6 +143,9 @@ export const loadChannels = () => async (dispatch: (arg: ReturnType<typeof chann
 export const connectSocket = () => async (dispatch: (arg: ReturnType<typeof socketConnected>) => void) => {
     const socket = io("http://localhost:4000/");    
     console.log("Socket: connected");
+    socket.on("connect", () => {
+        console.log("RECONNECTED AGAIN");
+    });
     dispatch(socketConnected(socket));
 }
 

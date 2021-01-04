@@ -6,21 +6,45 @@ import '../../styles/core/chat.scss';
 import {connect} from 'react-redux';
 import {RootReducer} from '../../store/root-reducer';
 import Empty from '../../assets/empty.png';
-import {Channel} from '../../global';
-import {connectSocket, disconnectSocket, messageAdded, channelUpdated} from '../../store/chat/actions';
+import {Channel, Message} from '../../global';
+import {connectSocket, disconnectSocket, addMessage, channelUpdated} from '../../store/chat/actions';
+
 
 type ChatBaseProps = {
+    channels: Channel[];
     currentChannel?: Channel | null,
     socket?: SocketIOClient.Socket | null
 } & DispatchProps;
 
 type DispatchProps = {
-    messageAdded: (...args: Parameters<typeof messageAdded>) => void;
+    addMessage: (...args: Parameters<typeof addMessage>) => void;
     channelUpdated: (...args: Parameters<typeof channelUpdated>) => void;
 }
 class ChatBase extends React.Component<ChatBaseProps> {
+    listeningOnMessages: boolean;
     constructor(props: ChatBaseProps) {
         super(props);
+        this.listeningOnMessages = false;
+    }
+
+    componentDidUpdate(prevProps: ChatBaseProps, prevState: any) {
+        this.onMessage();
+    }
+
+    onMessage = () => {
+        console.log("Socket exists?", this.props.socket);
+        if (this.props.socket && !this.listeningOnMessages) {
+            this.listeningOnMessages = true;
+            this.props.socket.on("message", async (m: Message) => {
+                console.log("Got data -", m);
+                this.props.addMessage(m, this.props.channels);
+                this.props.channelUpdated(m);
+            });
+        }
+    }
+
+    componentDidMount() {
+        console.log("ChatBase - mounted");
     }
 
     render() {
@@ -47,13 +71,14 @@ const mapStateToProps = (state: RootReducer) => {
     return {
         currentChannel: state.chat.currentChannel,
         socket: state.chat.socket,
+        channels: state.chat.channels,
     }
 }
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        messageAdded: (...args: Parameters<typeof messageAdded>) => {dispatch(messageAdded(...args))},
-        channelUpdated: (...args: Parameters<typeof channelUpdated>) => {dispatch(channelUpdated(...args))}
+        addMessage: (...args: Parameters<typeof addMessage>) => {dispatch(addMessage(...args))},
+        channelUpdated: (...args: Parameters<typeof channelUpdated>) => {dispatch(channelUpdated(...args))},
     }
 }
 

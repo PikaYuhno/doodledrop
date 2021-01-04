@@ -74,7 +74,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
         this.props.socket.emit("message", msg);
         this.props.messageAdded(msg);
         await this.postMessage();
-
+        this.setState({message: ''});
     }
 
     postMessage = async () => {
