@@ -3,21 +3,24 @@ import {Link} from 'react-router-dom';
 import styles from '../../../styles/core/navbar.module.scss';
 import {logout} from '../../../store/auth/actions';
 import {connect} from 'react-redux';
-import {connectSocket, disconnectSocket, messageAdded, channelUpdated} from '../../../store/chat/actions';
+import {connectSocket, disconnectSocket, messageAdded, channelUpdated, channelLogout} from '../../../store/chat/actions';
 import {RootReducer} from '../../../store/root-reducer';
 
 type NavbarProps = {
     socket?: SocketIOClient.Socket | null;
     logout: () => void;
     disconnectSocket: (...args: Parameters<typeof disconnectSocket>) => void;
+    channelLogout: () => void;
 }
 
 const Navbar: React.FC<NavbarProps> = (props) => {
 
     const handleLogout = () => {
         props.logout();
+        props.channelLogout();
         if (props.socket)
             props.disconnectSocket(props.socket);
+
     }
 
     return (
@@ -79,6 +82,7 @@ const mapDispatchToProps = (dispatch: any) => {
     return {
         logout: () => {dispatch(logout())},
         disconnectSocket: (...args: Parameters<typeof disconnectSocket>) => {dispatch(disconnectSocket(...args))},
+        channelLogout: (...args: Parameters<typeof channelLogout>) => {dispatch(channelLogout())}
     }
 }
 

@@ -3,18 +3,20 @@ import DMChannel from './DMChannel';
 import moment from 'moment';
 import {connect} from 'react-redux';
 import {RootReducer} from '../../../../store/root-reducer';
-import {Channel, Message} from '../../../../global';
-import {loadChannels, connectSocket, messageAdded, channelUpdated} from '../../../../store/chat/actions';
+import {Channel, Message, JWTPayload} from '../../../../global';
+import {loadChannels, connectSocket, addMessage, channelUpdated} from '../../../../store/chat/actions';
+import Pfp from '../../../../assets/pfp/pfp1.png';
 
 type SidebarProps = {
     channels: Channel[];
     socket: SocketIOClient.Socket | null;
+    user: JWTPayload | null;
 } & DispatchProps
 
 
 type DispatchProps = {
     loadChannels: any;
-    messageAdded: (...args: Parameters<typeof messageAdded>) => void;
+    addMessage: (...args: Parameters<typeof addMessage>) => void;
     channelUpdated: (...args: Parameters<typeof channelUpdated>) => void;
 }
 
@@ -54,9 +56,8 @@ class Sidebar extends React.Component<SidebarProps> {
             this.listeningOnMessages = true;
             this.props.socket.on("message", async (m: Message) => {
                 console.log("Got data -", m);
-                this.props.messageAdded(m);
+                this.props.addMessage(m, this.props.channels);
                 this.props.channelUpdated(m);
-                await this.updateChannel(m);
             });
         }
     }
@@ -98,6 +99,15 @@ class Sidebar extends React.Component<SidebarProps> {
                         <i className="fa fa-plus"></i>
                     </div>
                     {this.renderChannels()}
+                    <div className="channels-footer">
+                        <div className="user-select">
+                            <div className="user-avatar">
+                                <div className="helper"></div>
+                                <img src={this.props.user ? this.props.user.avatar : "default-1.png"} width="40" height="40" alt="avatar" />
+                            </div>
+                            <span className="username">{this.props.user && this.props.user.username}</span>
+                        </div>
+                    </div>
                 </div>
             </React.Fragment>
         );
@@ -108,13 +118,14 @@ const mapStateToProps = (state: RootReducer) => {
     return {
         channels: state.chat.channels,
         socket: state.chat.socket,
+        user: state.auth.user
     }
 }
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
         loadChannels: () => {dispatch(loadChannels())},
-        messageAdded: (...args: Parameters<typeof messageAdded>) => {dispatch(messageAdded(...args))},
+        addMessage: (...args: Parameters<typeof addMessage>) => {dispatch(addMessage(...args))},
         channelUpdated: (...args: Parameters<typeof channelUpdated>) => {dispatch(channelUpdated(...args))}
     }
 }

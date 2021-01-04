@@ -33,7 +33,7 @@ export const logout = () => {
 }
 
 
-export const loadUser = () => async (dispatch: (arg: ReturnType<typeof userLoaded | typeof logout>) => void) => {
+export const loadUser = (socket: SocketIOClient.Socket) => async (dispatch: (arg: ReturnType<typeof userLoaded | typeof logout>) => void) => {
     let token = localStorage.getItem("token");
     if(!token) {
         dispatch(logout());
@@ -52,6 +52,8 @@ export const loadUser = () => async (dispatch: (arg: ReturnType<typeof userLoade
     const jsonRes = await resposne.json();
     if(jsonRes.success) {
         dispatch(userLoaded(jsonRes.data));
+        socket.emit("join-room", jsonRes.data.id);
+        console.log("Joined room - user-room-", jsonRes.data.id);
     } else {
         dispatch(logout());
     }

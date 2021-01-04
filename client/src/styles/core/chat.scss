@@ -6,7 +6,9 @@
   flex-direction: column;
   //background-color: #edf1f3;
   background-color: #fff1f3;
-  padding: 1.5rem;
+  padding-top: 1.5rem;
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
 }
 .column.chat{
   display: flex;
@@ -197,4 +199,32 @@
   text-align: center;
   color: white;
   font-weight: bold;
+}
+
+.user-select {
+    display: flex; 
+    align-items: center;
+    padding: 0.3rem;
+}
+
+.user-select:hover {
+    background-color: #dcddde;
+    border-radius: 3px;
+}
+
+.user-select .username {
+    margin: 0px 0.5rem;
+}
+
+.user-select img {
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.user-avatar {
+    text-align: center;
+}
+
+.channels-footer {
+    margin-top: auto;
 }

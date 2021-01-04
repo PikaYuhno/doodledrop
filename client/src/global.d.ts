@@ -7,6 +7,7 @@ export interface APIResponse {
 export interface JWTPayload {
     id: nubmer;
     username: string;
+    avatar: string;
     iat: number;
     exp?: number;
 }
@@ -29,6 +30,7 @@ export type Message = {
     id: number | undefined;
     room_id: string;
     user_id: number;
+    receiver_id: number;
     body: string;
     read: boolean;
     created_at: Date;
@@ -36,6 +38,7 @@ export type Message = {
 
 export type Recipient = {
     id: number;
+    user_id :number;
     avatar: string;
     username: string;
 }

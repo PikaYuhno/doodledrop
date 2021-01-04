@@ -174,32 +174,37 @@ router.get("/@me/channels", async (req: Request, res: Response) => {
 // POST /api/users/@me/channels
 router.post("/@me/channels", async (req: Request, res: Response) => {
     const id = req.user!.id;
-    const recipientId = req.body.recipientId;
+    const recipientId = req.body.recipient_id;
+    const latestMessage = req.body.latest_message;
     
     if(id === recipientId)
         return res.status(400).json({data: null, message: 'Cannot create a channel with your self!', success: false});
 
-    const me: User | null = await User.findOne({where: {id}, attributes: ['id', 'username', 'avatar']});
     const recipient: User | null = await User.findOne({where: {id: recipientId}, attributes: ['id', 'username', 'avatar']});
-    if (!recipient || !me) 
+    if (!recipient) 
         return res
             .status(404)
             .json({ data: null, message: "User not found!", success: false });
 
         try {
             const room_id = uuid();
-            let channelMe = await Channel.create({user_id: id, type: 1, room_id});
-            let channelRec = await Channel.create({user_id: recipient.id, type: 1, room_id});
-            console.log(me);
-            console.log(recipient);
-            let cR = await Recipient.create({user_id: recipient.id, avatar: recipient.avatar, channel_id: channelMe.id, username: recipient.username}) 
-            let cM = await Recipient.create({user_id: me.id, avatar: me.avatar, channel_id: channelRec.id, username: me.username}) 
-            console.log(cR);
-            console.log(cM);
-            return res.status(200).json({data: null, message: 'Successfully created DM Channel!', success: true});
+            const count = await Channel.count({where: {user_id: id, type: 1, room_id: req.body.room_id || room_id}});
+            if(count > 0) return res.status(400).json({dat: null, message: 'Channel already exists!', success: false});
+
+            let channelMe = await Channel.create({user_id: id, type: 1, room_id: req.body.room_id || room_id, last_message: latestMessage || ''}); 
+            await Recipient.create({user_id: recipient.id, avatar: recipient.avatar, channel_id: channelMe.id, username: recipient.username});
+
+            let channel = await Channel.findOne({where: {user_id: id, room_id: req.body.room_id || room_id}, 
+                include: [{
+                    model: Recipient,
+                    required: true,
+                    as: 'recipients'
+                }]
+            });
+
+            return res.status(200).json({data: channel, message: 'Successfully created DM Channel!', success: true});
         } catch (error) {
             console.error(error);
             return res.status(400).json({data: null, message: error, success: false});
         }
-
 });

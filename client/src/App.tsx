@@ -21,13 +21,13 @@ type DispatchProps = {
     disconnectSocket: (...args: Parameters<typeof disconnectSocket>) => void;
 }
 const App: React.FC<AppProps> = (props) => {
-    useEffect(() => {
+    /*useEffect(() => {
         props.connectSocket();
         return () => {
             if (props.socket)
                 props.disconnectSocket(props.socket);
         }
-    }, []);
+        }, []);*/
 
     return (
         <React.Fragment>

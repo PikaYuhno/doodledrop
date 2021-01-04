@@ -28,7 +28,8 @@ export default (state = initialState, action: ChatActionTypes): ChatState => {
                 currentChannel: null
             }
         case "CHANNEL_UPDATE_LATEST_MSG":
-            let setNotfi = !state.currentChannel? true : false;
+            let setNotfi = !state.currentChannel ? true : (state.currentChannel.room_id !== action.payload.message.room_id ? true : false);
+             
             return {
                 ...state,
                 channels: state.channels.map((channel: Channel) => channel.room_id === action.payload.message.room_id ? {
@@ -46,6 +47,16 @@ export default (state = initialState, action: ChatActionTypes): ChatState => {
                     ...channel, 
                     notfi: false
                 } : channel)
+            }
+        case "CHANNEL_ADDED":
+            return {
+                ...state,
+                channels: [...state.channels, action.payload.channel]
+            }
+        case "CHANNEL_LOGOUT":
+            return {
+                ...state,
+                currentChannel: null,
             }
         case "SOCKET_CONNECTED":
             return {

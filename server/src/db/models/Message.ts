@@ -5,6 +5,7 @@ export default class Message extends Model {
     public id!: number;
     public channel_id!: number;
     public user_id!: number;
+    public receiver_id!: number
     public room_id!: string;
     public body!: string;
     public read!: boolean;
@@ -21,6 +22,9 @@ Message.init({
          type: DataTypes.UUID,
          allowNull: false,
     }, user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }, receiver_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     }, body: {

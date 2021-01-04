@@ -76,6 +76,52 @@ export const messageAdded = (message: Message) => {
     }
 }
 
+export const channelAdded = (channel: Channel) => {
+    return {
+        type: "CHANNEL_ADDED",
+        payload: {
+            channel
+        }
+    }
+}
+
+export const channelLogout = () => {
+    return {
+        type: "CHANNEL_LOGOUT",
+    }
+}
+
+export const addMessage = (message: Message, channels: Channel[]) => async (dispatch: (arg: ReturnType<typeof messageAdded | typeof channelAdded>) => void) => {
+    const channel = channels.find((channel: Channel) => {
+        return channel.room_id === message.room_id
+    });
+    if(!channel) {
+        // request channel
+        const promise = await fetch(`/api/users/@me/channels`, {
+            method: 'POST',
+            headers: {
+                "Authorization": localStorage.getItem("token") || "token",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                room_id: message.room_id,
+                recipient_id: message.user_id,
+                latest_message: message.body,
+            })
+        });
+        const resJson = await promise.json();
+        console.log(resJson);
+        if(resJson.success) {
+            // add channel to redux store
+            dispatch(channelAdded(resJson.data));
+        }
+
+    } else {
+        // add message
+        dispatch(messageAdded(message));
+    }
+}
+
 export const loadChannels = () => async (dispatch: (arg: ReturnType<typeof channelsLoaded | typeof alert>) => void) =>  {
     let token = localStorage.getItem("token");
     if(!token) {

@@ -5,24 +5,31 @@ import {connect, ConnectedComponent} from 'react-redux';
 import jwtDecode from 'jwt-decode';
 import {JWTPayload} from "../../global";
 import {loadUser, logout} from "../../store/auth/actions";
+import {connectSocket} from "../../store/chat/actions";
 
 type Props = {
     component: React.ComponentClass<any, any> | ConnectedComponent<any, any>;
     path: string;
     exact: boolean;
     isAuthenticated?: boolean;
+    isLoaded?: boolean;
+    socket?: SocketIOClient.Socket | null;
 } & DispatchProps;
 
 type DispatchProps = {
     logout: () => void;
-    loadUser: () => void;
+    loadUser: (...args: Parameters<typeof loadUser>) => void;
+    connectSocket: (...args: Parameters<typeof connectSocket>) => void;
 }
 
 
 const ProtectedRoute: React.FC<Props> = (props) => {
     useEffect(() => {
+        if (!props.socket)
+            props.connectSocket();
         checkAuth(props);
-    }, []);
+    }, [props.socket]);
+
 
     if (props.isAuthenticated) {
         return (
@@ -41,23 +48,29 @@ const checkAuth = (props: Props) => {
         let decoded = jwtDecode<JWTPayload>(token);
         if (decoded.exp && decoded.exp * 1000 < Date.now()) {
             props.logout();
-        } else {
-            props.loadUser();
+        } else if (props.isLoaded !== undefined && !props.isLoaded) {
+            console.log("IS NOT LOADED", props);
+            if (props.socket)
+                props.loadUser(props.socket);
         }
     }
 }
 
 const mapStateToProps = (state: RootReducer) => {
     return {
-        isAuthenticated: state.auth.isAuthenticated
+        isAuthenticated: state.auth.isAuthenticated,
+        isLoaded: state.auth.isLoaded,
+        socket: state.chat.socket
     }
 }
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
         logout: () => {dispatch(logout())},
-        loadUser: () => {dispatch(loadUser())}
+        loadUser: (socket: SocketIOClient.Socket) => {dispatch(loadUser(socket))},
+        connectSocket: () => {dispatch(connectSocket())},
     }
 }
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProtectedRoute);

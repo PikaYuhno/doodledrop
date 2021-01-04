@@ -17,6 +17,7 @@ export default (state = initialState, action: AuthActionTypes): AuthState => {
                 token: action.payload.token,
             }
         case 'LOGOUT':
+            localStorage.removeItem("token");
             return {
                 ...state,
                 isAuthenticated: false,

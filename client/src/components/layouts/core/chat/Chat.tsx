@@ -70,7 +70,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
     handleSend = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (!this.props.socket || !this.props.currentChannel || !this.props.user) return;
-        const msg: Msg = {id: undefined, user_id: this.props.user.id, body: this.state.message, created_at: new Date(), read: false, room_id: this.props.currentChannel.room_id};
+        const msg: Msg = {id: undefined, user_id: this.props.user.id, body: this.state.message, created_at: new Date(), read: false, room_id: this.props.currentChannel.room_id, receiver_id: this.props.currentChannel.recipients[0].user_id};
         console.log("Sending data:", msg);
         this.props.socket.emit("message", msg);
         this.props.messageAdded(msg);
@@ -89,6 +89,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
             },
             body: JSON.stringify({
                 content: this.state.message,
+                receiver_id: this.props.currentChannel.recipients[0].user_id
             })
         });
         const resJson = await promise.json();
