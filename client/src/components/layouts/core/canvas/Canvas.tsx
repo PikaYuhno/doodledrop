@@ -21,12 +21,13 @@ class Canvas extends React.Component {
     }
 
     componentDidMount() {
-        new P5(this.sketch, this.canvasRef.current!);
+        if (this.canvasRef.current)
+            new P5(this.sketch, this.canvasRef.current);
     }
 
     sketch = (p: any) => {
-        let undo: Line = [];
-        let redo: Line = [];
+        let undo: Line[] = [];
+        let redo: Line[] = [];
 
         p.setup = () => {
             p.createCanvas(400, 400);
