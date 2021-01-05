@@ -8,6 +8,7 @@ import {RootReducer} from '../../store/root-reducer';
 import Empty from '../../assets/empty.png';
 import {Channel, Message} from '../../global';
 import {connectSocket, disconnectSocket, addMessage, channelUpdated, updateChannelLatestMsg} from '../../store/chat/actions';
+import Canvas from '../layouts/core/canvas/Canvas';
 
 
 type ChatBaseProps = {
@@ -28,7 +29,7 @@ class ChatBase extends React.Component<ChatBaseProps> {
         this.listeningOnMessages = false;
     }
 
-    componentDidUpdate(prevProps: ChatBaseProps, prevState: any) {
+    componentDidUpdate() {
         this.onMessage();
     }
 
@@ -57,9 +58,10 @@ class ChatBase extends React.Component<ChatBaseProps> {
                         <Sidebar />
                         <div className="column chat">
                             {
-                                this.props.currentChannel ? <Chat imgSrc={this.props.currentChannel.recipients[0].avatar} name={this.props.currentChannel.recipients[0].username} />
-                                    : <div className="empty-image"><img src={Empty} width="512" height="512" alt="empty" /></div>
+                                //this.props.currentChannel ? <Chat imgSrc={this.props.currentChannel.recipients[0].avatar} name={this.props.currentChannel.recipients[0].username} />
+                                //    : <div className="empty-image"><img src={Empty} width="512" height="512" alt="empty" /></div>
                             }
+                            <Canvas />
                         </div>
                     </div>
                 </main>
