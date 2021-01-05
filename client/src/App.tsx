@@ -11,6 +11,8 @@ import ChatBase from "./components/pages/ChatBase";
 import {connectSocket, disconnectSocket} from './store/chat/actions';
 import {connect} from 'react-redux';
 import {RootReducer} from "./store/root-reducer";
+import About from './components/pages/About';
+import Contributers from './components/pages/Contributors';
 
 type AppProps = {
     socket?: SocketIOClient.Socket | null
@@ -34,6 +36,8 @@ const App: React.FC<AppProps> = (props) => {
             <Alert />
             <Router>
                 <Switch>
+                    <Route path="/about" exact component={About}/>
+                    <Route path="/coutributors" exact component={Contributers}/>
                     <Route path="/" exact component={Landing} />
                     <Route path="/auth/login" exact component={Login} />
                     <Route path="/auth/register" exact component={Register} />
