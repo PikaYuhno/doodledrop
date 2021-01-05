@@ -27,13 +27,7 @@ class Landing extends React.Component {
                             <div className="content">
                                 <h1 className="title">Social Media Platform</h1>
                                 <p className="content">
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit. Nulla accumsan, metus
-                                    ultrices eleifend gravida, nulla nunc varius
-                                    lectus, nec rutrum justo nibh eu lectus. Ut
-                                    vulputate semper dui. Fusce erat odio,
-                                    sollicitudin vel erat vel, interdum mattis
-                                    neque.
+                                    Doodledop is an open source social media platform on with you can share paintings, write with your friends and family and follow them in order to stay in contact.
                                 </p>
                                 <button className="button is-danger">
                                     Get Started
