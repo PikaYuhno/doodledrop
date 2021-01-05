@@ -20,7 +20,7 @@ class Dashboard extends React.Component {
 
 
 
-                    <div className="section">
+                    <div className="">
                         <div className="container">
                             <div className="columns">
 
@@ -89,7 +89,7 @@ class Dashboard extends React.Component {
                                                     <div className="level">
                                                         <div className="level-left">
                                                             <a className="ml-2">
-                                                                <span className="icon"><i className="fa fa-thumbs-up"></i></span>
+                                                                <span className="icon"><i className="fa fa-thumbs-up"></i> (4)</span>
                                                             </a>
                                                             <a className="ml-2">
                                                                 <span className="icon"><i className="fa fa-thumbs-down"></i></span>
@@ -224,7 +224,7 @@ class Dashboard extends React.Component {
                                             </div>
 
                                             <div className="media-content">
-                                                <p className="is-size-3 has-text-centered"><strong>Name</strong></p>
+                                                <p className="is-size-5 has-text-centered"><strong>Name</strong></p>
                                             </div>
                                 
                                             <div className="media-right">
@@ -242,7 +242,7 @@ class Dashboard extends React.Component {
                                             </div>
 
                                             <div className="media-content">
-                                                <p className="is-size-3 has-text-centered"><strong>Name</strong></p>
+                                                <p className="is-size-5 has-text-centered"><strong>Name</strong></p>
                                             </div>
                                 
                                             <div className="media-right">
