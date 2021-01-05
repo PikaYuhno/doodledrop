@@ -28,7 +28,6 @@ export default (state = initialState, action: ChatActionTypes): ChatState => {
                 currentChannel: null
             }
         case "CHANNEL_UPDATE_LATEST_MSG":
-            let setNotfi = !state.currentChannel ? true : (state.currentChannel.room_id !== action.payload.message.room_id ? true : false);
              
             return {
                 ...state,
@@ -36,7 +35,7 @@ export default (state = initialState, action: ChatActionTypes): ChatState => {
                     ...channel, 
                     last_message: action.payload.message.body,
                     date: action.payload.message.created_at,
-                    notfi: setNotfi
+                    notfi: action.payload.notfi
                 } : channel)
             }
 

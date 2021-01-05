@@ -27,11 +27,32 @@ export const channelDisconnected = () => {
     };
 }
 
-export const channelUpdated = (message: Message) => {
+// TODO: 
+export const channelUpdated = (message: Message, notfi: boolean) => {
     return {
         type: "CHANNEL_UPDATE_LATEST_MSG",
-        payload: {message}
+        payload: {message, notfi}
     };
+}
+
+export const updateChannelLatestMsg = (message: Message, currentChannel: Channel | null | undefined) => async (dispatch: (arg: ReturnType<typeof channelUpdated>) => void) => {
+    let setNotfi = currentChannel === null || currentChannel === undefined ? true : (currentChannel.room_id !== message.room_id ? true : false);
+    if(setNotfi) {
+        // update in database
+        await fetch(`/api/channels/${message.room_id}/ack`, {
+            method: 'PATCH',
+            headers: {
+                "Authorization": localStorage.getItem("token") || "token",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({notfi: setNotfi})
+        });
+        // dispatch channelUpdated with notfi true
+        dispatch(channelUpdated(message, setNotfi));
+    } else {
+        // dispatch channelUpdated with notfi false
+        dispatch(channelUpdated(message, setNotfi));
+    }
 }
 
 export const channelUpdatedNotfi = (roomId: string) => {
@@ -41,6 +62,17 @@ export const channelUpdatedNotfi = (roomId: string) => {
             room_id: roomId
         }
     }
+}
+
+export const updateChannelNotfi = (roomId: string) => async (dispatch: (arg: ReturnType<typeof channelUpdatedNotfi>) => void) => {
+    await fetch(`/api/channels/${roomId}/ack`, {
+        method: 'PATCH',
+        headers: {
+            "Authorization": localStorage.getItem("token") || "token",
+            "Content-Type": "application/json"
+        },
+    });
+    dispatch(channelUpdatedNotfi(roomId));
 }
 
 export const socketConnected = (socket: SocketIOClient.Socket) => {
@@ -170,5 +202,5 @@ export const recieveMessages = (roomId: string) => async (dispatch: (arg: Return
     const jsonRes = await promise.json();
     if(jsonRes.success ) {
         dispatch(messagesRecieved(jsonRes.data)); 
-    }
+    } 
 }

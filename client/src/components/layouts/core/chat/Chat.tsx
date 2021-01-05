@@ -66,7 +66,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
         this.props.channelDisconnected();
     }
 
-    handleSend = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    handleSend = async (e: React.MouseEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!this.props.socket || !this.props.currentChannel || !this.props.user) return;
         const msg: Msg = {id: undefined, user_id: this.props.user.id, body: this.state.message, created_at: new Date(), read: false, room_id: this.props.currentChannel.room_id, receiver_id: this.props.currentChannel.recipients[0].user_id};
@@ -121,11 +121,9 @@ class Chat extends React.Component<ChatProps, ChatState> {
                             <input className="input" type="text" placeholder="Type Something" onChange={this.handleChange} name="message" />
                         </div>
                         <div className="control">
-                            <button className="button is-info" onClick={this.handleSend}>
-                                <span className="icon is-small">
-                                    <i className="fa fa-paper-plane"></i>
-                                </span>
-                            </button>
+                            <form onSubmit={this.handleSend}>
+                                <input className="button is-info" type="submit" />
+                            </form>
                         </div>
                     </div>
                 </div>

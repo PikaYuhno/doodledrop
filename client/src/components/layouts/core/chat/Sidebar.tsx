@@ -5,8 +5,11 @@ import {connect} from 'react-redux';
 import {RootReducer} from '../../../../store/root-reducer';
 import {Channel, Message, JWTPayload} from '../../../../global';
 import {loadChannels, connectSocket, addMessage, channelUpdated} from '../../../../store/chat/actions';
-import Pfp from '../../../../assets/pfp/pfp1.png';
+import CreateChannelModal from './CreateChannelModal';
 
+type SidebarState = {
+    openModal: boolean;
+}
 type SidebarProps = {
     channels: Channel[];
     socket: SocketIOClient.Socket | null;
@@ -20,9 +23,12 @@ type DispatchProps = {
     channelUpdated: (...args: Parameters<typeof channelUpdated>) => void;
 }
 
-class Sidebar extends React.Component<SidebarProps> {
+class Sidebar extends React.Component<SidebarProps, SidebarState> {
     constructor(props: SidebarProps) {
         super(props);
+        this.state = {
+            openModal: false
+        }
     }
 
 
@@ -48,6 +54,10 @@ class Sidebar extends React.Component<SidebarProps> {
         });
     }
 
+    openModal = (e: React.MouseEvent<HTMLElement>) => {
+        this.setState({openModal: true});
+    }
+
     renderChannels = () => {
         return this.props.channels && this.props.channels.map((channel: Channel) => {
             let recipient = channel.recipients[0];
@@ -58,6 +68,7 @@ class Sidebar extends React.Component<SidebarProps> {
     render() {
         return (
             <React.Fragment>
+                <CreateChannelModal open={this.state.openModal} onClose={() => this.setState({openModal: false})} />
                 <div className="column is-one-quarter">
                     <div className="field">
                         <p className="control has-icons-left">
@@ -69,11 +80,11 @@ class Sidebar extends React.Component<SidebarProps> {
                     </div>
                     <div className="channels-header">
                         <span className="header-text">DIRECT MESSAGES</span>
-                        <i className="fa fa-plus"></i>
+                        <i className="fa fa-plus" onClick={this.openModal}></i>
                     </div>
                     {this.renderChannels()}
                     <div className="channels-footer">
-                        <div className="user-select">
+                        <div className="user-select-self">
                             <div className="user-avatar">
                                 <div className="helper"></div>
                                 <img src={this.props.user ? this.props.user.avatar : "default-1.png"} width="40" height="40" alt="avatar" />

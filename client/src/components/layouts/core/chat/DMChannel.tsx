@@ -1,9 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {Channel} from '../../../../global';
-import {channelConnected, channelUpdatedNotfi} from '../../../../store/chat/actions';
+import {channelConnected, updateChannelNotfi} from '../../../../store/chat/actions';
 import {RootReducer} from '../../../../store/root-reducer';
-
 
 type DMChannelProps = {
     id: number;
@@ -20,7 +19,7 @@ type DMChannelProps = {
 
 type DispatchProps = {
     channelConnected: (...args: Parameters<typeof channelConnected>) => void;
-    channelUpdatedNotfi: (...args: Parameters<typeof channelUpdatedNotfi>) => void;
+    updateChannelNotfi: (...args: Parameters<typeof updateChannelNotfi>) => void;
 }
 
 class DMChannel extends React.Component<DMChannelProps> {
@@ -33,7 +32,7 @@ class DMChannel extends React.Component<DMChannelProps> {
         let channel = this.props.channels.find(channel => channel.id === this.props.id);
         if (!channel) return;
         this.props.channelConnected(channel);
-        this.props.channelUpdatedNotfi(channel.room_id);
+        this.props.updateChannelNotfi(channel.room_id);
     }
 
 
@@ -74,7 +73,7 @@ const mapStateToProps = (state: RootReducer) => {
 const mapDispatchToProps = (dispatch: any) => {
     return {
         channelConnected: (id: Channel) => {dispatch(channelConnected(id))},
-        channelUpdatedNotfi: (...args: Parameters<typeof channelUpdatedNotfi>) => {dispatch(channelUpdatedNotfi(...args))}
+        updateChannelNotfi: (...args: Parameters<typeof updateChannelNotfi>) => {dispatch(updateChannelNotfi(...args))}
     }
 }
 

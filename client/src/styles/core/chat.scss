@@ -201,7 +201,68 @@
   font-weight: bold;
 }
 
-.user-select {
+.user-select-self {
+    display: flex; 
+    align-items: center;
+    padding: 0.3rem;
+}
+
+.user-select-self:hover {
+    background-color: #dcddde;
+    border-radius: 3px;
+}
+
+.user-select-self .username {
+    margin: 0px 0.5rem;
+}
+
+.user-select-self img {
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.user-avatar {
+    text-align: center;
+}
+
+.channels-footer {
+    margin-top: auto;
+}
+
+.user-list-card {
+    display: flex;
+    flex-direction: column;
+    height: 395px;
+    width: 440px;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.card-header {
+    display: flex;
+    flex-direction: column;
+    box-shadow: none;
+    padding: 1.5rem;
+}
+
+.input-wrapper {
+    margin-top: 1rem;
+}
+
+.card-footer {
+    padding: 1rem;
+}
+
+.card-footer:last-child {
+    margin-top: auto;
+}
+
+.card-main {
+    padding: 1rem;
+    overflow: auto;
+}
+
+.card-main .user-select {
     display: flex; 
     align-items: center;
     padding: 0.3rem;
@@ -213,7 +274,11 @@
 }
 
 .user-select .username {
-    margin: 0px 0.5rem;
+    margin: 0px 1rem;
+}
+
+.user-select input:last-child {
+    margin-left: auto;
 }
 
 .user-select img {
@@ -225,6 +290,31 @@
     text-align: center;
 }
 
-.channels-footer {
-    margin-top: auto;
+.helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.card-main::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+.card-main::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+.card-main::-webkit-scrollbar-track {
+    visibility: hidden;
+}
+.card-main::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    background-color: #db2444;
+    min-height: 40px;
+}
+.modal-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
