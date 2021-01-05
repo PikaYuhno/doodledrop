@@ -12,6 +12,8 @@ class Search extends React.Component {
             <React.Fragment>
                 <Navbar />
 
+                <main>
+
                 <div className="hero">
                     <div className="hero-body">
                         <p className="title is-1 has-text-centered">Search</p>
@@ -32,44 +34,32 @@ class Search extends React.Component {
                     <div className="section">
 
                         <div className="box">
-                            <div className="level">
-                                <div className="level-left">
-                                    <div className="level-item">
+                            <div className="media">
+                                <div className="media-left">
+                                    <div className="">
                                         <p className="image is-48x48">
                                             <img src={pfp1} className="is-rounded" alt="pfp"/>
                                         </p>
                                     </div>
-                                    
-                                    <div className="level-item">
-                                        <p className="is-size-4">Name</p>
-                                    </div>
+                                </div>
+
+                                <div className="media-content">
+                                    <p className="is-size-3 has-text-centered"><strong>Name</strong></p>
                                 </div>
                                 
-                                <div className="level-right">
+                                <div className="media-right">
                                     <button className="button">View</button>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="box">
-                            <div className="level">
-                                <div className="level-left">
-                                    <p className="image is-48x48">
-                                        <img src="https://media.discordapp.net/attachments/688406676805517575/790910951427145768/Punpun.png" className="is-rounded" alt="pfp"/>
-                                    </p>
-                                </div>
-                                <div className="level-item">
-                                    <p>Ich</p>
-                                </div>
-                                <div className="level-right">
-                                    <button className="button">View</button>
-                                </div>
-                            </div>
-                        </div>
+                        
                         
                     </div>
                     
                 </div>
+
+                </main>
 
             </React.Fragment>
         );
