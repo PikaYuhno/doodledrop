@@ -42,7 +42,7 @@ const App: React.FC<AppProps> = (props) => {
                     <Route path="/search" exact component={Search} />
                     {// <ProtectedRoute path="/search" exact component={Search} />
                     }                        
-                    <ProtectedRoute path="/dashboard" exact component={Dashboard} />
+                    <Route path="/dashboard" exact component={Dashboard} />
                     <ProtectedRoute path="/chat" exact component={ChatBase} />
                 </Switch>
             </Router>

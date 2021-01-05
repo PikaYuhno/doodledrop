@@ -1,5 +1,7 @@
 import React from 'react';
 import Navbar from '../layouts/core/Navbar';
+import '../../styles/landing/search.scss';
+import pfp1 from '../../assets/pfp/pfp1.png';
 
 class Search extends React.Component {  
 
@@ -23,7 +25,7 @@ class Search extends React.Component {
                     <div className="control has-icons-left">
                         <input name="search" className="input input-is-large input-is-rounded" type="text" placeholder="Search"></input>
                         <span className="icon is-large is-left">
-                            <i className="fas fa-search"></i>
+                            <i className="fa fa-search"></i>
                         </span>
                     </div>
                     
@@ -32,10 +34,32 @@ class Search extends React.Component {
                         <div className="box">
                             <div className="level">
                                 <div className="level-left">
-                                    <p className="image-is-128">
+                                    <div className="level-item">
+                                        <p className="image is-48x48">
+                                            <img src={pfp1} className="is-rounded" alt="pfp"/>
+                                        </p>
+                                    </div>
+                                    
+                                    <div className="level-item">
+                                        <p className="is-size-4">Name</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="level-right">
+                                    <button className="button">View</button>
+                                </div>
+                            </div>
+                        </div>
 
+                        <div className="box">
+                            <div className="level">
+                                <div className="level-left">
+                                    <p className="image is-48x48">
+                                        <img src="https://media.discordapp.net/attachments/688406676805517575/790910951427145768/Punpun.png" className="is-rounded" alt="pfp"/>
                                     </p>
-                                    <p>Name</p>
+                                </div>
+                                <div className="level-item">
+                                    <p>Ich</p>
                                 </div>
                                 <div className="level-right">
                                     <button className="button">View</button>
