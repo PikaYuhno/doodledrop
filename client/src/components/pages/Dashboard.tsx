@@ -5,6 +5,8 @@ import pfp1 from '../../assets/pfp/pfp1.png';
 
 class Dashboard extends React.Component {
 
+    
+
     render() {
         return (
             <React.Fragment>
@@ -22,7 +24,7 @@ class Dashboard extends React.Component {
 
                     <div className="">
                         <div className="container">
-                            <div className="columns">
+                            <div className="columns reverse-columns">
 
                                 <div className="column is-two-thirds">
 
@@ -200,7 +202,7 @@ class Dashboard extends React.Component {
                                 <div className="column">
 
                                     <div className="box">
-                                        <p className="title">Notifications</p>
+                                        <p className="title has-text-centered">Notifications</p>
                                         
                                         <div className="notification is-danger">
                                             You shall not pass!
@@ -212,7 +214,7 @@ class Dashboard extends React.Component {
                                     </div>
 
                                     <div className="box">
-                                        <p className="title">Following</p>
+                                        <p className="title has-text-centered">Following</p>
 
                                         <div className="media">
                                             <div className="media-left">

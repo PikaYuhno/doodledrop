@@ -5,7 +5,11 @@ import pfp1 from '../../assets/pfp/pfp1.png';
 
 class Search extends React.Component {  
 
-    
+    //const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+
+
+    //}
 
     render() {
         return (
