@@ -2,14 +2,69 @@ import React from 'react';
 import Navbar from '../layouts/core/Navbar';
 import '../../styles/landing/search.scss';
 import pfp1 from '../../assets/pfp/pfp1.png';
+import {User} from '../../global';
 
-class Search extends React.Component {  
+type SearchState = {
+    searchValue : string;
+    users : Array<User>;
+}
 
-    //const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+class Search extends React.Component<{} , SearchState> {  
 
+    constructor(props: {}) {
+        super(props);
+        this.state = {
+          searchValue: '',
+          users: []
+        }
+    }
 
+    handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({searchValue: e.target.value});
 
-    //}
+    } 
+
+    handleEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if(e.keyCode === 13){
+            const resp = await fetch(`/api/users?username=${this.state.searchValue}` , {
+                method: "GET",
+                headers: {
+                    "Authorization": localStorage.getItem("token") || "token",
+                    "Content-Type": "application/json"
+                },
+            });
+            const data = await resp.json();
+
+            this.setState({users: data.data});
+        }
+    }
+
+    renderUsers = () => {        
+        return this.state.users.map((user: User) => {
+            return <React.Fragment key={user.id}>
+                <div className="box">
+                    <div className="media">
+                        <div className="media-left">
+                            <div className="">
+                                <p className="image is-48x48">
+                                    <img src={user.pfp_pic_path} className="is-rounded" alt="pfp" />
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="media-content">
+                            <p className="is-size-3 has-text-centered"><strong>{user.username}</strong></p>
+                        </div>
+
+                        <div className="media-right">
+                            <button className="button">View</button>
+                        </div>
+                    </div>
+                </div>
+            </React.Fragment>
+        });
+  
+    }
 
     render() {
         return (
@@ -29,13 +84,13 @@ class Search extends React.Component {
                     
 
                     <div className="control has-icons-left">
-                        <input name="search" className="input input-is-large input-is-rounded" type="text" placeholder="Search"></input>
+                        <input onKeyUp={this.handleEnter} name="search" className="input input-is-large input-is-rounded" type="text" placeholder="Search" onChange={this.handleChange}></input>
                         <span className="icon is-large is-left">
                             <i className="fa fa-search"></i>
                         </span>
                     </div>
                     
-                    <div className="section">
+                    <div className="section" id="section">
 
                         <div className="box">
                             <div className="media">
@@ -57,8 +112,8 @@ class Search extends React.Component {
                             </div>
                         </div>
 
-                        
-                        
+
+
                     </div>
                     
                 </div>

@@ -120,48 +120,14 @@ class User extends React.Component {
                             </div>
 
                             <div className="column">
-                                <div className="box">
-                                    <p className="title has-text-centered">Followers</p>
-
-                                    <div className="media">
-                                        <div className="media-left">
-                                            <div className="">
-                                                <p className="image is-48x48">
-                                                    <img src={pfp1} className="is-rounded" alt="pfp" />
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div className="media-content">
-                                            <p className="is-size-5 has-text-centered"><strong>Name</strong></p>
-                                        </div>
-
-                                        <div className="media-right">
-                                            <button className="button">View</button>
-                                        </div>
-                                    </div>
-
-                                    <div className="media">
-                                        <div className="media-left">
-                                            <div className="">
-                                                <p className="image is-48x48">
-                                                    <img src={pfp1} className="is-rounded" alt="pfp" />
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div className="media-content">
-                                            <p className="is-size-5 has-text-centered"><strong>Name</strong></p>
-                                        </div>
-
-                                        <div className="media-right">
-                                            <button className="button">View</button>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <div className="box">
-                                    <p className="title has-text-centered">Following</p>
+                                    <div className="tabs is-large is-centered is-boxed">
+                                        <ul>
+                                            <li className="is-active"><a>Followers</a></li>
+                                            <li><a>Following</a></li>
+                                        </ul>
+                                    </div>
 
                                     <div className="media">
                                         <div className="media-left">
