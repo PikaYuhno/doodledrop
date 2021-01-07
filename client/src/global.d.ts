@@ -48,3 +48,11 @@ export type User = {
 }
 
 export type ActionCreator<T, R> = (...args: Parameters<T>) => R;
+
+export type User = {
+    id: number;
+    username: string;
+    pfp_pic_path: string;
+    bio: string;
+    location: string;
+}

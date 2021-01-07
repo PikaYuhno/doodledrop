@@ -1,0 +1,20 @@
+body {
+    overflow: auto;
+}
+
+.has-image-sized {
+    width: 50%;
+    height: auto;
+}
+
+.border{
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+@media(max-width: 767px) {
+    .reverse-columns {
+      flex-direction: column-reverse;
+      display: flex;
+    }
+}
