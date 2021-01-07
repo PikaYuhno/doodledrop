@@ -58,10 +58,9 @@ class ChatBase extends React.Component<ChatBaseProps> {
                         <Sidebar />
                         <div className="column chat">
                             {
-                                //this.props.currentChannel ? <Chat imgSrc={this.props.currentChannel.recipients[0].avatar} name={this.props.currentChannel.recipients[0].username} />
-                                //    : <div className="empty-image"><img src={Empty} width="512" height="512" alt="empty" /></div>
+                                this.props.currentChannel ? <Chat imgSrc={this.props.currentChannel.recipients[0].avatar} name={this.props.currentChannel.recipients[0].username} />
+                                    : <div className="empty-image"><img src={Empty} width="512" height="512" alt="empty" /></div>
                             }
-                            <Canvas />
                         </div>
                     </div>
                 </main>

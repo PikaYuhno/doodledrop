@@ -30,11 +30,13 @@ class Canvas extends React.Component {
         let redo: Line[] = [];
 
         p.setup = () => {
-            p.createCanvas(400, 400);
+            let height = this.canvasRef.current?.offsetHeight || 400
+            let width = this.canvasRef.current?.offsetWidth || 400
+            p.createCanvas(width, height);
         }
 
         p.draw = () => {
-            p.background(220);
+            p.background(255);
             if (p.mouseIsPressed) {
                 undo.push({
                     x: p.mouseX,
@@ -76,7 +78,13 @@ class Canvas extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <div ref={this.canvasRef}></div>
+                <div className="columns">
+                    <div className="column">
+                        <div ref={this.canvasRef} style={{height: '100%', border: '1px solid black', borderRadius: '5px', padding: '5px', overflow: 'hidden'}}></div>
+                    </div>
+                    <div className="column is-1">
+                    </div>
+                </div>
             </React.Fragment>
         );
     }
