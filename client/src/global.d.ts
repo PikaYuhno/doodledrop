@@ -52,3 +52,21 @@ export type User = {
     bio: string;
     location: string;
 }
+
+export type Doodle = {
+    id: number;
+    user_id: number;
+    image_path: string;
+    likes: Array<number>;
+    dislikes: Array<number>;
+}
+
+export type Comment = {
+    id: number;
+    doodle_id: number;
+    user_id: number;
+    content: string;
+    created_at: Date;
+    like: Array<number>;
+    dislikes: Array<number>;
+}

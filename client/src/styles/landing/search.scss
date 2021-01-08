@@ -1,3 +1,7 @@
+body{
+    overflow: auto;
+}
+
 .input{
     background-color: #db2444 ;
 }
@@ -6,3 +10,49 @@
     background-color:#fff1f3  ;
 }
 
+:root {
+    font-size: 16px;
+    --main-color: #8e9297;
+  }
+
+  .user-search {
+    margin-bottom: 1rem;
+  }
+
+  main {
+    margin-left: 5rem;
+  }
+
+  .users .list-item-content {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+
+  .users .box:hover {
+    background-color: var(--main-color);
+    border-radius: 3px;
+  }
+
+  .list-item-content .user-info {
+    margin: 0.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .user-info .user-name {
+    font-weight: bold;
+  }
+
+  .list-item-content div:last-child {
+    margin-left: auto;
+  }
+
+  .user-bio {
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    width: 300px;
+    display:inline-block;
+  }

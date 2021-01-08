@@ -9,7 +9,7 @@ import User from "../../db/models/User";
 import { userPostSchema, userPatchSchema } from "../../schemas/userSchemas";
 import {v4 as uuid} from 'uuid';
 import {Sequelize} from "sequelize";
-
+import { required } from "@hapi/joi";
 
 // GET /api/users/
 router.get("/", async (req: Request, res: Response) => {
@@ -260,4 +260,38 @@ router.post("/@me/channels", async (req: Request, res: Response) => {
             console.error(error);
             return res.status(400).json({data: null, message: error, success: false});
         }
+});
+
+// GET  /api/users/following
+router.get("/following/:id", async (req: Request, res: Response) => {
+    let id = req.params.id || req.user!.id;
+
+    let following: User[] = await User.findAll({
+        where: { user_id: id },
+        include: [
+            {
+                model: Follower,
+                required: true,
+            },
+        ],
+    });
+
+    return res.status(200).json({ data: following, message: "", success: true });
+});
+
+// GET /api/users/followers
+router.get("/followers/:id", async (req: Request, res: Response) => {
+    const id = req.params.id || req.user!.id; 
+
+    let followers: User[] = await User.findAll({
+        where: { follower_id: id },
+        include: [
+            {
+                model: Follower,
+                required: true,
+            },
+        ],
+    });
+
+    return res.status(200).json({ data: followers, message: "", success: true });
 });
