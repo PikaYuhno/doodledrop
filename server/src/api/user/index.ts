@@ -8,8 +8,27 @@ export const router = Router();
 import User from "../../db/models/User";
 import { userPostSchema, userPatchSchema } from "../../schemas/userSchemas";
 import {v4 as uuid} from 'uuid';
-import {Sequelize} from "sequelize";
-import { required } from "@hapi/joi";
+import {Sequelize, QueryTypes} from "sequelize";
+import {sequelize} from "../../db/connection";
+
+// GET /api/users/friends
+router.get("/friends", async (req: Request, res: Response) => {
+    const id = req.user!.id;
+    console.log("ID: ", id);
+    const data: any[] = await sequelize.query(`SELECT * FROM users AS u WHERE u.id IN (SELECT f.user_id FROM followers AS f WHERE f.follower_id = ${id}) AND u.id IN (SELECT f.follower_id FROM followers AS f WHERE f.user_id = ${id})`, { 
+      type: QueryTypes.SELECT
+    })
+    let exclude: string[] = ["password"];
+    for(let j = 0; j < data.length; j++) {
+        for(let i = 0; i < exclude.length; i++) {
+            if(data[j].hasOwnProperty(exclude[i])) {
+                delete data[j][exclude[i]];
+            }
+        }
+    }
+    console.log(data);
+    res.status(200).json({data, message: 'Successfully found friends!', success: true});
+});
 
 // GET /api/users/
 router.get("/", async (req: Request, res: Response) => {
@@ -295,3 +314,4 @@ router.get("/followers/:id", async (req: Request, res: Response) => {
 
     return res.status(200).json({ data: followers, message: "", success: true });
 });
+
