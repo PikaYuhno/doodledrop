@@ -43,10 +43,6 @@ export type Recipient = {
     username: string;
 }
 
-export type User = {
-
-}
-
 export type ActionCreator<T, R> = (...args: Parameters<T>) => R;
 
 export type User = {

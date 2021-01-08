@@ -33,7 +33,7 @@ const ProtectedRoute: React.FC<Props> = (props) => {
 
     if (props.isAuthenticated) {
         return (
-            <Route exact={props.exact} component={props.component} path={props.path} />
+            <Route exact={props.exact} render={(p) => (<props.component {...p} />)} path={props.path} />
         );
     } else {
         return (

@@ -11,14 +11,10 @@ import ChatBase from "./components/pages/ChatBase";
 import {connectSocket, disconnectSocket} from './store/chat/actions';
 import {connect} from 'react-redux';
 import {RootReducer} from "./store/root-reducer";
-<<<<<<< HEAD
 import About from './components/pages/About';
 import Contributers from './components/pages/Contributors';
-||||||| ab66e8e
-=======
 import Search from "./components/pages/Search";
 import User from "./components/pages/User";
->>>>>>> b9a80f08c5e4e59c8deb20b2a53513595b86f38f
 
 type AppProps = {
     socket?: SocketIOClient.Socket | null
@@ -29,30 +25,21 @@ type DispatchProps = {
     disconnectSocket: (...args: Parameters<typeof disconnectSocket>) => void;
 }
 const App: React.FC<AppProps> = (props) => {
-    /*useEffect(() => {
-        props.connectSocket();
-        return () => {
-            if (props.socket)
-                props.disconnectSocket(props.socket);
-        }
-        }, []);*/
 
-        
+
     return (
         <React.Fragment>
             <Alert />
             <Router>
                 <Switch>
-                    <Route path="/about" exact component={About}/>
-                    <Route path="/coutributors" exact component={Contributers}/>
+                    <Route path="/about" exact component={About} />
+                    <Route path="/coutributors" exact component={Contributers} />
                     <Route path="/" exact component={Landing} />
                     <Route path="/auth/login" exact component={Login} />
                     <Route path="/auth/register" exact component={Register} />
-                    <Route path="/search" exact component={Search} />
-                    {// <ProtectedRoute path="/search" exact component={Search} />
-                    }
-                    <Route path="/user" exact component={User} />                 
-                    <Route path="/dashboard" exact component={Dashboard} />
+                    <ProtectedRoute path="/search" exact component={Search} />
+                    <ProtectedRoute path="/user" exact component={User} />
+                    <ProtectedRoute path="/dashboard" exact component={Dashboard} />
                     <ProtectedRoute path="/chat" exact component={ChatBase} />
                 </Switch>
             </Router>
