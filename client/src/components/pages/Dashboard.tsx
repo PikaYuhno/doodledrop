@@ -67,7 +67,7 @@ class Dashboard extends React.Component<{}, DashboardState> {
                     <div className="media-left">
                         <div className="">
                             <p className="image is-48x48">
-                                <img src={following.pfp_pic_path} className="is-rounded" alt="pfp" />
+                                <img src={following.avatar} className="is-rounded" alt="pfp" />
                             </p>
                         </div>
                     </div>

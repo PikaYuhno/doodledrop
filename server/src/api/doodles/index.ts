@@ -1,6 +1,7 @@
 import {Request, Response, Router} from "express";
 export const router = Router();
 import Doodle from "../../db/models/Doodle";
+import User from "../../db/models/User";
 import {doodlePostSchema} from "../../schemas/doodleSchemas";
 import {commentSchema} from "../../schemas/commentSchemas";
 import Comment from '../../db/models/Comment';
@@ -177,4 +178,21 @@ router.delete("/:id", async (req: Request, res: Response) => {
         message: "Successfully deleted doodle!",
         success: true,
     });
+});
+
+// GET /api/doodles/user/:id
+router.get("/user/:id", async (req: Request, res: Response) => {
+    let userId = req.params.user;
+
+    let doodles: Doodle[] = await Doodle.findAll({
+        where: { user_id : userId },
+            include: [
+            {
+                model: User,
+                required: true,
+            },
+        ],
+    });
+
+    return res.status(200).json({ data: doodles, message: "", success: true });
 });

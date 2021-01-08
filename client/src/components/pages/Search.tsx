@@ -3,6 +3,7 @@ import Navbar from '../layouts/core/Navbar';
 import '../../styles/landing/search.scss';
 import pfp1 from '../../assets/pfp/pfp1.png';
 import {User} from '../../global';
+import {Link} from 'react-router-dom';
 
 type SearchState = {
     searchValue : string;
@@ -22,6 +23,7 @@ class Search extends React.Component<{} , SearchState> {
     handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({searchValue: e.target.value});
 
+        
     } 
 
     handleEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -46,7 +48,7 @@ class Search extends React.Component<{} , SearchState> {
                     <div className="list-item-content">
                         <div className="user-avatar">
                             <figure className="image is-48x48">
-                                <img src={user.pfp_pic_path} alt="avatar" className="is-rounded" />
+                                <img src={user.avatar} alt="avatar" className="is-rounded" />
                             </figure>
                         </div>
                         <div className="user-info">
@@ -122,7 +124,7 @@ class Search extends React.Component<{} , SearchState> {
                                         <span className="user-bio subtitle">This is a status</span>
                                     </div>
                                     <div className="actions">
-                                        <a href=""><button className="button is-info is-light">View Profile</button></a>
+                                        <Link to={"profile/1"}><button className="button is-info is-light">View Profile</button></Link>
                                     </div>
                                 </div>
                             </div>

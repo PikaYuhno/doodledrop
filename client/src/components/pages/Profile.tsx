@@ -6,23 +6,33 @@ import { Doodle,User } from '../../global';
 import { RouteComponentProps, useParams } from 'react-router-dom';
 import { userLoaded } from '../../store/auth/actions';
 
+
+
 type ProfileState = {
     user: User;
     doodles: Array<Doodle>;
-    following: Array<User>;
-    followers: Array<User>;
+    follow: Array<User>;
+    following: string;
+    followers: string;
 }
 
 class Profile extends React.Component<{}, ProfileState>{
 
+    TabState = {
+        following: "",
+        followers: "is-active"
+    }
+
     constructor(props: {}) {
         super(props);
         this.state = {
-          user: {id:0,username:"null",pfp_pic_path:"null",bio:"null",location:"null"},
+          user: {id:0,username:"null",avatar:"null",bio:"null",location:"null"},
           doodles: [],
-          following: [],
-          followers: []
+          follow: [],
+          following: "is-active",
+          followers: ""
         }
+        
     }
 
     componentDidMount = () => {
@@ -48,7 +58,14 @@ class Profile extends React.Component<{}, ProfileState>{
 
     }
 
-    loadFollowing = async () => {
+    loadFollowing = async (e: React.MouseEvent<HTMLLIElement>) => {
+        if(this.state.following=="is-active"){
+            return;
+        }
+        this.setState({following:"is-active"})
+        this.setState({followers:""})
+        
+
         const resp = await fetch(`/api/following/${this.state.user.id}` , {
             method: "GET",
             headers: {
@@ -58,10 +75,17 @@ class Profile extends React.Component<{}, ProfileState>{
         });
         const data = await resp.json();
 
-        this.setState({following: data.data});
+        this.setState({follow: data.data});
     }
 
-    loadFollowers = async () => {
+    loadFollowers = async (e: React.MouseEvent<HTMLLIElement>) => {
+        if(this.state.followers=="is-active"){
+            return;
+        }
+        this.setState({followers:"is-active"})
+        this.setState({following:""})
+
+
         const resp = await fetch(`/api/users?id=${this.state.user.id}` , {
             method: "GET",
             headers: {
@@ -71,18 +95,49 @@ class Profile extends React.Component<{}, ProfileState>{
         });
         const data = await resp.json();
 
-        this.setState({followers: data.data});
+        this.setState({follow: data.data});
     }
 
     loadDoodles = async () => {
-        
+        const resp = await fetch(`/api/doodle/user/${this.state.user.id}` , {
+            method: "GET",
+            headers: {
+                "Authorization": localStorage.getItem("token") || "token",
+                "Content-Type": "application/json"
+            },
+        });
+        const data = await resp.json();
+
+        this.setState({doodles: data.data});
     }
-    
-    handleTabs = (e: React.MouseEvent<HTMLUListElement>) => {
+
+    renderDoodles = () => {
 
     }
 
-    
+    renderFollows = () => {
+        return this.state.follow.map((follow:User) => {
+            return <React.Fragment key={follow.id}>
+                <div className="media">
+                    <div className="media-left">
+                        <div className="">
+                            <p className="image is-48x48">
+                                <img src={follow.avatar} className="is-rounded" alt="pfp" />
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="media-content">
+                        <p className="is-size-5 has-text-centered"><strong>{follow.username}</strong></p>
+                    </div>
+
+                    <div className="media-right">
+                        <button className="button">View</button>
+                    </div>
+                </div>
+            </React.Fragment>
+        });
+    }
 
     render() {
 
@@ -95,7 +150,7 @@ class Profile extends React.Component<{}, ProfileState>{
                         <div className="media">
                             <div className="media-left">
                                 <div className="image is-256x256">
-                                    <img src={this.state.user.pfp_pic_path} className="is-rounded" />
+                                    <img src={this.state.user.avatar} className="is-rounded" />
                                 </div>
                             </div>
 
@@ -195,15 +250,17 @@ class Profile extends React.Component<{}, ProfileState>{
                                     </div>
 
                                 </div>
+
+                                {this.renderDoodles}
                             </div>
 
                             <div className="column">
 
                                 <div className="box">
                                     <div className="tabs is-large is-centered is-boxed">
-                                        <ul onClick={this.handleTabs}>
-                                            <li className="is-active"><a>Followers</a></li>
-                                            <li><a>Following</a></li>
+                                        <ul>
+                                            <li className={this.state.followers} onClick={this.loadFollowers}><a>Followers</a></li>
+                                            <li className={this.state.following} onClick={this.loadFollowing}><a>Following</a></li>
                                         </ul>
                                     </div>
 
@@ -242,6 +299,8 @@ class Profile extends React.Component<{}, ProfileState>{
                                             <button className="button">View</button>
                                         </div>
                                     </div>
+
+                                    {this.renderFollows()}
                                 </div>
                             </div>
 
