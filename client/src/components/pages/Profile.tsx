@@ -1,30 +1,108 @@
-import React from 'react';
+import React, { ReactComponentElement } from 'react';
 import Navbar from '../layouts/core/Navbar';
 import pfp1 from '../../assets/pfp/pfp1.png';
 import '../../styles/landing/dashboard.scss';
+import { Doodle,User } from '../../global';
+import { RouteComponentProps, useParams } from 'react-router-dom';
+import { userLoaded } from '../../store/auth/actions';
 
-class User extends React.Component {
+type ProfileState = {
+    user: User;
+    doodles: Array<Doodle>;
+    following: Array<User>;
+    followers: Array<User>;
+}
+
+class Profile extends React.Component<{}, ProfileState>{
+
+    constructor(props: {}) {
+        super(props);
+        this.state = {
+          user: {id:0,username:"null",pfp_pic_path:"null",bio:"null",location:"null"},
+          doodles: [],
+          following: [],
+          followers: []
+        }
+    }
+
+    componentDidMount = () => {
+        const id=1;
+
+        // get id here
+
+        this.handleLoad(id);
+    }
+
+    handleLoad = async (id : number) => {
+        const resp = await fetch(`/api/users?id=${id}` , {
+            method: "GET",
+            headers: {
+                "Authorization": localStorage.getItem("token") || "token",
+                "Content-Type": "application/json"
+            },
+        });
+        const data = await resp.json();
+
+        this.setState({user: data.data});
 
 
+    }
+
+    loadFollowing = async () => {
+        const resp = await fetch(`/api/following/${this.state.user.id}` , {
+            method: "GET",
+            headers: {
+                "Authorization": localStorage.getItem("token") || "token",
+                "Content-Type": "application/json"
+            },
+        });
+        const data = await resp.json();
+
+        this.setState({following: data.data});
+    }
+
+    loadFollowers = async () => {
+        const resp = await fetch(`/api/users?id=${this.state.user.id}` , {
+            method: "GET",
+            headers: {
+                "Authorization": localStorage.getItem("token") || "token",
+                "Content-Type": "application/json"
+            },
+        });
+        const data = await resp.json();
+
+        this.setState({followers: data.data});
+    }
+
+    loadDoodles = async () => {
+        
+    }
+    
+    handleTabs = (e: React.MouseEvent<HTMLUListElement>) => {
+
+    }
+
+    
 
     render() {
+
         return (
             <React.Fragment>
                 <Navbar />
 
                 <main>
-                    <div className="box">
+                    <div className="box container">
                         <div className="media">
                             <div className="media-left">
                                 <div className="image is-256x256">
-                                    <img src={pfp1} className="is-rounded" />
+                                    <img src={this.state.user.pfp_pic_path} className="is-rounded" />
                                 </div>
                             </div>
 
                             <div className="media-content">
                                 <div className="hero">
                                     <div className="hero-body">
-                                        <p className="title has-text-centered">User</p>
+                                        <p className="title has-text-centered">{this.state.user.username}</p>
                                     </div>
                                 </div>
                             </div>
@@ -123,7 +201,7 @@ class User extends React.Component {
 
                                 <div className="box">
                                     <div className="tabs is-large is-centered is-boxed">
-                                        <ul>
+                                        <ul onClick={this.handleTabs}>
                                             <li className="is-active"><a>Followers</a></li>
                                             <li><a>Following</a></li>
                                         </ul>
@@ -176,4 +254,4 @@ class User extends React.Component {
 }
 
 
-export default User;
+export default Profile;

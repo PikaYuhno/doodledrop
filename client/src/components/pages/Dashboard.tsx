@@ -2,9 +2,87 @@ import React from 'react';
 import Navbar from '../layouts/core/Navbar';
 import '../../styles/landing/dashboard.scss';
 import pfp1 from '../../assets/pfp/pfp1.png';
+import {Doodle, User} from '../../global';
 
-class Dashboard extends React.Component {
+type DashboardState = {
+    doodles: Array<Doodle>;
+    following: Array<User>;
+}
 
+class Dashboard extends React.Component<{}, DashboardState> {
+
+    constructor(props: {}) {
+        super(props);
+        this.state = {
+          doodles: [],
+          following: []
+        }
+    }
+
+    componentDidMount = () => {
+        this.loadDoodles();
+        this.loadFollowing();
+    }
+
+    loadDoodles = async () => {
+        const resp = await fetch(`/api/users` , {
+            method: "GET",
+            headers: {
+                "Authorization": localStorage.getItem("token") || "token",
+                "Content-Type": "application/json"
+            },
+        });
+        const data = await resp.json();
+
+        this.setState({doodles: data.data});
+    }
+
+    loadFollowing = async () => {
+        const resp = await fetch(`/api/users/following/` , {
+            method: "GET",
+            headers: {
+                "Authorization": localStorage.getItem("token") || "token",
+                "Content-Type": "application/json"
+            },
+        });
+        const data = await resp.json();
+
+        this.setState({following: data.data});
+    }
+
+    renderDoodles = () => {
+        return this.state.doodles.map((doodle: Doodle) => {
+            
+        });
+    }
+
+    renderNotification = () => {
+        
+    }
+
+    renderFollowing = async () => {
+        return this.state.following.map((following: User) => {
+            return <React.Fragment key={following.id}>
+                <div className="media">
+                    <div className="media-left">
+                        <div className="">
+                            <p className="image is-48x48">
+                                <img src={following.pfp_pic_path} className="is-rounded" alt="pfp" />
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="media-content">
+                        <p className="title is-size-5 pt-3"><strong>{following.username}</strong></p>
+                    </div>
+
+                    <div className="media-right">
+                        <button className="button is-info is-light">View Profile</button>
+                    </div>
+                </div>
+            </React.Fragment>
+        });
+    }
     
 
     render() {
@@ -22,7 +100,7 @@ class Dashboard extends React.Component {
 
 
 
-                    <div className="">
+                    <div>
                         <div className="container">
                             <div className="columns reverse-columns">
 
@@ -205,11 +283,11 @@ class Dashboard extends React.Component {
                                         <p className="title has-text-centered">Notifications</p>
                                         
                                         <div className="notification is-danger">
-                                            You shall not pass!
+                                            Thy shall not pass!
                                         </div>
                                         
                                         <div className="notification is-danger">
-                                            You shall not pass!
+                                            Thy shall not pass!
                                         </div>
                                     </div>
 
@@ -226,11 +304,11 @@ class Dashboard extends React.Component {
                                             </div>
 
                                             <div className="media-content">
-                                                <p className="is-size-5 has-text-centered"><strong>Name</strong></p>
+                                                <p className="title is-size-5 pt-3"><strong>Name</strong></p>
                                             </div>
                                 
                                             <div className="media-right">
-                                                <button className="button">View</button>
+                                                <button className="button is-info is-light">View Profile</button>
                                             </div>
                                         </div>
 
@@ -244,15 +322,17 @@ class Dashboard extends React.Component {
                                             </div>
 
                                             <div className="media-content">
-                                                <p className="is-size-5 has-text-centered"><strong>Name</strong></p>
+                                                <p className="title is-size-5 pt-3"><strong>Name</strong></p>
                                             </div>
                                 
                                             <div className="media-right">
-                                                <button className="button">View</button>
+                                                <button className="button is-info is-light">View Profile</button>
                                             </div>
                                         </div>
-                                    </div>
 
+                                        {this.renderFollowing}
+
+                                    </div>
                                 </div>
                             </div>
                         </div>

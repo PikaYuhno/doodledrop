@@ -12,7 +12,7 @@ import {connectSocket, disconnectSocket} from './store/chat/actions';
 import {connect} from 'react-redux';
 import {RootReducer} from "./store/root-reducer";
 import Search from "./components/pages/Search";
-import User from "./components/pages/User";
+import Profile from "./components/pages/Profile";
 
 type AppProps = {
     socket?: SocketIOClient.Socket | null
@@ -43,7 +43,7 @@ const App: React.FC<AppProps> = (props) => {
                     <Route path="/search" exact component={Search} />
                     {// <ProtectedRoute path="/search" exact component={Search} />
                     }
-                    <Route path="/user" exact component={User} />                 
+                    <Route path="/profile/:id" exact component={Profile} />                 
                     <Route path="/dashboard" exact component={Dashboard} />
                     <ProtectedRoute path="/chat" exact component={ChatBase} />
                 </Switch>
