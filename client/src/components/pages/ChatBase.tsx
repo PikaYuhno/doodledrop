@@ -7,7 +7,8 @@ import {connect} from 'react-redux';
 import {RootReducer} from '../../store/root-reducer';
 import Empty from '../../assets/empty.png';
 import {Channel, Message} from '../../global';
-import {connectSocket, disconnectSocket, addMessage, channelUpdated} from '../../store/chat/actions';
+import {connectSocket, disconnectSocket, addMessage, channelUpdated, updateChannelLatestMsg} from '../../store/chat/actions';
+import Canvas from '../layouts/core/canvas/Canvas';
 
 
 type ChatBaseProps = {
@@ -19,6 +20,7 @@ type ChatBaseProps = {
 type DispatchProps = {
     addMessage: (...args: Parameters<typeof addMessage>) => void;
     channelUpdated: (...args: Parameters<typeof channelUpdated>) => void;
+    updateChannelLatestMsg: (...args: Parameters<typeof updateChannelLatestMsg>) => void;
 }
 class ChatBase extends React.Component<ChatBaseProps> {
     listeningOnMessages: boolean;
@@ -27,7 +29,7 @@ class ChatBase extends React.Component<ChatBaseProps> {
         this.listeningOnMessages = false;
     }
 
-    componentDidUpdate(prevProps: ChatBaseProps, prevState: any) {
+    componentDidUpdate() {
         this.onMessage();
     }
 
@@ -38,7 +40,7 @@ class ChatBase extends React.Component<ChatBaseProps> {
             this.props.socket.on("message", async (m: Message) => {
                 console.log("Got data -", m);
                 this.props.addMessage(m, this.props.channels);
-                this.props.channelUpdated(m);
+                this.props.updateChannelLatestMsg(m, this.props.currentChannel);
             });
         }
     }
@@ -79,6 +81,7 @@ const mapDispatchToProps = (dispatch: any) => {
     return {
         addMessage: (...args: Parameters<typeof addMessage>) => {dispatch(addMessage(...args))},
         channelUpdated: (...args: Parameters<typeof channelUpdated>) => {dispatch(channelUpdated(...args))},
+        updateChannelLatestMsg: (...args: Parameters<typeof updateChannelLatestMsg>) => {dispatch(updateChannelLatestMsg(...args))}
     }
 }
 

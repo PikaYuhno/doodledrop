@@ -11,6 +11,8 @@ import ChatBase from "./components/pages/ChatBase";
 import {connectSocket, disconnectSocket} from './store/chat/actions';
 import {connect} from 'react-redux';
 import {RootReducer} from "./store/root-reducer";
+import About from './components/pages/About';
+import Contributers from './components/pages/Contributors';
 import Search from "./components/pages/Search";
 import Profile from "./components/pages/Profile";
 
@@ -23,28 +25,19 @@ type DispatchProps = {
     disconnectSocket: (...args: Parameters<typeof disconnectSocket>) => void;
 }
 const App: React.FC<AppProps> = (props) => {
-    /*useEffect(() => {
-        props.connectSocket();
-        return () => {
-            if (props.socket)
-                props.disconnectSocket(props.socket);
-        }
-        }, []);*/
-
-        
     return (
         <React.Fragment>
             <Alert />
             <Router>
                 <Switch>
+                    <Route path="/about" exact component={About} />
+                    <Route path="/coutributors" exact component={Contributers} />
                     <Route path="/" exact component={Landing} />
                     <Route path="/auth/login" exact component={Login} />
                     <Route path="/auth/register" exact component={Register} />
-                    <Route path="/search" exact component={Search} />
-                    {// <ProtectedRoute path="/search" exact component={Search} />
-                    }
-                    <Route path="/profile/:id" exact component={Profile} />                 
-                    <Route path="/dashboard" exact component={Dashboard} />
+                    <ProtectedRoute path="/dashboard" exact component={Dashboard} />
+                    <ProtectedRoute path="/search" exact component={Search} />
+                    <ProtectedRoute path="/profile/:id" exact component={Profile} />
                     <ProtectedRoute path="/chat" exact component={ChatBase} />
                 </Switch>
             </Router>

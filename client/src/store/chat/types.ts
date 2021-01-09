@@ -25,7 +25,7 @@ export type ChatActionTypes = Action<"CHANNELS_LOADED", {channels: Channel[]}> |
     Action<"SOCKET_DISCONNECTED"> |
     Action<"MESSAGES_RECIEVED", {messages: Message[]}> | 
     Action<"MESSAGE_ADDED", {message: Message}> | 
-    Action<"CHANNEL_UPDATE_LATEST_MSG", {message: Message}> |
+    Action<"CHANNEL_UPDATE_LATEST_MSG", {message: Message, notfi: boolean}> |
     Action<"CHANNEL_UPDATE_NOTFI", {room_id: string}> | 
     Action<"CHANNEL_ADDED", {channel: Channel}> | 
     Action<"CHANNEL_LOGOUT">

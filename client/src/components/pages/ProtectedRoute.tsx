@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Route, Redirect, RouteProps} from 'react-router-dom';
+import {Route, Redirect, RouteProps, RouteComponentProps} from 'react-router-dom';
 import {RootReducer} from '../../store/root-reducer';
 import {connect, ConnectedComponent} from 'react-redux';
 import jwtDecode from 'jwt-decode';
@@ -22,6 +22,12 @@ type DispatchProps = {
     connectSocket: (...args: Parameters<typeof connectSocket>) => void;
 }
 
+interface MatchParams {
+    id: string;
+}
+
+interface MatchProps extends RouteComponentProps<MatchParams> {
+}
 
 const ProtectedRoute: React.FC<Props> = (props) => {
     useEffect(() => {
@@ -33,7 +39,7 @@ const ProtectedRoute: React.FC<Props> = (props) => {
 
     if (props.isAuthenticated) {
         return (
-            <Route exact={props.exact} component={props.component} path={props.path} />
+            <Route path={props.path} exact={props.exact} render={({match}: MatchProps) => (<props.component id={match.params.id} />)} />
         );
     } else {
         return (

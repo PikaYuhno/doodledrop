@@ -16,14 +16,13 @@ type ProfileState = {
     followers: string;
 }
 
-class Profile extends React.Component<{}, ProfileState>{
+type ProfileProps = {
+    id: number;
+}
 
-    TabState = {
-        following: "",
-        followers: "is-active"
-    }
+class Profile extends React.Component<ProfileProps, ProfileState>{
 
-    constructor(props: {}) {
+    constructor(props: ProfileProps) {
         super(props);
         this.state = {
           user: {id:0,username:"null",avatar:"null",bio:"null",location:"null"},
@@ -36,11 +35,9 @@ class Profile extends React.Component<{}, ProfileState>{
     }
 
     componentDidMount = () => {
-        const id=1;
-
         // get id here
-
-        this.handleLoad(id);
+        console.log("Profile - Props", this.props);
+        this.handleLoad(this.props.id);
     }
 
     handleLoad = async (id : number) => {

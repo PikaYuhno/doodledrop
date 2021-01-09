@@ -14,8 +14,8 @@ class Dashboard extends React.Component<{}, DashboardState> {
     constructor(props: {}) {
         super(props);
         this.state = {
-          doodles: [],
-          following: []
+            doodles: [],
+            following: []
         }
     }
 
@@ -25,7 +25,7 @@ class Dashboard extends React.Component<{}, DashboardState> {
     }
 
     loadDoodles = async () => {
-        const resp = await fetch(`/api/users` , {
+        const resp = await fetch(`/api/users`, {
             method: "GET",
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",
@@ -38,7 +38,7 @@ class Dashboard extends React.Component<{}, DashboardState> {
     }
 
     loadFollowing = async () => {
-        const resp = await fetch(`/api/users/following/` , {
+        const resp = await fetch(`/api/users/following/`, {
             method: "GET",
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",
@@ -52,12 +52,12 @@ class Dashboard extends React.Component<{}, DashboardState> {
 
     renderDoodles = () => {
         return this.state.doodles.map((doodle: Doodle) => {
-            
+
         });
     }
 
     renderNotification = () => {
-        
+
     }
 
     renderFollowing = async () => {
@@ -83,7 +83,9 @@ class Dashboard extends React.Component<{}, DashboardState> {
             </React.Fragment>
         });
     }
-    
+
+
+
 
     render() {
         return (
@@ -120,7 +122,7 @@ class Dashboard extends React.Component<{}, DashboardState> {
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                        <div className="image has-image-sized container">
                                             <img src={pfp1} />
                                        </div>
@@ -150,7 +152,7 @@ class Dashboard extends React.Component<{}, DashboardState> {
                                         <div className="">
 
                                         </div>
-                                        
+
                                         <div className="comment">
 
                                             <div className="media ml-5">
@@ -180,7 +182,7 @@ class Dashboard extends React.Component<{}, DashboardState> {
 
 
                                             </div>
-                                            
+
                                         </div>
 
                                     </div>
@@ -199,7 +201,7 @@ class Dashboard extends React.Component<{}, DashboardState> {
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                        <div className="image has-image-sized container">
                                             <img src={pfp1} />
                                        </div>
@@ -234,13 +236,13 @@ class Dashboard extends React.Component<{}, DashboardState> {
                                             </div>
                                             <div className="media-content">
                                                 <textarea className="textarea is-danger" placeholder="Write Comment here"></textarea>
-                                                
+
                                             </div>
                                             <div className="media-right">
                                                 <button className="button">Post Comment</button>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="comment">
 
                                             <div className="media ml-5">
@@ -270,7 +272,7 @@ class Dashboard extends React.Component<{}, DashboardState> {
 
 
                                             </div>
-                                            
+
                                         </div>
 
                                     </div>
@@ -281,11 +283,11 @@ class Dashboard extends React.Component<{}, DashboardState> {
 
                                     <div className="box">
                                         <p className="title has-text-centered">Notifications</p>
-                                        
+
                                         <div className="notification is-danger">
                                             Thy shall not pass!
                                         </div>
-                                        
+
                                         <div className="notification is-danger">
                                             Thy shall not pass!
                                         </div>
@@ -306,7 +308,7 @@ class Dashboard extends React.Component<{}, DashboardState> {
                                             <div className="media-content">
                                                 <p className="title is-size-5 pt-3"><strong>Name</strong></p>
                                             </div>
-                                
+
                                             <div className="media-right">
                                                 <button className="button is-info is-light">View Profile</button>
                                             </div>
@@ -324,7 +326,7 @@ class Dashboard extends React.Component<{}, DashboardState> {
                                             <div className="media-content">
                                                 <p className="title is-size-5 pt-3"><strong>Name</strong></p>
                                             </div>
-                                
+
                                             <div className="media-right">
                                                 <button className="button is-info is-light">View Profile</button>
                                             </div>
@@ -336,18 +338,9 @@ class Dashboard extends React.Component<{}, DashboardState> {
                                 </div>
                             </div>
                         </div>
-
-                       
-
-                        
-
                     </div>
-
-                </div>  
+                </div>
                 </main>
-                
-                
-
             </React.Fragment>
         );
     }

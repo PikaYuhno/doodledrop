@@ -6,29 +6,28 @@ import {User} from '../../global';
 import {Link} from 'react-router-dom';
 
 type SearchState = {
-    searchValue : string;
-    users : Array<User>;
+    searchValue: string;
+    users: Array<User>;
 }
 
-class Search extends React.Component<{} , SearchState> {  
+class Search extends React.Component<{}, SearchState> {
 
     constructor(props: {}) {
         super(props);
         this.state = {
-          searchValue: '',
-          users: []
+            searchValue: '',
+            users: []
         }
     }
 
     handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({searchValue: e.target.value});
-
         
     } 
 
     handleEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if(e.keyCode === 13){
-            const resp = await fetch(`/api/users?username=${this.state.searchValue}` , {
+        if (e.keyCode === 13) {
+            const resp = await fetch(`/api/users?username=${this.state.searchValue}`, {
                 method: "GET",
                 headers: {
                     "Authorization": localStorage.getItem("token") || "token",
@@ -41,7 +40,7 @@ class Search extends React.Component<{} , SearchState> {
         }
     }
 
-    renderUsers = () => {        
+    renderUsers = () => {
         return this.state.users.map((user: User) => {
             return <React.Fragment key={user.id}>
                 <div className="user-list-item box">
@@ -60,9 +59,9 @@ class Search extends React.Component<{} , SearchState> {
                         </div>
                     </div>
                 </div>
-            </React.Fragment> 
+            </React.Fragment>
         });
-  
+
     }
 
     render() {
