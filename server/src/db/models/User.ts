@@ -73,27 +73,22 @@ User.init(
 );
 
 // User has many Doodles through user_id
-User.hasMany(Doodle, {
-    foreignKey: "user_id",
-});
-Doodle.belongsTo(User, {foreignKey: "user_id"});
+User.hasMany(Doodle, {foreignKey: "user_id",});
+Doodle.belongsTo(User, {foreignKey: "user_id", as: "user"});
 
 // User has many Comments through user_id
-User.hasMany(Comment, {
-    foreignKey: "user_id",
-});
-Comment.belongsTo(User, {foreignKey: "user_id"});
+User.hasMany(Comment, {foreignKey: "user_id",});
+Comment.belongsTo(User, {foreignKey: "user_id", as: 'user'});
 
-// User has many Followers throught user_id
+// User has many Followers through user_id
 User.hasMany(Follower, {foreignKey: "user_id"});
 Follower.belongsTo(User, {foreignKey: "follower_id"});
-// User has many Followers throught follower_id
-User.hasMany(Follower, {foreignKey: "follower_id"});
-Follower.belongsTo(User, {foreignKey: "user_id"});
 
+// User has many Messages through user_id
 User.hasMany(Message, {foreignKey: 'user_id'});
 Message.belongsTo(User, {foreignKey: 'user_id'});
 
+// User has many Channels through user_id
 User.hasMany(Channel, {foreignKey: 'user_id'});
 Channel.belongsTo(User, {foreignKey: 'user_id'});
 //User.sync();

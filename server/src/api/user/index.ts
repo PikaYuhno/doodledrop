@@ -14,10 +14,10 @@ import {sequelize} from "../../db/connection";
 // GET /api/users/friends
 router.get("/friends", async (req: Request, res: Response) => {
     const id = req.user!.id;
-    console.log("ID: ", id);
     const data: any[] = await sequelize.query(`SELECT * FROM users AS u WHERE u.id IN (SELECT f.user_id FROM followers AS f WHERE f.follower_id = ${id}) AND u.id IN (SELECT f.follower_id FROM followers AS f WHERE f.user_id = ${id})`, { 
       type: QueryTypes.SELECT
-    })
+    });
+
     let exclude: string[] = ["password"];
     for(let j = 0; j < data.length; j++) {
         for(let i = 0; i < exclude.length; i++) {
@@ -26,8 +26,7 @@ router.get("/friends", async (req: Request, res: Response) => {
             }
         }
     }
-    console.log(data);
-    res.status(200).json({data, message: 'Successfully found friends!', success: true});
+    return res.status(200).json({data, message: 'Successfully found friends!', success: true});
 });
 
 // GET /api/users/
