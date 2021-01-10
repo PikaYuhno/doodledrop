@@ -59,6 +59,7 @@ export type Doodle = {
     image_path: string;
     likes: Array<number>;
     dislikes: Array<number>;
+    comments?: Array<Comment>
 }
 
 export type Comment = {

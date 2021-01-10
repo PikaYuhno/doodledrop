@@ -281,7 +281,7 @@ router.post("/@me/channels", async (req: Request, res: Response) => {
         }
 });
 
-// GET  /api/users/following
+// GET  /api/users/following/:id
 router.get("/following/:id", async (req: Request, res: Response) => {
     let id = req.params.id || req.user!.id;
 
@@ -298,7 +298,7 @@ router.get("/following/:id", async (req: Request, res: Response) => {
     return res.status(200).json({ data: following, message: "", success: true });
 });
 
-// GET /api/users/followers
+// GET /api/users/followers/:id
 router.get("/followers/:id", async (req: Request, res: Response) => {
     const id = req.params.id || req.user!.id; 
 
@@ -312,6 +312,12 @@ router.get("/followers/:id", async (req: Request, res: Response) => {
         ],
     });
 
-    return res.status(200).json({ data: followers, message: "", success: true });
-});
+    let ifollow=false;
+    followers.forEach((follower: User) => {
+        if(follower.id == req.user!.id){
+            ifollow=true;
+        }
+    });
 
+    return res.status(200).json({ data: followers, message: ifollow, success: true });
+});
