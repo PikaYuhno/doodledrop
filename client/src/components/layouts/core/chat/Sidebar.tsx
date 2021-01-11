@@ -85,7 +85,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                     {this.renderChannels()}
                     <div className="channels-footer">
                         <div className="user-select-self">
-                            <div className="user-avatar">
+                            <div className="user-avatar-chat">
                                 <div className="helper"></div>
                                 <img src={this.props.user ? this.props.user.avatar : "default-1.png"} width="40" height="40" alt="avatar" />
                             </div>

@@ -1,10 +1,10 @@
-import React, { ReactComponentElement } from 'react';
+import React, {ReactComponentElement} from 'react';
 import Navbar from '../layouts/core/Navbar';
 import pfp1 from '../../assets/pfp/pfp1.png';
 import '../../styles/landing/dashboard.scss';
-import { Doodle,User } from '../../global';
-import { RouteComponentProps, useParams } from 'react-router-dom';
-import { userLoaded } from '../../store/auth/actions';
+import {Doodle, User} from '../../global';
+import {RouteComponentProps, useParams} from 'react-router-dom';
+import {userLoaded} from '../../store/auth/actions';
 
 type ProfileState = {
     user: User;
@@ -22,10 +22,10 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     constructor(props: ProfileProps) {
         super(props);
         this.state = {
-          user: {id:0,username:"null",pfp_pic_path:"null",bio:"null",location:"null"},
-          doodles: [],
-          following: [],
-          followers: []
+            user: {id: 0, username: "null", avatar: "null", bio: "null", location: "null"},
+            doodles: [],
+            following: [],
+            followers: []
         }
     }
 
@@ -35,8 +35,8 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
         this.handleLoad(this.props.id);
     }
 
-    handleLoad = async (id : number) => {
-        const resp = await fetch(`/api/users?id=${id}` , {
+    handleLoad = async (id: number) => {
+        const resp = await fetch(`/api/users?id=${id}`, {
             method: "GET",
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",
@@ -51,7 +51,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     }
 
     loadFollowing = async () => {
-        const resp = await fetch(`/api/following/${this.state.user.id}` , {
+        const resp = await fetch(`/api/following/${this.state.user.id}`, {
             method: "GET",
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",
@@ -64,7 +64,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     }
 
     loadFollowers = async () => {
-        const resp = await fetch(`/api/users?id=${this.state.user.id}` , {
+        const resp = await fetch(`/api/users?id=${this.state.user.id}`, {
             method: "GET",
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",
@@ -77,14 +77,14 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     }
 
     loadDoodles = async () => {
-        
+
     }
-    
+
     handleTabs = (e: React.MouseEvent<HTMLUListElement>) => {
 
     }
 
-    
+
 
     render() {
 
@@ -97,7 +97,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                         <div className="media">
                             <div className="media-left">
                                 <div className="image is-256x256">
-                                    <img src={this.state.user.pfp_pic_path} className="is-rounded" />
+                                    <img src={this.state.user.avatar} className="is-rounded" />
                                 </div>
                             </div>
 

@@ -43,12 +43,12 @@ export type Recipient = {
     username: string;
 }
 
-export type ActionCreator<T, R> = (...args: Parameters<T>) => R;
+export type ActionCreator<T, R = void> = (...args: Parameters<T>) => R;
 
 export type User = {
     id: number;
     username: string;
-    pfp_pic_path: string;
+    avatar: string;
     bio: string;
     location: string;
 }

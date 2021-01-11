@@ -46,7 +46,7 @@ class Search extends React.Component<{}, SearchState> {
                     <div className="list-item-content">
                         <div className="user-avatar">
                             <figure className="image is-48x48">
-                                <img src={user.pfp_pic_path} alt="avatar" className="is-rounded" />
+                                <img src={user.avatar} alt="avatar" className="is-rounded" />
                             </figure>
                         </div>
                         <div className="user-info">

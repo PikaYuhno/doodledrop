@@ -49,6 +49,7 @@ const ProtectedRoute: React.FC<Props> = (props) => {
 }
 
 const checkAuth = (props: Props) => {
+    console.log("CHECK AUTH");
     let token = localStorage.getItem("token");
     if (token) {
         let decoded = jwtDecode<JWTPayload>(token);

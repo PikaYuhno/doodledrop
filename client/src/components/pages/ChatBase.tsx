@@ -54,7 +54,7 @@ class ChatBase extends React.Component<ChatBaseProps> {
             <React.Fragment>
                 <Navbar />
                 <main>
-                    <div className="columns">
+                    <div className="columns" id="chat-columns">
                         <Sidebar />
                         <div className="column chat">
                             {
