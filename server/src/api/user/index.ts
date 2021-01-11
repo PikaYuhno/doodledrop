@@ -10,6 +10,7 @@ import { userPostSchema, userPatchSchema } from "../../schemas/userSchemas";
 import {v4 as uuid} from 'uuid';
 import {Sequelize, QueryTypes} from "sequelize";
 import {sequelize} from "../../db/connection";
+import bcrypt from 'bcrypt';
 
 // GET /api/users/friends
 router.get("/friends", async (req: Request, res: Response) => {
@@ -60,7 +61,7 @@ router.get("/doodles", async (req: Request, res: Response) => {
 // GET /api/users/:id
 router.get("/:id", async (req: Request, res: Response) => {
     let userId = req.params.id;
-    let user: User | null = await User.findOne({ where: { id: userId } });
+    let user: User | null = await User.findOne({ where: { id: userId }, attributes: {exclude: ['password']} });
     if (!user) {
         return res
             .status(404)
@@ -314,3 +315,28 @@ router.get("/followers/:id", async (req: Request, res: Response) => {
     return res.status(200).json({ data: followers, message: "", success: true });
 });
 
+// PATCH /api/users/:id/profile 
+router.patch("/:user_id/profile", async (req: Request, res: Response) => {
+    const user_id = req.params.user_id;
+    try {
+        const value = /*await userPatchSchema.validateAsync(req.body);*/ req.body;
+        const foundUser = await User.findOne({where: {id: user_id}});
+        if(!foundUser) return res.status(404).json({data: null, message: 'User not found!', success: false});
+        
+        const match = await bcrypt.compare(
+            value.password,
+            foundUser.password
+        );
+
+        if (!match)
+            return res.status(400).json({data: null, message: 'Password invalid!', success: false});
+         
+        value.password = foundUser.password;
+
+        await User.update(value, {where: {id: user_id}});
+        return res.status(200).json({data: null, message: 'Successfully updated User!', success: true});
+
+    } catch (error) {
+        return res.status(400).json({data: null, message: error.details[0].message || error, success: false});
+    }
+});
