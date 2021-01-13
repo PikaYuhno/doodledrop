@@ -15,6 +15,7 @@ import About from './components/pages/About';
 import Contributers from './components/pages/Contributors';
 import Search from "./components/pages/Search";
 import Profile from "./components/pages/Profile";
+import UserProfile from './components/pages/UserProfile';
 
 type AppProps = {
     socket?: SocketIOClient.Socket | null
@@ -38,6 +39,7 @@ const App: React.FC<AppProps> = (props) => {
                     <ProtectedRoute path="/dashboard" exact component={Dashboard} />
                     <ProtectedRoute path="/search" exact component={Search} />
                     <ProtectedRoute path="/profile/:id" exact component={Profile} />
+                    <ProtectedRoute path="/profile" exact component={UserProfile} />
                     <ProtectedRoute path="/chat" exact component={ChatBase} />
                 </Switch>
             </Router>

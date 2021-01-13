@@ -18,7 +18,7 @@ export const userPatchSchema = Joi.object({
     username: Joi.string().max(15).min(3),
     first_name: Joi.string().alphanum().max(15).min(3),
     last_name: Joi.string().alphanum().max(15).min(3),
-    password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
+    password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
     email: Joi.string().email(),
     avatar: Joi.string(),
     bio: Joi.string(),

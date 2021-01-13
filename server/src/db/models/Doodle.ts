@@ -10,6 +10,7 @@ export default class Doodle extends Model {
     public image_path!: string;
     public likes!: number[];
     public dislikes!: number[];
+    public created_at!: Date;
 }
 
 Doodle.init(
@@ -40,6 +41,11 @@ Doodle.init(
             type: DataTypes.ARRAY(DataTypes.INTEGER),
             defaultValue: [],
         },
+        created_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false,
+        }
     },
     {
         sequelize: sequelize,
@@ -47,8 +53,8 @@ Doodle.init(
     }
 );
 
-Doodle.hasMany(Comment, {foreignKey: "doodle_id"});
-Comment.belongsTo(Doodle, {foreignKey: "doodle_id"});
+Doodle.hasMany(Comment, {foreignKey: "doodle_id", as: 'comments'});
+Comment.belongsTo(Doodle, {foreignKey: "doodle_id", as: 'comments'});
 
 //Doodle.sync();
 

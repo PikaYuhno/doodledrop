@@ -1,0 +1,128 @@
+#user-info-column {
+    display: flex;
+    align-items: center;
+}
+
+#user-settings-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#user-profile-columns {
+    height: 100%;
+}
+
+.user-info-card {
+    box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
+    background-color: white;
+    border: 1px solid #ebe9e6;
+    border-radius: 4px;
+    height: 580px;
+    width: 250px;
+}
+
+.user-info-img {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    border-radius: 50%;
+}
+
+.user-info-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.user-avatar-card {
+    opacity: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: 0.5s ease;
+    backface-visibility: hidden;
+    border-radius: 50%;
+}
+.middle {
+    transition: 0.5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    pointer-events: none;
+    text-align: center;
+}
+.text {
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 16px 32px;
+}
+.user-info-name {
+    display: flex;
+    justify-content: center;
+}
+
+.user-infos {
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+}
+
+.user-infos div:last-child {
+    border-bottom: 1px solid #ebe9e6;
+}
+
+.user-info-item {
+    border-top: 1px solid #ebe9e6;
+    justify-content: space-around;
+    display: flex;
+    padding: 20px;
+}
+
+.user-info-item .item {
+    font-weight: bold;
+    color: grey;
+    font-size: 15px;
+}
+
+.user-info-item:hover {
+    background-color: #ebe9e6;
+}
+
+.user-settings-card {
+    box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
+    background-color: white;
+    border: 1px solid #ebe9e6;
+    border-radius: 4px;
+    height: 580px;
+    overflow: hidden;
+}
+
+.user-settings-card input,
+.input-item select {
+    background-color: #fcfdfe;
+}
+
+.input-item {
+    padding: 20px;
+    padding-bottom: 5px;
+}
+
+.input-username .input-title {
+    font-color: #ebe9e6;
+    margin-bottom: 5px;
+}
+
+.setting-title-container {
+    margin: 20px;
+}
+
+.button-container {
+    padding: 20px;
+    padding-left: 20px;
+}

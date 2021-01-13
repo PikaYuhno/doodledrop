@@ -292,23 +292,23 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
             <React.Fragment>
                 <Navbar />
                 <main>
-                <div className="hero">
-                    <div className="hero-body">
-                        <p className="title is-1 has-text-centered">Dashboard</p>
+                    <div className="hero">
+                        <div className="hero-body">
+                            <p className="title is-1 has-text-centered">Dashboard</p>
+                        </div>
                     </div>
-                </div>
 
-                <div className="container">
-
+                    <div className="container">
 
 
-                    <div>
-                        <div className="container">
-                            <div className="columns reverse-columns">
 
-                                <div className="column is-two-thirds">
+                        <div>
+                            <div className="container">
+                                <div className="columns reverse-columns">
 
-                                    <div className="box is-shawowless">
+                                    <div className="column is-two-thirds">
+
+                                        <div className="box is-shawowless">
 
                                         <div className="level is-mobile">
                                             <div className="level-left">
@@ -326,37 +326,37 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                             </div>
                                         </div>
 
-                                       <div className="image has-image-sized container">
-                                            <img src={pfp1} />
-                                       </div>
+                                            <div className="image has-image-sized container">
+                                                <img src={pfp1} />
+                                            </div>
 
 
-                                        <div className="columns border is-mobile mt-1">
-                                            <div className="column has-text-centered">
-                                                <a className="icon-text">
-                                                    <span className="icon"><i className="fa fa-reply fa-lg"></i></span>
-                                                    <span> Reply</span>
-                                                </a>
+                                            <div className="columns border is-mobile mt-1">
+                                                <div className="column has-text-centered">
+                                                    <a className="icon-text">
+                                                        <span className="icon"><i className="fa fa-reply fa-lg"></i></span>
+                                                        <span> Reply</span>
+                                                    </a>
+                                                </div>
+                                                <div className="column has-text-centered">
+                                                    <a className="icon-text">
+                                                        <span className="icon"><i className="fa fa-thumbs-up fa-lg"></i></span>
+                                                        <span> Like</span>
+                                                    </a>
+                                                </div>
+                                                <div className="column has-text-centered">
+                                                    <a className="icon-text">
+                                                        <span className="icon"><i className="fa fa-thumbs-down fa-lg"></i></span>
+                                                        <span> Dislike</span>
+                                                    </a>
+                                                </div>
                                             </div>
-                                            <div className="column has-text-centered">
-                                                <a className="icon-text">
-                                                    <span className="icon"><i className="fa fa-thumbs-up fa-lg"></i></span>
-                                                    <span> Like</span>
-                                                </a>
-                                            </div>
-                                            <div className="column has-text-centered">
-                                                <a className="icon-text">
-                                                    <span className="icon"><i className="fa fa-thumbs-down fa-lg"></i></span>
-                                                    <span> Dislike</span>
-                                                </a>
-                                            </div>
-                                        </div>
 
                                         {this.renderReply(0)}
 
                                         <div className="">
 
-                                            <div className="media ml-5">
+                                                <div className="media ml-5">
 
                                                 <div className="media-left">
                                                     <p className="image is-48x48">
@@ -369,65 +369,64 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                                         s
                                                     </p>
 
-                                                    <div className="level">
-                                                        <div className="level-left">
-                                                            <a className="ml-2">
-                                                                <span className="icon"><i className="fa fa-thumbs-up"></i> (4)</span>
-                                                            </a>
-                                                            <a className="ml-2">
-                                                                <span className="icon"><i className="fa fa-thumbs-down"></i></span>
-                                                            </a>
+                                                        <div className="level">
+                                                            <div className="level-left">
+                                                                <a className="ml-2">
+                                                                    <span className="icon"><i className="fa fa-thumbs-up"></i> (4)</span>
+                                                                </a>
+                                                                <a className="ml-2">
+                                                                    <span className="icon"><i className="fa fa-thumbs-down"></i></span>
+                                                                </a>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
 
+
+                                                </div>
 
                                             </div>
 
                                         </div>
 
-                                    </div>
+                                        <div className="box is-shawowless">
 
-                                    <div className="box is-shawowless">
-
-                                        <div className="level">
-                                            <div className="level-left">
-                                                <div className="ml-2">
-                                                    <p className="image is-48x48">
-                                                        <img src={pfp1} className="is-rounded" alt="pfp"/>
-                                                    </p>
+                                            <div className="level">
+                                                <div className="level-left">
+                                                    <div className="ml-2">
+                                                        <p className="image is-48x48">
+                                                            <img src={pfp1} className="is-rounded" alt="pfp" />
+                                                        </p>
+                                                    </div>
+                                                    <div className="ml-2">
+                                                        <p><strong className="is-size-4">Name</strong> <small>time</small></p>
+                                                    </div>
                                                 </div>
-                                                <div className="ml-2">
-                                                    <p><strong className="is-size-4">Name</strong> <small>time</small></p>
+                                            </div>
+
+                                            <div className="image has-image-sized container">
+                                                <img src={pfp1} />
+                                            </div>
+
+                                            <div className="columns border is-mobile mt-1">
+                                                <div className="column has-text-centered">
+                                                    <a className="icon-text">
+                                                        <span className="icon"><i className="fa fa-reply fa-lg"></i></span>
+                                                        <span> Reply</span>
+                                                    </a>
+                                                </div>
+                                                <div className="column has-text-centered">
+                                                    <a className="icon-text">
+                                                        <span className="icon"><i className="fa fa-thumbs-up fa-lg"></i></span>
+                                                        <span> Like</span>
+                                                    </a>
+                                                </div>
+                                                <div className="column has-text-centered">
+                                                    <a className="icon-text">
+                                                        <span className="icon"><i className="fa fa-thumbs-down fa-lg"></i></span>
+                                                        <span> Dislike</span>
+                                                    </a>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                       <div className="image has-image-sized container">
-                                            <img src={pfp1} />
-                                       </div>
-
-
-                                        <div className="columns border is-mobile mt-1">
-                                            <div className="column has-text-centered">
-                                                <a className="icon-text">
-                                                    <span className="icon"><i className="fa fa-reply fa-lg"></i></span>
-                                                    <span> Reply</span>
-                                                </a>
-                                            </div>
-                                            <div className="column has-text-centered">
-                                                <a className="icon-text">
-                                                    <span className="icon"><i className="fa fa-thumbs-up fa-lg"></i></span>
-                                                    <span> Like</span>
-                                                </a>
-                                            </div>
-                                            <div className="column has-text-centered">
-                                                <a className="icon-text">
-                                                    <span className="icon"><i className="fa fa-thumbs-down fa-lg"></i></span>
-                                                    <span> Dislike</span>
-                                                </a>
-                                            </div>
-                                        </div>
 
                                         <div className="media ml-5 style">
                                             <div className="media-left">
@@ -451,31 +450,37 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
                                         <div className="">
 
-                                            <div className="media ml-5">
 
-                                                <div className="media-left">
-                                                    <p className="image is-24x24">
-                                                        <img src={pfp1} className="is-rounded" alt="pfp"/>
-                                                    </p>
-                                                </div>
-                                                <div className="media-content">
-                                                    <p><strong className="is-size-5">Name</strong> <small>time</small></p>
-                                                    <p>foivnsifenvinsringielvuihseingihrtiuhbihrnginbsrtibiubsreibsiehfpawheiueriughilsdhilerhdsnbieshrifusberiuhgisuernbostghiueriueiubebgeoihrivegusenvnigsirnilsehriogugieng
-                                                        s
-                                                    </p>
+                                            <div className="comment">
 
-                                                    <div className="level">
-                                                        <div className="level-left">
-                                                            <a className="ml-2">
-                                                                <span className="icon"><i className="fa fa-thumbs-up"></i></span>
-                                                            </a>
-                                                            <a className="ml-2">
-                                                                <span className="icon"><i className="fa fa-thumbs-down"></i></span>
-                                                            </a>
+                                                <div className="media ml-5">
+
+                                                    <div className="media-left">
+                                                        <p className="image is-24x24">
+                                                            <img src={pfp1} className="is-rounded" alt="pfp" />
+                                                        </p>
+                                                    </div>
+                                                    <div className="media-content">
+                                                        <p><strong className="is-size-5">Name</strong> <small>time</small></p>
+                                                        <p>foivnsifenvinsringielvuihseingihrtiuhbihrnginbsrtibiubsreibsiehfpawheiueriughilsdhilerhdsnbieshrifusberiuhgisuernbostghiueriueiubebgeoihrivegusenvnigsirnilsehriogugieng
+                                                            s
+                                                    </p>
+                                                    </div>
+
+                                                        <div className="level is-mobile">
+                                                            <div className="level-left">
+                                                                <a className="ml-2">
+                                                                    <span className="icon"><i className="fa fa-thumbs-up"></i></span>
+                                                                </a>
+                                                                <a className="ml-2">
+                                                                    <span className="icon"><i className="fa fa-thumbs-down"></i></span>
+                                                                </a>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
 
+
+                                                </div>
 
                                             </div>
 
@@ -483,11 +488,9 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
                                     </div>
                                     
-                                    {this.renderDoodles}
+                                    
 
-                                </div>
-
-                                <div className="column">
+                                    <div className="column">
 
                                     <div className="box">
                                         <div className="level is-mobile">
@@ -505,60 +508,61 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                             Thy shall not pass!
                                         </div>
 
-                                        <div className="notification is-danger">
-                                            Thy shall not pass!
+                                            <div className="notification is-danger">
+                                                Thy shall not pass!
                                         </div>
+                                        
 
                                         {this.renderNotification()}
                                     </div>
 
-                                    <div className="box">
-                                        <p className="title has-text-centered">Following</p>
+                                        <div className="box">
+                                            <p className="title has-text-centered">Following</p>
 
-                                        <div className="media">
-                                            <div className="media-left">
-                                                <div className="">
-                                                    <p className="image is-48x48">
-                                                        <img src={pfp1} className="is-rounded" alt="pfp"/>
-                                                    </p>
+                                            <div className="media">
+                                                <div className="media-left">
+                                                    <div className="">
+                                                        <p className="image is-48x48">
+                                                            <img src={pfp1} className="is-rounded" alt="pfp" />
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="media-content">
+                                                    <p className="title is-size-5 pt-3"><strong>Name</strong></p>
+                                                </div>
+
+                                                <div className="media-right">
+                                                    <button className="button is-info is-light">View Profile</button>
                                                 </div>
                                             </div>
 
-                                            <div className="media-content">
-                                                <p className="title is-size-5 pt-3"><strong>Name</strong></p>
-                                            </div>
+                                            <div className="media">
+                                                <div className="media-left">
+                                                    <div className="">
+                                                        <p className="image is-48x48">
+                                                            <img src={pfp1} className="is-rounded" alt="pfp" />
+                                                        </p>
+                                                    </div>
+                                                </div>
 
-                                            <div className="media-right">
-                                                <button className="button is-info is-light">View Profile</button>
-                                            </div>
-                                        </div>
+                                                <div className="media-content">
+                                                    <p className="title is-size-5 pt-3"><strong>Name</strong></p>
+                                                </div>
 
-                                        <div className="media">
-                                            <div className="media-left">
-                                                <div className="">
-                                                    <p className="image is-48x48">
-                                                        <img src={pfp1} className="is-rounded" alt="pfp"/>
-                                                    </p>
+                                                <div className="media-right">
+                                                    <button className="button is-info is-light">View Profile</button>
                                                 </div>
                                             </div>
 
-                                            <div className="media-content">
-                                                <p className="title is-size-5 pt-3"><strong>Name</strong></p>
-                                            </div>
+                                            {this.renderFollowing}
 
-                                            <div className="media-right">
-                                                <button className="button is-info is-light">View Profile</button>
-                                            </div>
                                         </div>
-
-                                        {this.renderFollowing}
-
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 </main>
             </React.Fragment>
         );

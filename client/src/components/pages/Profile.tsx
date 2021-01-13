@@ -1,13 +1,11 @@
-import React, { ReactComponentElement } from 'react';
+import React, {ReactComponentElement} from 'react';
 import Navbar from '../layouts/core/Navbar';
 import pfp1 from '../../assets/pfp/pfp1.png';
 import '../../styles/landing/dashboard.scss';
-import { Doodle,User } from '../../global';
-import { RouteComponentProps, useParams } from 'react-router-dom';
-import { userLoaded } from '../../store/auth/actions';
-import {History} from "history";
+import {Doodle, User} from '../../global';
 import {Link} from 'react-router-dom';
-
+import {RouteComponentProps, useParams} from 'react-router-dom';
+import {userLoaded} from '../../store/auth/actions';
 
 type ProfileState = {
     user: User;
@@ -101,7 +99,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     }
 
     loadFollowing = async () => {
-        const resp = await fetch(`/api/following/${this.state.user.id}` , {
+        const resp = await fetch(`/api/following/${this.state.user.id}`, {
             method: "GET",
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",

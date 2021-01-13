@@ -11,6 +11,10 @@ class CreateChannelModal extends React.Component<CreateChannelModalProps> {
         super(props);
     }
 
+    async componentDidMount() {
+
+    }
+
     render() {
         return (
             <React.Fragment>

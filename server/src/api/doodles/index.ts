@@ -5,6 +5,8 @@ import User from "../../db/models/User";
 import {doodlePostSchema} from "../../schemas/doodleSchemas";
 import {commentSchema} from "../../schemas/commentSchemas";
 import Comment from '../../db/models/Comment';
+import User from "../../db/models/User";
+import Follower from '../../db/models/Follower';
 
 
 // PATCH /api/doodles/:id/comments/:c_id
@@ -68,7 +70,48 @@ router.get("/:id/comments", async (req: Request, res: Response) => {
 
 // GET /api/doodles/
 router.get("/", async (req: Request, res: Response) => {
-    let doodles: Doodle[] = await Doodle.findAll();
+    const id = req.user!.id;
+    const attributes = ["username", "avatar"];
+    const allDoodles = !req.query.follower ? true : (req.query.follower !== 'true');
+
+    let doodles: Doodle[] | User[] = [];
+    console.log("All Doodles? ", allDoodles);
+
+    if(allDoodles) {
+         doodles = await Doodle.findAll({
+            include: [
+                {
+                    model: Comment,
+                    include: [{
+                        model: User,
+                        required: true,
+                        attributes,
+                        as: 'user'
+                    }],
+                    as: 'comments'
+                },
+                {
+                    model: User,
+                    required: true,
+                    attributes,
+                    as: 'user'
+                }
+            ]
+        });
+    } else {
+        doodles = await User.findAll({
+            where: {"$Followers.follower_id$": id},
+            include: [
+                {
+                    model: Follower,
+                    required: true,
+                },
+                {
+                    model: Doodle,
+                }
+            ],
+        })
+    }
     return res.status(200).json({data: doodles, message: "", success: true});
 });
 
@@ -96,8 +139,10 @@ router.get("/:id", async (req: Request, res: Response) => {
 // POST /api/doodles/
 router.post("/", async (req: Request, res: Response) => {
     let body = req.body;
+    const id = req.user!.id;
     try {
         let value = await doodlePostSchema.validateAsync(body);
+        value.user_id = id;
         const created: Doodle = await Doodle.create(value);
         return res.status(201).json({
             data: created,
@@ -109,7 +154,7 @@ router.post("/", async (req: Request, res: Response) => {
 
         return res.status(400).json({
             data: null,
-            message: error,
+            message: error.details[0].message || error,
             success: false,
         });
     }
