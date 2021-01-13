@@ -286,11 +286,11 @@ router.get("/following/:id", async (req: Request, res: Response) => {
     let id = req.params.id || req.user!.id;
 
     let following: User[] = await User.findAll({
-        where: { user_id: id },
         include: [
             {
                 model: Follower,
                 required: true,
+                where: { user_id: id },
             },
         ],
     });
@@ -303,11 +303,11 @@ router.get("/followers/:id", async (req: Request, res: Response) => {
     const id = req.params.id || req.user!.id; 
 
     let followers: User[] = await User.findAll({
-        where: { follower_id: id },
         include: [
             {
                 model: Follower,
                 required: true,
+                where: { follower_id: id },
             },
         ],
     });

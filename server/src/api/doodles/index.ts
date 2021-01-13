@@ -233,11 +233,11 @@ router.get("/user/:id", async (req: Request, res: Response) => {
     let userId = req.params.user;
 
     let doodles: Doodle[] = await Doodle.findAll({
-        where: { user_id : userId },
             include: [
             {
                 model: User,
                 required: true,
+                where: { user_id : userId },
             },
         ],
     });

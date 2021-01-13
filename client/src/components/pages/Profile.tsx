@@ -5,7 +5,8 @@ import '../../styles/landing/dashboard.scss';
 import { Doodle,User } from '../../global';
 import { RouteComponentProps, useParams } from 'react-router-dom';
 import { userLoaded } from '../../store/auth/actions';
-
+import {History} from "history";
+import {Link} from 'react-router-dom';
 
 
 type ProfileState = {
@@ -20,6 +21,7 @@ type ProfileState = {
 
 type ProfileProps = {
     id: number;
+    history: History;
 }
 
 class Profile extends React.Component<ProfileProps, ProfileState>{
@@ -161,7 +163,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                     </div>
 
                     <div className="media-right">
-                        <button className="button">View</button>
+                        <Link to={`profile/${follow.id}`}><button className="button is-info is-light">View Profile</button></Link>
                     </div>
                 </div>
             </React.Fragment>
@@ -170,7 +172,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
 
     renderButton = () => {
         return <React.Fragment>
-            <button onClick={this.handleFollow} className="button">{(this.state.ifollow) ? "- Unfollow" : "+ Follow"}</button>
+            <button onClick={this.handleFollow} className="button">{(this.state.ifollow) ?  "- Unfollow" : "+ Follow"}</button>
         </React.Fragment>
     }
 
@@ -183,9 +185,12 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                 <main>
                     <div className="box container">
                         <div className="media">
-                            <div className="media-left">
+                            <div className="media-left mt-5">
                                 <div className="image is-256x256">
                                     <img src={pfp1} className="is-rounded" />
+                                </div>
+                                <div className="mt-3 has-text-centered">
+                                    {this.renderButton()}
                                 </div>
                             </div>
 
@@ -197,7 +202,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                                     </div>
                                 </div>
                                 
-                                <div className="level is-mobile">
+                                <div className="level is-mobile has-text-centered">
                                     <div className="level-item">
                                         <div>
                                             <p className="heading">Doodles</p>
@@ -219,9 +224,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                                 </div>
                             </div>
 
-                            <div className="media-left">
-                                {this.renderButton()}
-                            </div>
+                            
                         </div>
                     </div>
 

@@ -2,22 +2,29 @@ import React from 'react';
 import Navbar from '../layouts/core/Navbar';
 import '../../styles/landing/dashboard.scss';
 import pfp1 from '../../assets/pfp/pfp1.png';
-import {Doodle, User} from '../../global';
+import {Doodle, User, Comment} from '../../global';
+import {History} from "history";
 
 type DashboardState = {
     doodles: Array<Doodle>;
     following: Array<User>;
     notifications: Array<number>;
+    reply: number;
 }
 
-class Dashboard extends React.Component<{}, DashboardState> {
+type DashboardProps = {
+    history: History;
+}
 
-    constructor(props: {}) {
+class Dashboard extends React.Component<DashboardProps, DashboardState> {
+
+    constructor(props: DashboardProps) {
         super(props);
         this.state = {
             doodles: [],
             following: [],
-            notifications:[]
+            notifications:[],
+            reply: 0
         }
     }
 
@@ -47,17 +54,40 @@ class Dashboard extends React.Component<{}, DashboardState> {
         } 
     }
 
+    handleReply = (doodle_id: number) => {
+        this.setState({reply: doodle_id})
+    }
+
+    renderReply = (doodle_id: number) => {
+        if(this.state.reply == doodle_id){
+            return <React.Fragment>
+            <div className="media ml-5 style">
+                <div className="media-left">
+                    <p className="image is-24x24">
+                        <img src={pfp1} className="is-rounded" alt="pfp" />
+                    </p>
+                </div>
+                <div className="media-content">
+                    <textarea className="textarea is-danger" placeholder="Write Comment here"></textarea>
+
+                </div>
+                <div className="media-right">
+                    <button className="button" onClick={() => {this.postComment}}>Post Comment</button>
+                </div>
+            </div>
+        </React.Fragment>
+        }
+    }
+
     postComment = async (doodleid: number, content: string) => {
-        // await fetch(`/api/doodles/comments`, {
-        //     method: "POST",
-        //     headers: {
-        //         "Authorization": localStorage.getItem("token") || "token",
-        //         "Content-Type": "application/json"
-        //     },
-        //     body: {
-                
-        //     }
-        // });
+        await fetch(`/api/doodles/${doodleid}/comments`, {
+            method: "POST",
+            headers: {
+                "Authorization": localStorage.getItem("token") || "token",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({doodle_id: doodleid, content: content})
+        });
     }
 
     loadDoodles = async () => {
@@ -180,6 +210,7 @@ class Dashboard extends React.Component<{}, DashboardState> {
 
                         </div>
 
+
                     </div>
 
                 </div>
@@ -187,8 +218,38 @@ class Dashboard extends React.Component<{}, DashboardState> {
         });
     }
 
-    renderComments = () => {
-        
+    renderComments = (comments: Array<Comment>) => {
+            return comments.map((comment: Comment) => {
+                return <React.Fragment key={comment.id}>
+                    <div className="media ml-5">
+
+                        <div className="media-left">
+                            <p className="image is-48x48">
+                                <img src={pfp1} className="is-rounded" alt="pfp" />
+                            </p>
+                        </div>
+                        <div className="media-content">
+                            <p><strong className="is-size-5">Name</strong> <small>time</small></p>
+                            <p className="comment">foivnsifenvinsringielvuihseingihrtiuhbihrnginbsrtibiubsreibsiehfpawheiueriughilsdhilerhdsnbieshrifusberiuhgisuernbostghiueriueiubebgeoihrivegusenvnigsirnilsehriogugieng
+                            s
+                            </p>
+
+                            <div className="level">
+                                <div className="level-left">
+                                    <a className="ml-2">
+                                        <span className="icon"><i className="fa fa-thumbs-up"></i> (4)</span>
+                                    </a>
+                                    <a className="ml-2">
+                                        <span className="icon"><i className="fa fa-thumbs-down"></i></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </React.Fragment>
+            })
     }
 
     renderNotification = () => {
@@ -224,8 +285,6 @@ class Dashboard extends React.Component<{}, DashboardState> {
             </React.Fragment>
         });
     }
-
-
 
 
     render() {
@@ -293,9 +352,7 @@ class Dashboard extends React.Component<{}, DashboardState> {
                                             </div>
                                         </div>
 
-                                        <div className="">
-
-                                        </div>
+                                        {this.renderReply(0)}
 
                                         <div className="">
 
@@ -374,16 +431,21 @@ class Dashboard extends React.Component<{}, DashboardState> {
 
                                         <div className="media ml-5 style">
                                             <div className="media-left">
-                                                    <p className="image is-24x24">
-                                                        <img src={pfp1} className="is-rounded" alt="pfp"/>
-                                                    </p>
+                                                <p className="image is-24x24">
+                                                    <img src={pfp1} className="is-rounded" alt="pfp" />
+                                                </p>
                                             </div>
                                             <div className="media-content">
-                                                <textarea className="textarea is-danger" placeholder="Write Comment here"></textarea>
-
-                                            </div>
-                                            <div className="media-right">
-                                                <button className="button">Post Comment</button>
+                                                <div className="field">
+                                                    <p className="control">
+                                                        <textarea className="textarea is-danger" placeholder="Add a comment..."></textarea>
+                                                    </p>
+                                                </div>
+                                                <div className="field">
+                                                    <p className="control">
+                                                        <button className="button">Post comment</button>
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -428,9 +490,18 @@ class Dashboard extends React.Component<{}, DashboardState> {
                                 <div className="column">
 
                                     <div className="box">
-                                        <p className="title has-text-centered">Notifications</p>
+                                        <div className="level is-mobile">
+                                            <div className="level-item">
+                                                <p className="title has-text-centered">Notifications</p>
+                                            </div>
+                                            <div className="level-left">
+                                                <span className="icon" onClick={this.loadNotifications}><i className="fa fa-history"></i></span>
+                                            </div>
+                                        </div>                                           
+                                        
 
                                         <div className="notification is-danger">
+                                            <button className="delete"></button>
                                             Thy shall not pass!
                                         </div>
 
