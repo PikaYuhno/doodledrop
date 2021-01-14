@@ -1,6 +1,7 @@
 import {Request, Response, Router} from "express";
 export const router = Router();
 import Doodle from "../../db/models/Doodle";
+import User from "../../db/models/User";
 import {doodlePostSchema} from "../../schemas/doodleSchemas";
 import {commentSchema} from "../../schemas/commentSchemas";
 import Comment from '../../db/models/Comment';
@@ -47,9 +48,8 @@ router.post("/:id/comments", async (req: Request, res: Response) => {
     } catch (error) {
         return res.status(400).json({data: null, message: error.details[0].message, success: false}); 
     }    
-
-
 });
+
 // GET /api/doodles/:id/comments
 router.get("/:id/comments", async (req: Request, res: Response) => {
     const id = req.params.id;
@@ -163,6 +163,55 @@ const likeOrDislike = async (
     });
 };
 
+// PATCH /api/doodles/comment/:id/like
+router.patch("comment/:id/like", async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const userId = req.user!.id;
+    const comment = await Comment.findOne({where: {id}});
+    likeOrDislikeComment(userId, res, true, comment, id);
+});
+
+// PATCH /api/doodles/comment/:id/dislike
+router.patch("/comment/:id/dislike", async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const userId = req.user!.id;
+    const comment = await Comment.findOne({where: {id}});
+    likeOrDislikeComment(userId, res, false, comment, id);
+});
+
+const likeOrDislikeComment = async (
+    userId: number,
+    res: Response,
+    like: boolean,
+    comment: Comment | null,
+    id?: string
+) => {
+    if (!comment)
+        return res
+            .status(404)
+            .json({data: null, message: "Comment not found!", success: false});
+    if (
+        like ? comment.likes.includes(userId) : comment.dislikes.includes(userId)
+    ) {
+        return res.status(400).json({
+            data: null,
+            message: `Comment is already ${like ? "liked" : "disliked"}!`,
+            success: false,
+        });
+    }
+
+    let values = like
+        ? {likes: [...comment.likes, userId]}
+        : {dislikes: comment.dislikes.filter((el) => el !== userId)};
+    const updated = await Comment.update(values, {where: {id}});
+    return res.status(200).json({
+        data: updated,
+        message: `Successfully ${like ? "liked" : "disliked"} comment!`,
+        success: true,
+    });
+};
+
+
 // DELETE /api/doodles/:id
 router.delete("/:id", async (req: Request, res: Response) => {
     let id = req.params.id;
@@ -178,3 +227,21 @@ router.delete("/:id", async (req: Request, res: Response) => {
         success: true,
     });
 });
+
+// GET /api/doodles/user/:id
+router.get("/user/:id", async (req: Request, res: Response) => {
+    let userId = req.params.user;
+
+    let doodles: Doodle[] = await Doodle.findAll({
+            include: [
+            {
+                model: User,
+                required: true,
+                where: { user_id : userId },
+            },
+        ],
+    });
+
+    return res.status(200).json({ data: doodles, message: "", success: true });
+});
+

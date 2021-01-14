@@ -129,17 +129,11 @@ export const addMessage = (message: Message, channels: Channel[]) => async (disp
     });
     if(!channel) {
         // request channel
-        const promise = await fetch(`/api/users/@me/channels`, {
-            method: 'POST',
+        const promise = await fetch(`/api/users/@me/channels/${message.room_id}`, {
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                room_id: message.room_id,
-                recipient_id: message.user_id,
-                latest_message: message.body,
-            })
         });
         const resJson = await promise.json();
         console.log(resJson);

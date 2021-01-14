@@ -44,3 +44,30 @@ export type Recipient = {
 }
 
 export type ActionCreator<T, R> = (...args: Parameters<T>) => R;
+
+export type User = {
+    id: number;
+    username: string;
+    avatar: string;
+    bio: string;
+    location: string;
+}
+
+export type Doodle = {
+    id: number;
+    user_id: number;
+    image_path: string;
+    likes: Array<number>;
+    dislikes: Array<number>;
+    comments?: Array<Comment>
+}
+
+export type Comment = {
+    id: number;
+    doodle_id: number;
+    user_id: number;
+    content: string;
+    created_at: Date;
+    like: Array<number>;
+    dislikes: Array<number>;
+}

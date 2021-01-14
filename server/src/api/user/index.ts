@@ -8,17 +8,43 @@ export const router = Router();
 import User from "../../db/models/User";
 import { userPostSchema, userPatchSchema } from "../../schemas/userSchemas";
 import {v4 as uuid} from 'uuid';
+import {Sequelize, QueryTypes} from "sequelize";
+import {sequelize} from "../../db/connection";
 
+// GET /api/users/friends
+router.get("/friends", async (req: Request, res: Response) => {
+    const id = req.user!.id;
+    console.log("ID: ", id);
+    const data: any[] = await sequelize.query(`SELECT * FROM users AS u WHERE u.id IN (SELECT f.user_id FROM followers AS f WHERE f.follower_id = ${id}) AND u.id IN (SELECT f.follower_id FROM followers AS f WHERE f.user_id = ${id})`, { 
+      type: QueryTypes.SELECT
+    })
+    let exclude: string[] = ["password"];
+    for(let j = 0; j < data.length; j++) {
+        for(let i = 0; i < exclude.length; i++) {
+            if(data[j].hasOwnProperty(exclude[i])) {
+                delete data[j][exclude[i]];
+            }
+        }
+    }
+    console.log(data);
+    res.status(200).json({data, message: 'Successfully found friends!', success: true});
+});
 
 // GET /api/users/
 router.get("/", async (req: Request, res: Response) => {
-    let users: User[] = await User.findAll();
+    const username = req.query.username;
+    let users: User[] = [];
+    const attributes = {exclude: ['password']};
+    if(username) {
+        users = await User.findAll({where: {username: Sequelize.where(Sequelize.col('username'), 'LIKE', `%${username}%`)}, attributes});
+    } else {
+        users = await User.findAll({attributes});
+    }
     return res.status(200).json({ data: users, message: "", success: true });
 });
 
 // GET /api/users/doodles
 router.get("/doodles", async (req: Request, res: Response) => {
-    console.log("HERE");
     let user = req.user;
     let doodles: Doodle[] = await Doodle.findAll({
         where: { id: user!.id },
@@ -171,8 +197,25 @@ router.get("/@me/channels", async (req: Request, res: Response) => {
     return res.status(200).json({data: channels, message: '', success: true});
 });
 
+// GET /api/users/@me/channels/:roomId
+router.get("/@me/channels/:roomId", async (req: Request, res: Response) => {
+    const roomId = req.params.roomId; 
+    const userId = req.user!.id;
+
+    const channel: Channel | null = await Channel.findOne({where: {room_id: roomId, user_id: userId},
+        include: [{
+            model: Recipient,
+            required: true,
+            as: 'recipients'
+        }],
+    });
+    if(!channel) return res.status(404).json({data: null, message: 'Channel not found!', success: false});
+    
+    return res.status(200).json({data: channel, message: '', success: true});
+});
+
 // POST /api/users/@me/channels
-router.post("/@me/channels", async (req: Request, res: Response) => {
+/*router.post("/@me/channels", async (req: Request, res: Response) => {
     const id = req.user!.id;
     const recipientId = req.body.recipient_id;
     const latestMessage = req.body.latest_message;
@@ -207,4 +250,74 @@ router.post("/@me/channels", async (req: Request, res: Response) => {
             console.error(error);
             return res.status(400).json({data: null, message: error, success: false});
         }
+});*/
+
+router.post("/@me/channels", async (req: Request, res: Response) => {
+    const id = req.user!.id;
+    const recipientId = req.body.recipientId;
+    
+    if(id === recipientId)
+        return res.status(400).json({data: null, message: 'Cannot create a channel with your self!', success: false});
+
+    const me: User | null = await User.findOne({where: {id}, attributes: ['id', 'username', 'avatar']});
+    const recipient: User | null = await User.findOne({where: {id: recipientId}, attributes: ['id', 'username', 'avatar']});
+    if (!recipient || !me) 
+        return res
+            .status(404)
+            .json({ data: null, message: "User not found!", success: false });
+
+        try {
+            const room_id = uuid();
+            let channelMe = await Channel.create({user_id: id, type: 1, room_id});
+            let channelRec = await Channel.create({user_id: recipient.id, type: 1, room_id});
+
+            await Recipient.create({user_id: recipient.id, avatar: recipient.avatar, channel_id: channelMe.id, username: recipient.username}) 
+            await Recipient.create({user_id: me.id, avatar: me.avatar, channel_id: channelRec.id, username: me.username}) 
+
+            return res.status(200).json({data: null, message: 'Successfully created DM Channel!', success: true});
+        } catch (error) {
+            console.error(error);
+            return res.status(400).json({data: null, message: error, success: false});
+        }
+});
+
+// GET  /api/users/following/:id
+router.get("/following/:id", async (req: Request, res: Response) => {
+    let id = req.params.id || req.user!.id;
+
+    let following: User[] = await User.findAll({
+        include: [
+            {
+                model: Follower,
+                required: true,
+                where: { user_id: id },
+            },
+        ],
+    });
+
+    return res.status(200).json({ data: following, message: "", success: true });
+});
+
+// GET /api/users/followers/:id
+router.get("/followers/:id", async (req: Request, res: Response) => {
+    const id = req.params.id || req.user!.id; 
+
+    let followers: User[] = await User.findAll({
+        include: [
+            {
+                model: Follower,
+                required: true,
+                where: { follower_id: id },
+            },
+        ],
+    });
+
+    let ifollow=false;
+    followers.forEach((follower: User) => {
+        if(follower.id == req.user!.id){
+            ifollow=true;
+        }
+    });
+
+    return res.status(200).json({ data: followers, message: ifollow, success: true });
 });

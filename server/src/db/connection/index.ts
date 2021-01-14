@@ -10,6 +10,7 @@ export const createConnection = () => {
         {
             host: "localhost",
             dialect: "postgres",
+            port: parseInt(process.env.DB_PORT || "5432"),
             define: {
                 timestamps: false
             }
