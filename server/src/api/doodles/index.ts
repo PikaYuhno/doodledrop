@@ -5,6 +5,7 @@ import {doodlePostSchema} from "../../schemas/doodleSchemas";
 import {commentSchema} from "../../schemas/commentSchemas";
 import Comment from '../../db/models/Comment';
 import User from "../../db/models/User";
+import Notification from "../../db/models/Notification";
 import Follower from '../../db/models/Follower';
 
 
@@ -45,6 +46,7 @@ router.post("/:id/comments", async (req: Request, res: Response) => {
     try {
         const value = await commentSchema.validateAsync(body); 
         const created = await Comment.create({doodle_id: doodle.id, user_id: req.user!.id, content: value.content, created_at: new Date()});
+        Notification.create({user_id: req.user!.id, doodle_id: doodle.id, content: `${req.user!.username} commented on your doodle `})
         return res.status(200).json({data: created, message: 'Successfully created Comment!', success:true});
     } catch (error) {
         return res.status(400).json({data: null, message: error.details[0].message, success: false}); 
