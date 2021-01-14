@@ -251,16 +251,16 @@ router.post("/@me/channels", async (req: Request, res: Response) => {
         }
 });
 
-// GET  /api/users/following
+// GET  /api/users/following/:id
 router.get("/following/:id", async (req: Request, res: Response) => {
     let id = req.params.id || req.user!.id;
 
     let following: User[] = await User.findAll({
-        where: { user_id: id },
         include: [
             {
                 model: Follower,
                 required: true,
+                where: { user_id: id },
             },
         ],
     });
@@ -268,23 +268,28 @@ router.get("/following/:id", async (req: Request, res: Response) => {
     return res.status(200).json({ data: following, message: "", success: true });
 });
 
-// GET /api/users/followers
+// GET /api/users/followers/:id
 router.get("/followers/:id", async (req: Request, res: Response) => {
     const id = req.params.id || req.user!.id; 
 
     let followers: User[] = await User.findAll({
-        where: { follower_id: id },
         include: [
             {
                 model: Follower,
                 required: true,
+                where: { follower_id: id },
             },
         ],
     });
 
-    return res.status(200).json({ data: followers, message: "", success: true });
-});
+    let ifollow=false;
+    followers.forEach((follower: User) => {
+        if(follower.id == req.user!.id){
+            ifollow=true;
+        }
+    });
 
+<<<<<<< HEAD
 // PATCH /api/users/:id/profile 
 router.patch("/:user_id/profile", async (req: Request, res: Response) => {
     const user_id = req.params.user_id;
@@ -332,3 +337,8 @@ router.get("/notifications", async (req: Request, res: Response) => {
 
     return res.status(200).json({data: notifications, message: 'Successfully found notifications!', success: true});
 });
+||||||| f3833ea
+=======
+    return res.status(200).json({ data: followers, message: ifollow, success: true });
+});
+>>>>>>> not-master

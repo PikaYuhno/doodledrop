@@ -1,4 +1,4 @@
-body {
+body{
     overflow: auto;
 }
 
@@ -17,4 +17,10 @@ body {
       flex-direction: column-reverse;
       display: flex;
     }
+}
+
+.comment{
+    height: auto;
+    word-wrap: break-word;
+    width: 65%;
 }

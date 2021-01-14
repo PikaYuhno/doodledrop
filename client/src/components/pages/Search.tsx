@@ -3,6 +3,9 @@ import Navbar from '../layouts/core/Navbar';
 import '../../styles/landing/search.scss';
 import pfp1 from '../../assets/pfp/pfp1.png';
 import {User} from '../../global';
+import {Link} from 'react-router-dom';
+import { type } from 'os';
+import {History} from "history";
 
 type SearchState = {
     searchValue: string;
@@ -21,12 +24,12 @@ class Search extends React.Component<{}, SearchState> {
 
     handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({searchValue: e.target.value});
-
-    }
+        
+    } 
 
     handleEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.keyCode === 13) {
-            const resp = await fetch(`/api/users?username=${this.state.searchValue}`, {
+            const resp = await fetch(`/api/users/`, {
                 method: "GET",
                 headers: {
                     "Authorization": localStorage.getItem("token") || "token",
@@ -54,7 +57,7 @@ class Search extends React.Component<{}, SearchState> {
                             <span className="user-bio subtitle">{user.bio}</span>
                         </div>
                         <div className="actions">
-                            <button className="button is-info is-light">View Profile</button>
+                            <Link to={`profile/${user.id}`}><button className="button is-info is-light">View Profile</button></Link>
                         </div>
                     </div>
                 </div>
@@ -122,7 +125,7 @@ class Search extends React.Component<{}, SearchState> {
                                         <span className="user-bio subtitle">This is a status</span>
                                     </div>
                                     <div className="actions">
-                                        <a href=""><button className="button is-info is-light">View Profile</button></a>
+                                        <Link to={"profile/1"}><button className="button is-info is-danger is-outlined">View Profile</button></Link>
                                     </div>
                                 </div>
                             </div>
