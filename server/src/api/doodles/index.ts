@@ -4,13 +4,13 @@ import Doodle from "../../db/models/Doodle";
 import {doodlePostSchema} from "../../schemas/doodleSchemas";
 import {commentSchema} from "../../schemas/commentSchemas";
 import Comment from '../../db/models/Comment';
-import User from "../../db/models/User";
 import Notification from "../../db/models/Notification";
 import Follower from '../../db/models/Follower';
 import {Sequelize} from "sequelize";
 import fs from 'fs';
 import path from 'path';
 import {v4} from 'uuid';
+import User from '../../db/models/User';
 
 
 // PATCH /api/doodles/:id/comments/:c_id
