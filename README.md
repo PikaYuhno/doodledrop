@@ -1,6 +1,5 @@
 # doodledrop 
 
-## Setup Server
-Comming soon.
-## Setup Client
-Comming soon.
+## changes
+* new logout icon
+* new location icon
