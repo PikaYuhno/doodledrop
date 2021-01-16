@@ -288,8 +288,8 @@ router.get("/followers/:id", async (req: Request, res: Response) => {
             ifollow=true;
         }
     });
-
-<<<<<<< HEAD
+    return res.status(200).json({ data: followers, message: ifollow, success: true });
+});
 // PATCH /api/users/:id/profile 
 router.patch("/:user_id/profile", async (req: Request, res: Response) => {
     const user_id = req.params.user_id;
@@ -337,8 +337,3 @@ router.get("/notifications", async (req: Request, res: Response) => {
 
     return res.status(200).json({data: notifications, message: 'Successfully found notifications!', success: true});
 });
-||||||| f3833ea
-=======
-    return res.status(200).json({ data: followers, message: ifollow, success: true });
-});
->>>>>>> not-master

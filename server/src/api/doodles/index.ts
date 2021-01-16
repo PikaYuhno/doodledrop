@@ -5,7 +5,6 @@ import User from "../../db/models/User";
 import {doodlePostSchema} from "../../schemas/doodleSchemas";
 import {commentSchema} from "../../schemas/commentSchemas";
 import Comment from '../../db/models/Comment';
-import User from "../../db/models/User";
 import Notification from "../../db/models/Notification";
 import Follower from '../../db/models/Follower';
 
