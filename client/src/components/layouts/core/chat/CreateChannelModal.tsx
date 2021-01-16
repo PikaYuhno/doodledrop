@@ -63,7 +63,7 @@ class CreateChannelModal extends React.Component<CreateChannelModalProps, Create
     renderUsers = () => {
         return this.state.users.map((user: User) => {
             return (
-                <div className="user-select">
+                <div key={Date.now() - Math.random()} className="user-select">
                     <div className="user-avatar">
                         <div className="helper"></div>
                         <img src={user.avatar} width="40" height="40" alt="avatar" />

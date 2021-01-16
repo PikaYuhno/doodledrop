@@ -170,6 +170,7 @@ router.post("/follow/:id", async (req: Request, res: Response) => {
     const count = await User.count({where: {id}});
     if (count === 0) return res.status(404).json({data: null, message: 'User not found', success: false});
     const followEntry = await Follower.create({user_id: curId, follower_id: id});
+    await Notification.create({user_id: id, content: `${req.user!.username} started following you!`})
     return res.status(200).json({data: followEntry, message: 'Successfully followed user!', success: true});
 });
 
@@ -288,8 +289,9 @@ router.get("/followers/:id", async (req: Request, res: Response) => {
             ifollow=true;
         }
     });
+    return res.status(200).json({ data: followers, message: ifollow, success: true });
+});
 
-<<<<<<< HEAD
 // PATCH /api/users/:id/profile 
 router.patch("/:user_id/profile", async (req: Request, res: Response) => {
     const user_id = req.params.user_id;
@@ -328,17 +330,7 @@ router.get("/notifications", async (req: Request, res: Response) => {
                 exclude: ['password']
             }
         },
-        {
-            model: Doodle,
-            required: true,
-            where: {user_id: id}
-        }
     ]});
 
     return res.status(200).json({data: notifications, message: 'Successfully found notifications!', success: true});
 });
-||||||| f3833ea
-=======
-    return res.status(200).json({ data: followers, message: ifollow, success: true });
-});
->>>>>>> not-master

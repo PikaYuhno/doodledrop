@@ -61,7 +61,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     renderChannels = () => {
         return this.props.channels && this.props.channels.map((channel: Channel) => {
             let recipient = channel.recipients[0];
-            return (<DMChannel key={channel.id} notfi={channel.notfi} id={channel.id} imgSrc={recipient.avatar} date={moment().format('hh:mm a')} latestMessage={channel.last_message || "No message sent"} name={recipient.username} />);
+            return (<DMChannel key={channel.id} notfi={channel.notfi} id={channel.id} imgSrc={recipient.avatar} date={moment().format('hh:mm a')} latestMessage={channel.last_message || "No message sent"} name={recipient.username} roomId={channel.room_id}/>);
         });
     }
 

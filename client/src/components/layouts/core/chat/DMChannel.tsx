@@ -1,8 +1,10 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Channel} from '../../../../global';
-import {channelConnected, updateChannelNotfi} from '../../../../store/chat/actions';
+import {Channel, ActionCreator, JWTPayload} from '../../../../global';
+import {channelConnected, updateChannelNotfi, channelDisconnected, enterDrawing} from '../../../../store/chat/actions';
+import {alert} from '../../../../store/alert/actions';
 import {RootReducer} from '../../../../store/root-reducer';
+import {AlertType} from '../../../../store/alert/types';
 
 type DMChannelProps = {
     id: number;
@@ -10,16 +12,22 @@ type DMChannelProps = {
     name: string;
     date: string;
     latestMessage: string;
+    roomId: string;
     notfi: boolean;
     channels: Channel[];
     socket: SocketIOClient.Socket | null;
     currentChannel: Channel | null;
+    user: JWTPayload | null;
+    drawingRoom: string | null;
 } & DispatchProps;
 
 
 type DispatchProps = {
     channelConnected: (...args: Parameters<typeof channelConnected>) => void;
     updateChannelNotfi: (...args: Parameters<typeof updateChannelNotfi>) => void;
+    channelDisconnected: ActionCreator<typeof channelDisconnected>;
+    enterDrawing: ActionCreator<typeof enterDrawing>;
+    alert: ActionCreator<typeof alert>;
 }
 
 class DMChannel extends React.Component<DMChannelProps> {
@@ -29,11 +37,32 @@ class DMChannel extends React.Component<DMChannelProps> {
 
     handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
+        if (this.props.drawingRoom !== null) {
+            this.props.alert("Please leave the drawing first!", AlertType.FAIL, 3);
+            return;
+        }
         let channel = this.props.channels.find(channel => channel.id === this.props.id);
         if (!channel) return;
         this.props.channelConnected(channel);
         this.props.updateChannelNotfi(channel.room_id);
     }
+
+
+    enterDrawing = (e: React.MouseEvent<HTMLElement>, roomId: string) => {
+        if (!this.props.socket || !this.props.user) return;
+        e.stopPropagation();
+        // disconnect from channel if connected
+        if (this.props.currentChannel !== null) {
+            this.props.channelDisconnected();
+        }
+        if (this.props.drawingRoom !== null) return;
+        // dispatch ENTER_DRAWING
+        this.props.enterDrawing(roomId);
+
+        // emit join event
+        this.props.socket.emit("drawing-join", {user_id: this.props.user.id, room_id: this.props.roomId});
+    }
+
 
 
     render() {
@@ -50,7 +79,7 @@ class DMChannel extends React.Component<DMChannelProps> {
                         </div>
                         <span className="latest-message">{this.props.latestMessage}</span>
                         <div className="icons">
-                            <i className="fa fa-tv"></i>
+                            <i className="fa fa-tv" onClick={(e: React.MouseEvent<HTMLElement>) => this.enterDrawing(e, this.props.roomId)}></i>
                             {this.props.notfi && <div className="notfi">
                                 !
                             </div>}
@@ -67,13 +96,18 @@ const mapStateToProps = (state: RootReducer) => {
         currentChannel: state.chat.currentChannel,
         channels: state.chat.channels,
         socket: state.chat.socket,
+        user: state.auth.user,
+        drawingRoom: state.chat.drawingRoom
     }
 }
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
         channelConnected: (id: Channel) => {dispatch(channelConnected(id))},
-        updateChannelNotfi: (...args: Parameters<typeof updateChannelNotfi>) => {dispatch(updateChannelNotfi(...args))}
+        channelDisconnected: () => {dispatch(channelDisconnected())},
+        updateChannelNotfi: (...args: Parameters<typeof updateChannelNotfi>) => {dispatch(updateChannelNotfi(...args))},
+        enterDrawing: (...args: Parameters<typeof enterDrawing>) => {dispatch(enterDrawing(...args))},
+        alert: (...args: Parameters<typeof alert>) => {dispatch(alert(...args))}
     }
 }
 

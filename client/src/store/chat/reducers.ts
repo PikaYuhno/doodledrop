@@ -7,7 +7,8 @@ const initialState: ChatState = {
     channels: [],
     currentChannel: null,
     socket: null,
-    messages: []
+    messages: [],
+    drawingRoom: null
 }
 
 export default (state = initialState, action: ChatActionTypes): ChatState => {
@@ -76,6 +77,17 @@ export default (state = initialState, action: ChatActionTypes): ChatState => {
             return {
                 ...state,
                 messages: [...state.messages, action.payload.message]
+            }
+
+        case "ENTER_DRAWING":
+            return {
+                ...state,
+                drawingRoom: action.payload.room_id 
+            }
+        case "LEAVE_DRAWING":
+            return {
+                ...state,
+                drawingRoom: null
             }
         default:
             return state;

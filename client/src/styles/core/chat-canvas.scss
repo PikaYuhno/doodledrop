@@ -1,0 +1,60 @@
+.cols {
+    display: flex;
+    width: 100%;
+    align-content: stretch;
+    padding: 1px;
+}
+
+.col {
+    margin: 2px;
+}
+
+.cols .col:nth-last-child(2) {
+    flex-grow: 2;
+}
+
+.tool-item {
+    height: 48px;
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tool-item:hover {
+    background-color: #ebe9e6;
+    border-radius: 50%;
+}
+
+.tool-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.option-pane {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#canvas-wrapper {
+    background-color: #3F3F3C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    border-radius: 5px;
+    height: '100%'; 
+    border: '2px solid #ebe9e6';
+    height: 100%;
+}
+
+.doodle-create-card {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    width: 440px;
+    background-color: white;
+    border-radius: 5px;
+}
