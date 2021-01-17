@@ -316,7 +316,7 @@ router.patch("/:user_id/profile", async (req: Request, res: Response) => {
 router.get("/notifications", async (req: Request, res: Response) => {
     const id = req.user!.id;
     
-    const notifications = await Notification.findAll({include: [
+    const notifications = await Notification.findAll({where: {user_id: id}, include: [
         {
             model: User,
             required: true,
@@ -327,4 +327,12 @@ router.get("/notifications", async (req: Request, res: Response) => {
     ]});
 
     return res.status(200).json({data: notifications, message: 'Successfully found notifications!', success: true});
+});
+
+// DELETE /api/users/notifications/:id
+router.delete("/notifications/:id", async (req: Request, res: Response) => {
+    const notifiId = req.params.id;
+    await Notification.destroy({where: {id: notifiId, user_id: req.user!.id}});
+
+    return res.status(200).json({data: null, message: 'Successfully deleted notifcation!', success: true});
 });

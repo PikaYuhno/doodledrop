@@ -2,6 +2,7 @@ import React from 'react';
 import {User, ActionCreator} from '../../../../global';
 import {channelAdded} from '../../../../store/chat/actions';
 import {connect} from 'react-redux';
+import VoidImg from '../../../../assets/void.png';
 
 
 type CreateChannelModalState = {
@@ -92,7 +93,7 @@ class CreateChannelModal extends React.Component<CreateChannelModalProps, Create
                                 </div>
                             </div>
                             <div className="card-main">
-                                {this.renderUsers()}
+                                {this.state.users.length > 0 ? this.renderUsers() : <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}><img src={VoidImg} height="128" width="128" /></div>}
                             </div>
                             <div className="card-footer">
                                 <button className="button is-fullwidth is-danger is-outline" onClick={this.handleCreateDM}>Create DM</button>

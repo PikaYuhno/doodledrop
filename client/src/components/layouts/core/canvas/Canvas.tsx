@@ -3,6 +3,7 @@ import P5 from 'p5';
 import {connect} from 'react-redux';
 import {RootReducer} from '../../../../store/root-reducer';
 import {JWTPayload} from '../../../../global';
+import {Tools} from '../../../pages/ChatCanvas';
 
 type Line = {
     x: number;
@@ -23,6 +24,7 @@ type CanvasProps = {
     strokeWeight: number;
     fill: string;
     multiplayer: boolean;
+    currentTool: Tools;
     style?: CSSProperties;
 } & OwnProps;
 
@@ -92,8 +94,8 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
 
                 }
             });
-            console.log("Listeing on drawing");
             this.props.socket.on('drawing', (data: {line: Line, room_id: string}) => {
+                console.log("Got data");
                 this.userHistory.undo.push(data.line);
             });
 
@@ -182,9 +184,6 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
     }
 
     sketch = (p: any) => {
-        console.log("rendered");
-        //let height = this.canvasRef.current?.offsetHeight || this.props.canvasHeight;
-        //let width = this.canvasRef.current?.offsetWidth || this.props.canvasWidth;
         let height = 600;
         let width = 800;
         p.setup = () => {
@@ -204,10 +203,12 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
                         strokeWeight: this.props.strokeWeight,
                         fill: this.props.fill
                     };
-                    if (this.props.multiplayer && this.props.socket && this.props.drawingRoom) {
-                        this.props.socket.emit("drawing", {line, room_id: this.props.drawingRoom})
+                    if (this.props.currentTool === Tools.PEN || this.props.currentTool === Tools.ERASER) {
+                        if (this.props.multiplayer && this.props.socket && this.props.drawingRoom) {
+                            this.props.socket.emit("drawing", {line, room_id: this.props.drawingRoom})
+                        }
+                        this.ownHistory.undo.push(line);
                     }
-                    this.ownHistory.undo.push(line);
                 }
 
             }

@@ -131,7 +131,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
 
     render() {
         if (!this.state.user)
-            return (<h1>Loading...</h1>);
+            return (null);
         console.log("User", this.state.user);
         const user = this.state.updatedUser || null;
         return (
@@ -166,7 +166,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                                         <div className="user-info-item">
                                             <span className="item">DOODLES</span>
                                             <span className="item-value">
-                                                {53}
+                                                {this.state.user.created_doodles}
                                             </span>
                                         </div>
                                     </div>

@@ -118,7 +118,7 @@ class Chat extends React.Component<ChatProps, ChatState> {
                 <div className="input-container">
                     <div className="field has-addons" style={{width: '100%'}}>
                         <div className="control" id="message-input">
-                            <input className="input" type="text" placeholder="Type Something" onChange={this.handleChange} name="message" />
+                            <input className="input" type="text" placeholder="Type Something" onChange={this.handleChange} name="message" value={this.state.message} />
                         </div>
                         <div className="control">
                             <form onSubmit={this.handleSend}>

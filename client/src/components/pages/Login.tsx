@@ -54,8 +54,7 @@ const Login: React.FC<LoginProps & DispatchProps> = (props) => {
                     <div className={styles['register-container']} >
                         <div className={styles.wrapper}>
                             <h1 className="title" style={{color: 'white'}}>New Here?</h1>
-                            <p className="content" style={{width: '500px', textAlign: 'center'}}>Lorem, ipsum dolor sit amet consectetur
-                        adipisicing elit. Quasi reprehenderit maiores iure facere quod possimus earum tempore </p>
+                            <p className="content" style={{width: '500px', textAlign: 'center'}}>Click here to make a new account</p>
                             <Link to="/auth/register">
                                 <input type="button" className="button is-danger is-outlined is-inverted" value="Register" />
                             </Link>

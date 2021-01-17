@@ -136,8 +136,7 @@ const Register: React.FC<RegisterProps & DispatchProps> = (props) => {
                     <div className="register-container">
                         <div className="wrapper">
                             <h1 className="title" style={{color: 'white'}}>Already have an Account?</h1>
-                            <p className="content" style={{width: '35vw', textAlign: 'center'}}>Lorem, ipsum dolor sit amet consectetur
-                        adipisicing elit. </p>
+                            <p className="content" style={{width: '35vw', textAlign: 'center'}}>Click here to sign in!</p>
                             <Link to="/auth/login">
                                 <input type="button" className="button is-danger is-outlined is-inverted" style={{width: '100px'}} value="Login" />
                             </Link>

@@ -7,15 +7,17 @@ import {leaveDrawing} from '../../store/chat/actions';
 import {connect} from 'react-redux';
 import {ActionCreator} from '../../global';
 
-enum Tools {
+export enum Tools {
     NONE,
     COLOR,
     STROKE,
+    ERASER,
+    PEN,
     REDO,
     UNDO,
     CLEAR,
     LEAVE,
-    UPLOAD
+    UPLOAD,
 }
 
 type ChatCanvasProps = DispatchProps & {multiplayer: boolean; styles?: CSSProperties};
@@ -33,6 +35,8 @@ type ChatCanvasState = {
 
 class ChatCanvas extends React.Component<ChatCanvasProps, ChatCanvasState> {
     canvasRef: React.RefObject<any>;
+    toolStyles: CSSProperties;
+    iconStyles: CSSProperties;
     constructor(props: ChatCanvasProps) {
         super(props);
         this.state = {
@@ -42,6 +46,13 @@ class ChatCanvas extends React.Component<ChatCanvasProps, ChatCanvasState> {
             openModal: false,
         }
         this.canvasRef = React.createRef();
+        this.toolStyles = {
+            backgroundColor: 'rgb(181 177 177)',
+            borderRadius: '50%'
+        }
+        this.iconStyles = {
+            color: 'white'
+        }
     }
 
 
@@ -64,6 +75,18 @@ class ChatCanvas extends React.Component<ChatCanvasProps, ChatCanvasState> {
                 this.canvasRef.current.leave();
                 this.props.leaveDrawing();
                 break;
+            /*case Tools.PEN:
+                this.setState({currentTool: tool, fill: '#000000'});
+                break;
+            case Tools.ERASER:
+                this.setState({currentTool: tool, fill: '#ffffff'});
+                break;
+            case Tools.COLOR:
+                this.setState({currentTool: tool});
+                break;
+            case Tools.STROKE:
+                this.setState({currentTool: tool});
+                break;*/
         }
         this.setState({currentTool: tool});
     }
@@ -93,16 +116,24 @@ class ChatCanvas extends React.Component<ChatCanvasProps, ChatCanvasState> {
                 <CreateDoodleModal open={this.state.openModal} onClose={() => this.setState({openModal: false})} imgStr={this.canvasRef.current && this.canvasRef.current.getImage()} />
                 <div className="cols" style={{height: '89%', ...this.props.styles}}>
                     <div className="col">
-                        <Canvas canvasWidth={400} canvasHeight={400} fill={this.state.fill} strokeWeight={this.state.strokeWeight} ref={this.canvasRef} multiplayer={this.props.multiplayer} />
+                        <Canvas canvasWidth={400} canvasHeight={400} fill={this.state.currentTool === Tools.ERASER ? '#ffffff' : this.state.fill} strokeWeight={this.state.currentTool === Tools.ERASER ? 20 : this.state.strokeWeight} ref={this.canvasRef} multiplayer={this.props.multiplayer} currentTool={this.state.currentTool} />
                     </div>
                     <div className="col">
                         <div className="tool-panel">
-                            <div className="tool-item" onClick={(e: React.MouseEvent<HTMLDivElement>) => this.handleClick(e, Tools.COLOR)}>
-                                <i className="fa fa-tint"></i>
+                            <div className="tool-item" style={this.state.currentTool === Tools.COLOR ? this.toolStyles : undefined} onClick={(e: React.MouseEvent<HTMLDivElement>) => this.handleClick(e, Tools.COLOR)}>
+                                <i className="fa fa-tint" style={this.state.currentTool === Tools.COLOR ? this.toolStyles : undefined}></i>
                             </div>
-                            <div className="tool-item" onClick={(e: React.MouseEvent<HTMLDivElement>) => this.handleClick(e, Tools.STROKE)}>
-                                <i className="fa fa-pencil"></i>
+                            <div className="tool-item" style={this.state.currentTool === Tools.STROKE ? this.toolStyles : undefined} onClick={(e: React.MouseEvent<HTMLDivElement>) => this.handleClick(e, Tools.STROKE)}>
+                                <i className="fa fa-sliders" style={this.state.currentTool === Tools.STROKE ? this.toolStyles : undefined}></i>
                             </div>
+                            <div className="tool-item" style={this.state.currentTool === Tools.PEN ? this.toolStyles : undefined} onClick={(e: React.MouseEvent<HTMLDivElement>) => this.handleClick(e, Tools.PEN)}>
+                                <i className="fa fa-pencil" style={this.state.currentTool === Tools.PEN ? this.toolStyles : undefined}></i>
+                            </div>
+                            {!this.props.multiplayer &&
+                                <div className="tool-item" style={this.state.currentTool === Tools.ERASER ? this.toolStyles : undefined} onClick={(e: React.MouseEvent<HTMLDivElement>) => this.handleClick(e, Tools.ERASER)}>
+                                    <i className="fa fa-eraser" style={this.state.currentTool === Tools.ERASER ? this.toolStyles : undefined}></i>
+                                </div>
+                            }
                             <div className="tool-item" onClick={(e: React.MouseEvent<HTMLDivElement>) => this.handleClick(e, Tools.REDO)}>
                                 <i className="fa fa-undo" style={{transform: 'scale(-1, 1)'}}></i>
                             </div>

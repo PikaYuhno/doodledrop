@@ -30,10 +30,6 @@ Notification.init({
         type: DataTypes.STRING,
         allowNull: false,
     },
-    notif_type: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
     read: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
