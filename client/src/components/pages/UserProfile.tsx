@@ -341,7 +341,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                                                     </div>
 
                                                     <span className="icon is-small is-left">
-                                                        <i className="fa fa-venus-mars"></i>
+                                                        <i className="fa fa-globe"></i>
                                                     </span>
                                                 </div>
                                             </div>

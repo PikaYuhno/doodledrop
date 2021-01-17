@@ -407,35 +407,6 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
                                                 </div>
                                                 </summary>
-
-                                                <div className="media ml-5">
-
-                                                    <div className="media-left">
-                                                        <p className="image is-48x48">
-                                                            <img src={pfp1} className="is-rounded" alt="pfp" />
-                                                        </p>
-                                                    </div>
-                                                    <div className="media-content">
-                                                        <p><strong className="is-size-5">Name</strong> <small>time</small></p>
-                                                        <p className="comment">foivnsifenvinsringielvuihseingihrtiuhbihrnginbsrtibiubsreibsiehfpawheiueriughilsdhilerhdsnbieshrifusberiuhgisuernbostghiueriueiubebgeoihrivegusenvnigsirnilsehriogugieng
-                                                        s
-                                                    </p>
-
-                                                        <div className="level">
-                                                            <div className="level-left">
-                                                                <a className="ml-2">
-                                                                    <span className="icon"><i className="fa fa-thumbs-up"></i> (4)</span>
-                                                                </a>
-                                                                <a className="ml-2">
-                                                                    <span className="icon"><i className="fa fa-thumbs-down"></i></span>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-
-                                                </div>
-
                                             </details>
 
                                         </div>
@@ -558,12 +529,12 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                             <div className="notifications">
                                                 <div className="notification is-danger">
                                                     <button className="delete" onClick={() => { this.handleNotification(1) }}></button>
-                                            Thy shall not pass!
-                                        </div>
+                                                    Thy shall not pass!
+                                                </div>
 
                                                 <div className="notification is-danger">
                                                     Thy shall not pass!
-                                        </div>
+                                                </div>
 
 
 

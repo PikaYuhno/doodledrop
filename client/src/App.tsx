@@ -16,6 +16,7 @@ import Contributers from './components/pages/Contributors';
 import Search from "./components/pages/Search";
 import Profile from "./components/pages/Profile";
 import UserProfile from './components/pages/UserProfile';
+import MainCanvas from './components/pages/MainCanvas';
 
 type AppProps = {
     socket?: SocketIOClient.Socket | null
@@ -41,6 +42,7 @@ const App: React.FC<AppProps> = (props) => {
                     <ProtectedRoute path="/profile/:id" exact component={Profile} />
                     <ProtectedRoute path="/profile" exact component={UserProfile} />
                     <ProtectedRoute path="/chat" exact component={ChatBase} />
+                    <ProtectedRoute path="/canvas" exact component={MainCanvas} />
                 </Switch>
             </Router>
         </React.Fragment>

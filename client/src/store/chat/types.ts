@@ -11,12 +11,15 @@ export const SOCKET_CONNECTED = "SOCKET_CONNECTED";
 export const SOCKET_DISCONNECTED = "SOCKET_DISCONNECTED";
 export const MESSAGES_RECIEVED = "MESSAGES_RECIEVED";
 export const MESSAGES_ADDED = "MESSAGES_ADDED";
+export const ENTER_DRAWING = "ENTER_DRAWING";
+export const LEAVE_DRAWING = "LEAVE_DRAWING";
 
 export type ChatState = {
     channels: Channel[];
     currentChannel: Channel | null;
     socket: SocketIOClient.Socket | null;
     messages: Message[];
+    drawingRoom: string | null;
 }
 
 export type ChatActionTypes = Action<"CHANNELS_LOADED", {channels: Channel[]}> | Action<"CHANNEL_CONNECTED", {channel: Channel}> |
@@ -28,4 +31,6 @@ export type ChatActionTypes = Action<"CHANNELS_LOADED", {channels: Channel[]}> |
     Action<"CHANNEL_UPDATE_LATEST_MSG", {message: Message, notfi: boolean}> |
     Action<"CHANNEL_UPDATE_NOTFI", {room_id: string}> | 
     Action<"CHANNEL_ADDED", {channel: Channel}> | 
-    Action<"CHANNEL_LOGOUT">
+    Action<"CHANNEL_LOGOUT"> | 
+    Action<"ENTER_DRAWING", {room_id: string}> | 
+    Action<"LEAVE_DRAWING">

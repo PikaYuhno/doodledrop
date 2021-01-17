@@ -1,11 +1,16 @@
 import {Request, Response, Router} from "express";
 export const router = Router();
 import Doodle from "../../db/models/Doodle";
-import User from "../../db/models/User";
 import {doodlePostSchema} from "../../schemas/doodleSchemas";
 import {commentSchema} from "../../schemas/commentSchemas";
 import Comment from '../../db/models/Comment';
+import Notification from "../../db/models/Notification";
 import Follower from '../../db/models/Follower';
+import {Sequelize} from "sequelize";
+import fs from 'fs';
+import path from 'path';
+import {v4} from 'uuid';
+import User from '../../db/models/User';
 
 
 // PATCH /api/doodles/:id/comments/:c_id
@@ -45,6 +50,9 @@ router.post("/:id/comments", async (req: Request, res: Response) => {
     try {
         const value = await commentSchema.validateAsync(body); 
         const created = await Comment.create({doodle_id: doodle.id, user_id: req.user!.id, content: value.content, created_at: new Date()});
+
+        await Notification.create({user_id: doodle.user_id, doodle_id: doodle.id, content: `${req.user!.username} commented on your doodle "${doodle.title}"`})
+         
         return res.status(200).json({data: created, message: 'Successfully created Comment!', success:true});
     } catch (error) {
         return res.status(400).json({data: null, message: error.details[0].message, success: false}); 
@@ -142,7 +150,15 @@ router.post("/", async (req: Request, res: Response) => {
     try {
         let value = await doodlePostSchema.validateAsync(body);
         value.user_id = id;
+        const imageData = value.image_path.replace(/^data:image\/png;base64,/, "");
+        const fileName = `${v4()}.png`;
+        fs.writeFile(`doodles/${fileName}`, imageData, 'base64', (err) => {
+           if(err) return res.status(400).json({data: null, message: 'Something went wrong...', success: false});
+        });
+        value.image_path = fileName;
+
         const created: Doodle = await Doodle.create(value);
+        await User.update({created_doodles: Sequelize.literal('created_doodles + 1')}, {where: {id: id}})
         return res.status(201).json({
             data: created,
             message: "Successfully created doodle!",
@@ -164,24 +180,24 @@ router.patch("/:id/like", async (req: Request, res: Response) => {
     const id = req.params.id;
     const userId = req.user!.id;
     const doodle = await Doodle.findOne({where: {id}});
-    likeOrDislike(userId, res, true, doodle, id);
+    likeOrDislike( req, res, true, doodle, id);
 });
 
 // PATCH /api/doodles/:id/dislike
 router.patch("/:id/dislike", async (req: Request, res: Response) => {
     const id = req.params.id;
-    const userId = req.user!.id;
     const doodle = await Doodle.findOne({where: {id}});
-    likeOrDislike(userId, res, false, doodle, id);
+    likeOrDislike( req, res, false, doodle, id);
 });
 
 const likeOrDislike = async (
-    userId: number,
+    req: Request,
     res: Response,
     like: boolean,
     doodle: Doodle | null,
     id?: string
 ) => {
+    const userId = req.user!.id;
     if (!doodle)
         return res
             .status(404)
@@ -200,6 +216,9 @@ const likeOrDislike = async (
         ? {likes: [...doodle.likes, userId]}
         : {dislikes: doodle.dislikes.filter((el) => el !== userId)};
     const updated = await Doodle.update(values, {where: {id}});
+
+    await Notification.create({user_id: doodle.user_id, doodle_id: doodle.id, content: `${req.user!.username} ${like ? "liked" : "disliked"} your Doodle "${doodle.title}"`})
+
     return res.status(200).json({
         data: updated,
         message: `Successfully ${like ? "liked" : "disliked"} doodle!`,
@@ -265,6 +284,8 @@ router.delete("/:id", async (req: Request, res: Response) => {
             .json({data: null, message: "ID not specified!", success: false});
 
     await Doodle.destroy({where: {id}});
+    await User.update({created_doodles: Sequelize.literal('created_doodles - 1')}, {where: {id: req.user!.id}})
+
     return res.status(200).json({
         data: null,
         message: "Successfully deleted doodle!",

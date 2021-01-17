@@ -3,6 +3,20 @@ import {alert} from "../alert/actions";
 import {AlertType} from "../alert/types";
 import io from 'socket.io-client';
 
+export const enterDrawing = (room_id: string) => {
+    return {
+        type: "ENTER_DRAWING",
+        payload: {
+            room_id
+        }
+    }
+}
+export const leaveDrawing = () => {
+    return {
+        type: "LEAVE_DRAWING",
+    }
+}
+
 export const channelsLoaded = (channels: Channel[]) => {
     return {
         type: "CHANNELS_LOADED",
