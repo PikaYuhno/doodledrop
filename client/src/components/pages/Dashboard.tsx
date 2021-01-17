@@ -114,7 +114,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     }
 
     loadDoodles = async () => {
-        const resp = await fetch(`/api/users`, {
+        const resp = await fetch(`/api/doodles`, {
             method: "GET",
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",
@@ -153,6 +153,10 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     }
 
     renderDoodles = () => {
+        if(this.state.doodles == null){
+            return;
+        }
+
         return this.state.doodles.map((doodle: Doodle) => {
             return <React.Fragment key={doodle.id}>
                 <div className="box is-shawowless">
@@ -161,20 +165,20 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                         <div className="level-left">
                             <div className="ml-2">
                                 <p className="image is-64x64">
-                                    <img src={pfp1} className="is-rounded" alt="pfp" />
+                                    <Link to={`profile/${doodle.user.id}`}><img src={doodle.user.avatar} className="is-rounded" alt="pfp" /></Link>
                                 </p>
                             </div>
                             <div className="ml-2">
-                                <p><strong className="is-size-4">{ }</strong> <small>time</small></p>
+                                <p><strong className="is-size-4">{doodle.user.username}</strong> <small>{doodle.created_at}</small></p>
                             </div>
                         </div>
                         <div className="level-item">
-                            <p className="title">{ }</p>
+                            <p className="title">{doodle.title}</p>
                         </div>
                     </div>
 
                     <div className="image has-image-sized container">
-                        <img src={doodle.image_path} />
+                        <img src={`/doodles/${doodle.image_path}`} />
                     </div>
 
 
@@ -186,13 +190,13 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                             </a>
                         </div>
                         <div className="column has-text-centered">
-                            <a className="icon-text" style={ (doodle.likes.includes(this.props.user?.id)) ? {} : {} } onClick={() => { (doodle.likes.includes(this.props.user?.id)) ? this.handleFeedback(doodle.id, true, "like") : console.log("ok") }}>
+                            <a className="icon-text" style={ (doodle.likes.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={() => { (doodle.likes.includes(this.props.user?.id)) ? this.handleFeedback(doodle.id, true, "like") : console.log("ok") }}>
                                 <span className="icon"><i className="fa fa-thumbs-up fa-lg"></i></span>
                                 <span> Like ({doodle.likes.length})</span>
                             </a>
                         </div>
                         <div className="column has-text-centered">
-                            <a className="icon-text" onClick={() => { this.handleFeedback(doodle.id, true, "dislike") }}>
+                            <a className="icon-text" style={ (doodle.likes.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={() => { (doodle.likes.includes(this.props.user?.id)) ? this.handleFeedback(doodle.id, true, "dislike") : console.log("ok") }}>
                                 <span className="icon"><i className="fa fa-thumbs-down fa-lg"></i></span>
                                 <span> Dislike ({doodle.dislikes.length})</span>
                             </a>
@@ -203,34 +207,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
                     <div className="">
 
-                        <div className="media ml-5">
-
-                            <div className="media-left">
-                                <p className="image is-48x48">
-                                    <img src={pfp1} className="is-rounded" alt="pfp" />
-                                </p>
-                            </div>
-                            <div className="media-content">
-                                <p><strong className="is-size-5">Name</strong> <small>time</small></p>
-                                <p className="comment">foivnsifenvinsringielvuihseingihrtiuhbihrnginbsrtibiubsreibsiehfpawheiueriughilsdhilerhdsnbieshrifusberiuhgisuernbostghiueriueiubebgeoihrivegusenvnigsirnilsehriogugieng
-                                s
-                                </p>
-
-                                <div className="level">
-                                    <div className="level-left">
-                                        <a className="ml-2">
-                                            <span className="icon"><i className="fa fa-thumbs-up"></i> (4)</span>
-                                        </a>
-                                        <a className="ml-2">
-                                            <span className="icon"><i className="fa fa-thumbs-down"></i></span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div>
-
+                        {this.renderComments(doodle.comments)}
 
                     </div>
 
@@ -239,29 +216,27 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         });
     }
 
-    renderComments = (comments: Array<Comment>) => {
-        return comments.map((comment: Comment) => {
+    renderComments = (comments: Array<Comment> | undefined) => {
+        return comments?.map((comment: Comment) => {
             return <React.Fragment key={comment.id}>
                 <div className="media ml-5">
 
                     <div className="media-left">
                         <p className="image is-48x48">
-                            <img src={pfp1} className="is-rounded" alt="pfp" />
+                            <Link to={`profile/${comment.user_id}`}><img src={pfp1} className="is-rounded" alt="pfp" /></Link>
                         </p>
                     </div>
                     <div className="media-content">
-                        <p><strong className="is-size-5">Name</strong> <small>time</small></p>
-                        <p className="comment">foivnsifenvinsringielvuihseingihrtiuhbihrnginbsrtibiubsreibsiehfpawheiueriughilsdhilerhdsnbieshrifusberiuhgisuernbostghiueriueiubebgeoihrivegusenvnigsirnilsehriogugieng
-                        s
-                            </p>
+                        <p><strong className="is-size-5">{comment.user_id}</strong> <small>{comment.created_at}</small></p>
+                        <p className="comment">{comment.content}</p>
 
                         <div className="level">
                             <div className="level-left">
-                                <a className="ml-2">
-                                    <span className="icon"><i className="fa fa-thumbs-up"></i> (4)</span>
+                                <a className="ml-2" style={ (comment.like.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={ () => { (comment.like.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "like") : console.log("ok")}}>
+                                    <span className="icon"><i className="fa fa-thumbs-up"></i> ({comment.like.length})</span>
                                 </a>
-                                <a className="ml-2">
-                                    <span className="icon"><i className="fa fa-thumbs-down"></i></span>
+                                <a className="ml-2" style={ (comment.like.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={ () => { (comment.like.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "dislike") : console.log("ok")}}>
+                                    <span className="icon"><i className="fa fa-thumbs-down"></i> ({comment.dislikes.length})</span>
                                 </a>
                             </div>
                         </div>
@@ -285,7 +260,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     }
 
     handleNotification = async (id: number) => {
-        await fetch(`/api/users/notification/${id}`, {
+        await fetch(`/api/users/notifications/${id}`, {
             method: "DELETE",
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",
@@ -295,6 +270,10 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     }
 
     renderFollowing = () => {
+        if(this.state.following == null){
+            return;
+        }
+
         return this.state.following.map((following: User) => {
             return <React.Fragment key={following.id}>
                 <div className="media">
@@ -518,6 +497,8 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
                                         </div>
 
+                                        {this.renderDoodles()}
+
                                     </div>
 
 
@@ -536,17 +517,6 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                             </div>
 
                                             <div className="notifications">
-                                                <div className="notification is-danger">
-                                                    <button className="delete" onClick={() => { this.handleNotification(1) }}></button>
-                                                    Thy shall not pass!
-                                                </div>
-
-                                                <div className="notification is-danger">
-                                                    Thy shall not pass!
-                                                </div>
-
-
-
 
                                                 {this.renderNotification()}
                                             </div>
@@ -554,42 +524,6 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
                                         <div className="box">
                                             <p className="title has-text-centered">Following</p>
-
-                                            <div className="media">
-                                                <div className="media-left">
-                                                    <div className="">
-                                                        <p className="image is-48x48">
-                                                            <img src={pfp1} className="is-rounded" alt="pfp" />
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <div className="media-content">
-                                                    <p className="title is-size-5 pt-3"><strong>Name</strong></p>
-                                                </div>
-
-                                                <div className="media-right">
-                                                    <button className="button is-info is-light">View Profile</button>
-                                                </div>
-                                            </div>
-
-                                            <div className="media">
-                                                <div className="media-left">
-                                                    <div className="">
-                                                        <p className="image is-48x48">
-                                                            <img src={pfp1} className="is-rounded" alt="pfp" />
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <div className="media-content">
-                                                    <p className="title is-size-5 pt-3"><strong>Name</strong></p>
-                                                </div>
-
-                                                <div className="media-right">
-                                                    <button className="button is-info is-light">View Profile</button>
-                                                </div>
-                                            </div>
 
                                             {this.renderFollowing()}
 

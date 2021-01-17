@@ -56,10 +56,10 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
         this.loadFollowers();
         this.loadFollowing();
 
-        const found = this.state.followers.find(el => {el.id === this.props.user?.id}) ? true : false;
+        let found = this.state.followers.find(el => el.id === this.props.user?.id) ? true : false;
         this.setState({ifollow: found})
 
-        console.log(this.state.following);
+        console.log("ok");
     }
 
     componentDidUpdate(prevProps: ProfileProps) {
@@ -87,29 +87,26 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     }
 
     handleFollow = async () => {
-        if(!this.props.user) {
-            return;
-        }
 
         if (this.state.ifollow) {
-            await fetch(`/api/users/unfollow/${this.props.id}`, {
-                method: "DELETE",
-                headers: {
-                    "Authorization": localStorage.getItem("token") || "token",
-                    "Content-Type": "application/json"
-                },
-            });
+            // await fetch(`/api/users/unfollow/${this.props.id}`, {
+            //     method: "DELETE",
+            //     headers: {
+            //         "Authorization": localStorage.getItem("token") || "token",
+            //         "Content-Type": "application/json"
+            //     },
+            // });
             
             this.setState({ifollow: false});
         }
         else {
-            await fetch(`/api/users/follow/${this.props.id}`, {
-                method: "POST",
-                headers: {
-                    "Authorization": localStorage.getItem("token") || "token",
-                    "Content-Type": "application/json"
-                },
-            });
+            // await fetch(`/api/users/follow/${this.props.id}`, {
+            //     method: "POST",
+            //     headers: {
+            //         "Authorization": localStorage.getItem("token") || "token",
+            //         "Content-Type": "application/json"
+            //     },
+            // });
 
             this.setState({ifollow: true});
         }
@@ -235,7 +232,11 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     renderDelete = (id: number) => {
         if (this.props.user?.id === this.state.user.id) {
             return <React.Fragment>
-                <button className="button" onClick={() => { this.setState({ delete: 1 }) }}>Delete</button>
+                <button className="button" onClick={() => { this.setState({ delete: id }) }}>
+                    <div className="icon">
+                        <span className="icon is-medium"><i className="fa fa-trash"></i></span>
+                    </div>
+                </button>
 
                 <div className={(this.state.delete == id) ? "modal is-active" : "modal"}>
                     <div className="modal-background"></div>
@@ -264,7 +265,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                         <div className="media">
                             <div className="media-left mt-5">
                                 <div className="image is-256x256">
-                                    <img src={pfp1} className="is-rounded" />
+                                    <img src={this.state.user.avatar} className="is-rounded" />
                                 </div>
                                 <div className="mt-3 has-text-centered">
                                     {this.renderButton()}
@@ -404,42 +405,6 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                                             <li className={this.state.followersClass} onClick={() => { this.handleTabs(false) }}><a>Followers</a></li>
                                             <li className={this.state.followingClass} onClick={() => { this.handleTabs(true) }}><a>Following</a></li>
                                         </ul>
-                                    </div>
-
-                                    <div className="media">
-                                        <div className="media-left">
-                                            <div className="">
-                                                <p className="image is-48x48">
-                                                    <img src={pfp1} className="is-rounded" alt="pfp" />
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div className="media-content">
-                                            <p className="is-size-5 has-text-centered"><strong>Name</strong></p>
-                                        </div>
-
-                                        <div className="media-right">
-                                            <button className="button">View</button>
-                                        </div>
-                                    </div>
-
-                                    <div className="media">
-                                        <div className="media-left">
-                                            <div className="">
-                                                <p className="image is-48x48">
-                                                    <img src={pfp1} className="is-rounded" alt="pfp" />
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div className="media-content">
-                                            <p className="is-size-5 has-text-centered"><strong>Name</strong></p>
-                                        </div>
-
-                                        <div className="media-right">
-                                            <button className="button">View</button>
-                                        </div>
                                     </div>
 
                                     {this.renderFollows()}

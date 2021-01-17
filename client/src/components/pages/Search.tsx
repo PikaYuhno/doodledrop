@@ -67,7 +67,7 @@ class Search extends React.Component<{}, SearchState> {
         }
         else{
             return <React.Fragment>
-                <figure className="image is-1by1">
+                <figure className="image resize container">
                     <img src="https://media.discordapp.net/attachments/757688756454293545/800387540489469972/unknown.png"/>
                 </figure>
             </React.Fragment>
