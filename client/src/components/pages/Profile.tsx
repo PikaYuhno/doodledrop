@@ -38,7 +38,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     constructor(props: ProfileProps) {
         super(props);
         this.state = {
-            user: { id: 0, username: "null", avatar: "null", bio: "null", location: "null" },
+            user: { id: 0, username: "", avatar: "", bio: "", location: "" },
             doodles: [],
             following: [],
             followers: [],
@@ -50,16 +50,25 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
 
     }
 
-
-
     componentDidMount = () => {
         console.log("Profile - Props", this.props);
         this.handleLoad(this.props.id);
         this.loadFollowers();
         this.loadFollowing();
 
+        const found = this.state.followers.find(el => {el.id === this.props.user?.id}) ? true : false;
+        this.setState({ifollow: found})
+
         console.log(this.state.following);
     }
+
+    componentDidUpdate(prevProps: ProfileProps) {
+        if(prevProps.id !== this.props.id) {
+            this.handleLoad(this.props.id);
+            this.loadFollowers();
+            this.loadFollowing();
+        }
+      } 
 
     handleLoad = async (id: number) => {
 
@@ -78,6 +87,10 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     }
 
     handleFollow = async () => {
+        if(!this.props.user) {
+            return;
+        }
+
         if (this.state.ifollow) {
             await fetch(`/api/users/unfollow/${this.props.id}`, {
                 method: "DELETE",
@@ -86,7 +99,8 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                     "Content-Type": "application/json"
                 },
             });
-            this.setState({ ifollow: false })
+            
+            this.setState({ifollow: false});
         }
         else {
             await fetch(`/api/users/follow/${this.props.id}`, {
@@ -96,8 +110,11 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                     "Content-Type": "application/json"
                 },
             });
-            this.setState({ ifollow: true })
+
+            this.setState({ifollow: true});
         }
+
+        this.loadFollowers();
     }
 
     handleTabs = (following: boolean) => {
@@ -139,7 +156,8 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
         const data = await resp.json();
 
         this.setState({ followers: data.data });
-        this.setState({ ifollow: data.message });
+
+        
     }
 
     loadDoodles = async () => {
@@ -156,11 +174,11 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     }
 
     renderDoodles = () => {
-
+        
     }
 
     renderFollows = () => {
-        let follow = (this.state.followersClass === "is-active") ? this.state.following : this.state.followers;
+        let follow = (this.state.followersClass === "is-active") ? this.state.followers : this.state.following;
 
         return follow.map((follow: User) => {
             return <React.Fragment key={follow.id}>
@@ -178,15 +196,17 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                     </div>
 
                     <div className="media-right">
-                        <Link to={`profile/${follow.id}`}><button className="button is-info is-light">View Profile</button></Link>
+                        <Link to={`/profile/${follow.id}`}><button className="button is-info is-light">View Profile</button></Link>
                     </div>
                 </div>
             </React.Fragment>
         });
     }
 
+    
+
     renderButton = () => {
-        if (this.props.user?.id === this.state.user.id) {
+        if(this.state.user.id === this.props.user?.id){
             return;
         }
 
@@ -275,7 +295,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                                     <div className="level-item">
                                         <div>
                                             <p className="heading">Followers</p>
-                                            <p>{this.state.following.length}</p>
+                                            <p>{this.state.followers.length}</p>
                                         </div>
                                     </div>
                                 </div>

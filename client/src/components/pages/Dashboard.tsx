@@ -2,16 +2,17 @@ import React, { TextareaHTMLAttributes } from 'react';
 import Navbar from '../layouts/core/Navbar';
 import '../../styles/landing/dashboard.scss';
 import pfp1 from '../../assets/pfp/pfp1.png';
-import { Doodle, User, Comment } from '../../global';
+import { Doodle, User, Comment, Notification } from '../../global';
 import { History } from "history";
 import { JWTPayload as AuthUser } from '../../global';
 import { connect } from 'react-redux';
 import { RootReducer } from '../../store/root-reducer';
+import { Link } from 'react-router-dom';
 
 type DashboardState = {
     doodles: Array<Doodle>;
     following: Array<User>;
-    notifications: Array<number>;
+    notifications: Array<Notification>;
     reply: number;
     comment: string;
 }
@@ -43,6 +44,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     componentDidMount = () => {
         this.loadDoodles();
         this.loadFollowing();
+        
     }
 
     handleFeedback = async (id: number, doodle: boolean, like: string) => {
@@ -138,7 +140,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     }
 
     loadNotifications = async () => {
-        const resp = await fetch(``, {
+        const resp = await fetch(`/api/users/notifications`, {
             method: "GET",
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",
@@ -184,7 +186,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                             </a>
                         </div>
                         <div className="column has-text-centered">
-                            <a className="icon-text" onClick={() => { this.handleFeedback(doodle.id, true, "like") }}>
+                            <a className="icon-text" style={ (doodle.likes.includes(this.props.user?.id)) ? {} : {} } onClick={() => { (doodle.likes.includes(this.props.user?.id)) ? this.handleFeedback(doodle.id, true, "like") : console.log("ok") }}>
                                 <span className="icon"><i className="fa fa-thumbs-up fa-lg"></i></span>
                                 <span> Like ({doodle.likes.length})</span>
                             </a>
@@ -272,17 +274,24 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     }
 
     renderNotification = () => {
-        // return this.state.notifications.map((notification: Notification) => {
-        //     return <React.Fragment key={}>
-        //         <div className="notification is-danger">
-        //             Thy shall not pass!
-        //         </div>
-        //     </React.Fragment>
-        // })
+        return this.state.notifications.map((notification: Notification) => {
+            return <React.Fragment key={notification.id}>
+                <div className="notification is-danger">
+                    <button className="delete" onClick={() => { this.handleNotification(notification.id) }}></button>
+                    {notification.message}
+                </div>
+             </React.Fragment>
+        })
     }
 
     handleNotification = async (id: number) => {
-
+        await fetch(`/api/users/notification/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": localStorage.getItem("token") || "token",
+                "Content-Type": "application/json",
+            },
+        });
     }
 
     renderFollowing = () => {
@@ -302,7 +311,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                     </div>
 
                     <div className="media-right">
-                        <button className="button is-info is-light">View Profile</button>
+                        <Link to={`profile/${following.id}`}><button className="button is-info is-light">View Profile</button></Link>
                     </div>
                 </div>
             </React.Fragment>

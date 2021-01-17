@@ -71,3 +71,8 @@ export type Comment = {
     like: Array<number>;
     dislikes: Array<number>;
 }
+
+export type Notification = {
+    id: number;
+    message: string;
+}
