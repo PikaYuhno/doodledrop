@@ -13,8 +13,9 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "2MB" }));
 app.use(express.static('avatars'));
+app.use(express.static('doodles'));
 
 app.use("/api/users", verifyToken, userRouter);
 app.use("/api/doodles", verifyToken, doodleRouter);
