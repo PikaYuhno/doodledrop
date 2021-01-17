@@ -1,11 +1,14 @@
-import React, {ReactComponentElement} from 'react';
+import React, { ReactComponentElement } from 'react';
 import Navbar from '../layouts/core/Navbar';
 import pfp1 from '../../assets/pfp/pfp1.png';
 import '../../styles/landing/dashboard.scss';
-import {Doodle, User} from '../../global';
-import {Link} from 'react-router-dom';
-import {RouteComponentProps, useParams} from 'react-router-dom';
-import {userLoaded} from '../../store/auth/actions';
+import { Doodle, User } from '../../global';
+import { Link } from 'react-router-dom';
+import { JWTPayload as AuthUser } from '../../global';
+import { connect } from 'react-redux';
+import { RootReducer } from '../../store/root-reducer';
+import { RouteComponentProps, useParams } from 'react-router-dom';
+import { userLoaded } from '../../store/auth/actions';
 
 type ProfileState = {
     user: User;
@@ -15,11 +18,19 @@ type ProfileState = {
     followingClass: string;
     followersClass: string;
     ifollow: boolean;
+    delete: number;
 }
 
 type ProfileProps = {
     id: number;
+    user: AuthUser | null;
     history: History;
+}
+
+const mapStateToProps = (state: RootReducer) => {
+    return {
+        user: state.auth.user,
+    }
 }
 
 class Profile extends React.Component<ProfileProps, ProfileState>{
@@ -27,26 +38,32 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     constructor(props: ProfileProps) {
         super(props);
         this.state = {
-          user: {id:0,username:"null",avatar:"null",bio:"null",location:"null"},
-          doodles: [],
-          following: [],
-          followers: [],
-          followingClass: "",
-          followersClass: "is-active",
-          ifollow: false
+            user: { id: 0, username: "null", avatar: "null", bio: "null", location: "null" },
+            doodles: [],
+            following: [],
+            followers: [],
+            followingClass: "",
+            followersClass: "is-active",
+            ifollow: false,
+            delete: 0
         }
-        
+
     }
+
+
 
     componentDidMount = () => {
         console.log("Profile - Props", this.props);
         this.handleLoad(this.props.id);
         this.loadFollowers();
         this.loadFollowing();
+
+        console.log(this.state.following);
     }
 
-    handleLoad = async (id : number) => {
-        const resp = await fetch(`/api/users/${id}` , {
+    handleLoad = async (id: number) => {
+
+        const resp = await fetch(`/api/users/${id}`, {
             method: "GET",
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",
@@ -55,51 +72,51 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
         });
         const data = await resp.json();
 
-        this.setState({user: data.data});
+        this.setState({ user: data.data });
 
 
     }
 
     handleFollow = async () => {
-        if(this.state.ifollow){
-            await fetch(`/api/users/unfollow/${this.state.user.id}` , {
+        if (this.state.ifollow) {
+            await fetch(`/api/users/unfollow/${this.props.id}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": localStorage.getItem("token") || "token",
                     "Content-Type": "application/json"
                 },
             });
-            this.setState({ifollow: false})
+            this.setState({ ifollow: false })
         }
-        else{
-            await fetch(`/api/users/follow/${this.state.user.id}` , {
+        else {
+            await fetch(`/api/users/follow/${this.props.id}`, {
                 method: "POST",
                 headers: {
                     "Authorization": localStorage.getItem("token") || "token",
                     "Content-Type": "application/json"
                 },
             });
-            this.setState({ifollow: true})
+            this.setState({ ifollow: true })
         }
     }
 
     handleTabs = (following: boolean) => {
-        if(following){
-            if(this.state.followingClass!="is-active"){
-                this.setState({followingClass:"is-active"})
-                this.setState({followersClass:""})
+        if (following) {
+            if (this.state.followingClass != "is-active") {
+                this.setState({ followingClass: "is-active" })
+                this.setState({ followersClass: "" })
             }
         }
-        else{
-            if(this.state.followersClass!="is-active"){
-                this.setState({followersClass:"is-active"})
-                this.setState({followingClass:""})
+        else {
+            if (this.state.followersClass != "is-active") {
+                this.setState({ followersClass: "is-active" })
+                this.setState({ followingClass: "" })
             }
         }
     }
 
     loadFollowing = async () => {
-        const resp = await fetch(`/api/following/${this.state.user.id}`, {
+        const resp = await fetch(`/api/users/following/${this.props.id}`, {
             method: "GET",
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",
@@ -108,11 +125,11 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
         });
         const data = await resp.json();
 
-        this.setState({following: data.data});
+        this.setState({ following: data.data });
     }
 
     loadFollowers = async () => {
-        const resp = await fetch(`/api/followers/${this.state.user.id}` , {
+        const resp = await fetch(`/api/users/followers/${this.props.id}`, {
             method: "GET",
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",
@@ -121,12 +138,12 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
         });
         const data = await resp.json();
 
-        this.setState({followers: data.data});
-        this.setState({ifollow: data.message});
+        this.setState({ followers: data.data });
+        this.setState({ ifollow: data.message });
     }
 
     loadDoodles = async () => {
-        const resp = await fetch(`/api/doodle/user/${this.state.user.id}` , {
+        const resp = await fetch(`/api/doodle/user/${this.props.id}`, {
             method: "GET",
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",
@@ -135,7 +152,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
         });
         const data = await resp.json();
 
-        this.setState({doodles: data.data});
+        this.setState({ doodles: data.data });
     }
 
     renderDoodles = () => {
@@ -143,9 +160,9 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     }
 
     renderFollows = () => {
-        let follow = (this.state.followersClass=="is-active") ? this.state.following : this.state.followers;
-    
-        return follow.map((follow:User) => {
+        let follow = (this.state.followersClass === "is-active") ? this.state.following : this.state.followers;
+
+        return follow.map((follow: User) => {
             return <React.Fragment key={follow.id}>
                 <div className="media">
                     <div className="media-left">
@@ -169,9 +186,51 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     }
 
     renderButton = () => {
-        return <React.Fragment>
-            <button onClick={this.handleFollow} className="button">{(this.state.ifollow) ?  "- Unfollow" : "+ Follow"}</button>
-        </React.Fragment>
+        if (this.props.user?.id === this.state.user.id) {
+            return;
+        }
+
+        if (this.state.ifollow) {
+            return <React.Fragment>
+                <button onClick={this.handleFollow} className="button"><span className="icon mr-1"><i className="fa fa-minus"></i></span> Unfollow</button>
+            </React.Fragment>
+        }
+        else {
+            return <React.Fragment>
+                <button onClick={this.handleFollow} className="button"><span className="icon mr-1"><i className="fa fa-plus"></i></span> Follow</button>
+            </React.Fragment>
+        }
+    }
+
+    handleDelete = async (id: number) => {
+        await fetch(`/api/doodle/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": localStorage.getItem("token") || "token",
+                "Content-Type": "application/json"
+            },
+        });
+    }
+
+    renderDelete = (id: number) => {
+        if (this.props.user?.id === this.state.user.id) {
+            return <React.Fragment>
+                <button className="button" onClick={() => { this.setState({ delete: 1 }) }}>Delete</button>
+
+                <div className={(this.state.delete == id) ? "modal is-active" : "modal"}>
+                    <div className="modal-background"></div>
+                    <div className="modal-card">
+                        <div className="modal-card-head">
+                            <p className="modal-card-title">Are you sure you want to delete this doodle?</p>
+                        </div>
+                        <div className="modal-card-foot">
+                            <button className="button" onClick={() => { this.handleDelete(id) }}>Delete</button>
+                            <button className="button" onClick={() => { this.setState({ delete: 0 }) }}>Close</button>
+                        </div>
+                    </div>
+                </div>
+            </React.Fragment>
+        }
     }
 
     render() {
@@ -199,7 +258,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                                         <p className="subtitle has-text-centered">{this.state.user.bio}</p>
                                     </div>
                                 </div>
-                                
+
                                 <div className="level is-mobile has-text-centered">
                                     <div className="level-item">
                                         <div>
@@ -222,7 +281,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                                 </div>
                             </div>
 
-                            
+
                         </div>
                     </div>
 
@@ -232,7 +291,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                             <div className="column is-two-thirds">
                                 <div className="box is-shawowless">
 
-                                    <div className="level">
+                                    <div className="level is-mobile">
                                         <div className="level-left">
                                             <div className="ml-2">
                                                 <p className="image is-48x48">
@@ -242,6 +301,11 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                                             <div className="ml-2">
                                                 <p><strong className="is-size-4">Name</strong> <small>time</small></p>
                                             </div>
+                                        </div>
+                                        <div className="level-right">
+
+
+                                            {this.renderDelete(1)}
                                         </div>
                                     </div>
 
@@ -284,6 +348,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                                                     <img src={pfp1} className="is-rounded" alt="pfp" />
                                                 </p>
                                             </div>
+
                                             <div className="media-content">
                                                 <p><strong className="is-size-5">Name</strong> <small>time</small></p>
                                                 <p>foivnsifenvinsringielvuihseingihrtiuhbihrnginbsrtibiubsreibsiehfpawheiueriughilsdhilerhdsnbieshrifusberiuhgisuernbostghiueriueiubebgeoihrivegusenvnigsirnilsehriogugieng
@@ -302,7 +367,6 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                                                 </div>
                                             </div>
 
-
                                         </div>
 
                                     </div>
@@ -317,8 +381,8 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                                 <div className="box">
                                     <div className="tabs is-large is-centered is-boxed">
                                         <ul>
-                                            <li className={this.state.followersClass} onClick={()=>{this.handleTabs(false)}}><a>Followers</a></li>
-                                            <li className={this.state.followingClass} onClick={()=>{this.handleTabs(true)}}><a>Following</a></li>
+                                            <li className={this.state.followersClass} onClick={() => { this.handleTabs(false) }}><a>Followers</a></li>
+                                            <li className={this.state.followingClass} onClick={() => { this.handleTabs(true) }}><a>Following</a></li>
                                         </ul>
                                     </div>
 
@@ -370,5 +434,4 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     }
 }
 
-
-export default Profile;
+export default connect(mapStateToProps)(Profile);

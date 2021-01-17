@@ -290,7 +290,7 @@ router.get("/following/:id", async (req: Request, res: Response) => {
             {
                 model: Follower,
                 required: true,
-                where: { user_id: id },
+                where: { follower_id: id },
             },
         ],
     });
@@ -307,7 +307,7 @@ router.get("/followers/:id", async (req: Request, res: Response) => {
             {
                 model: Follower,
                 required: true,
-                where: { follower_id: id },
+                where: { user_id: id },
             },
         ],
     });

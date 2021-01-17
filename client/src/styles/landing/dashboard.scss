@@ -24,3 +24,8 @@ body{
     word-wrap: break-word;
     width: 65%;
 }
+
+.notifications{
+    height: calc(65vh - 200px);
+    overflow-y: auto;
+}
