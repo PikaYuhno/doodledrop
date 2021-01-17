@@ -51,6 +51,7 @@ export type User = {
     avatar: string;
     bio: string;
     location: string;
+    created_doodles?: number;
 }
 
 export type Doodle = {
