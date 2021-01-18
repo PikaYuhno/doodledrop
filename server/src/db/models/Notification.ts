@@ -20,7 +20,7 @@ Notification.init({
     },
     user_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     }, 
     doodle_id: {
         type: DataTypes.INTEGER,
