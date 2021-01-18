@@ -62,7 +62,7 @@ export type Doodle = {
     image_path: string;
     likes: Array<number>;
     dislikes: Array<number>;
-    comments?: Array<Comment>
+    comments?: Array<Comment>;
 }
 
 export type Comment = {
@@ -73,9 +73,10 @@ export type Comment = {
     created_at: Date;
     like: Array<number>;
     dislikes: Array<number>;
+    user: User;
 }
 
 export type Notification = {
     id: number;
-    message: string;
+    content: string;
 }

@@ -8,6 +8,8 @@ import { JWTPayload as AuthUser } from '../../global';
 import { connect } from 'react-redux';
 import { RootReducer } from '../../store/root-reducer';
 import { Link } from 'react-router-dom';
+import doodle1 from "../../assets/pfp/58c0e3c4-c2b6-4206-a521-b95cca9a4b60.png";
+import doodle2 from "../../assets/pfp/864101fb-417d-4b6f-9096-aacd892f26b8.png";
 
 type DashboardState = {
     doodles: Array<Doodle>;
@@ -43,8 +45,13 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
     componentDidMount = () => {
         this.loadDoodles();
-        this.loadFollowing();
-        
+        this.loadNotifications();
+    }
+
+    componentDidUpdate = (prevProps: DashboardProps) => {
+        if(prevProps.user != this.props.user){
+            this.loadFollowing();      
+        }       
     }
 
     handleFeedback = async (id: number, doodle: boolean, like: string) => {
@@ -66,19 +73,20 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                 },
             });
         }
+        this.loadDoodles();
     }
 
     handleReply = (doodle_id: number) => {
         this.setState({ reply: doodle_id })
     }
 
-    renderReply = (doodle_id: number) => {
+    renderReply = (doodle_id: number, user: User) => {
         if (this.state.reply == doodle_id) {
             return <React.Fragment>
                 <div className="media ml-5 style">
                     <div className="media-left">
                         <p className="image is-48x48">
-                            <img src={pfp1} className="is-rounded" alt="pfp" />
+                            <img src={user.avatar} className="is-rounded" alt="pfp" />
                         </p>
                     </div>
                     <div className="media-content mb-5">
@@ -103,6 +111,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     }
 
     postComment = async (doodleid: number) => {
+        console.log("comment");
         await fetch(`/api/doodles/${doodleid}/comments`, {
             method: "POST",
             headers: {
@@ -114,6 +123,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     }
 
     loadDoodles = async () => {
+        console.log("load");
         const resp = await fetch(`/api/doodles`, {
             method: "GET",
             headers: {
@@ -178,7 +188,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                     </div>
 
                     <div className="image has-image-sized container">
-                        <img src={`/doodles/${doodle.image_path}`} />
+                        <img src={`${doodle.image_path}`}/>
                     </div>
 
 
@@ -190,25 +200,25 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                             </a>
                         </div>
                         <div className="column has-text-centered">
-                            <a className="icon-text" style={ (doodle.likes.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={() => { (doodle.likes.includes(this.props.user?.id)) ? this.handleFeedback(doodle.id, true, "like") : console.log("ok") }}>
+                            <a className="icon-text" style={ (doodle.likes.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={() => { (doodle.likes.includes(this.props.user?.id)) ? console.log("ok") :  this.handleFeedback(doodle.id, true, "like")}}>
                                 <span className="icon"><i className="fa fa-thumbs-up fa-lg"></i></span>
                                 <span> Like ({doodle.likes.length})</span>
                             </a>
                         </div>
                         <div className="column has-text-centered">
-                            <a className="icon-text" style={ (doodle.likes.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={() => { (doodle.likes.includes(this.props.user?.id)) ? this.handleFeedback(doodle.id, true, "dislike") : console.log("ok") }}>
+                            <a className="icon-text" style={ (doodle.dislikes.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={() => { (doodle.dislikes.includes(this.props.user?.id)) ? console.log("ok") : this.handleFeedback(doodle.id, true, "dislike") }}>
                                 <span className="icon"><i className="fa fa-thumbs-down fa-lg"></i></span>
                                 <span> Dislike ({doodle.dislikes.length})</span>
                             </a>
                         </div>
                     </div>
 
-                    {this.renderReply(doodle.id)}
+                    {this.renderReply(doodle.id, doodle.user)}
 
                     <div className="">
 
-                        {this.renderComments(doodle.comments)}
-
+                        
+                        
                     </div>
 
                 </div>
@@ -217,6 +227,8 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     }
 
     renderComments = (comments: Array<Comment> | undefined) => {
+        
+
         return comments?.map((comment: Comment) => {
             return <React.Fragment key={comment.id}>
                 <div className="media ml-5">
@@ -235,7 +247,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                 <a className="ml-2" style={ (comment.like.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={ () => { (comment.like.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "like") : console.log("ok")}}>
                                     <span className="icon"><i className="fa fa-thumbs-up"></i> ({comment.like.length})</span>
                                 </a>
-                                <a className="ml-2" style={ (comment.like.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={ () => { (comment.like.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "dislike") : console.log("ok")}}>
+                                <a className="ml-2" style={ (comment.dislikes.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={ () => { (comment.dislikes.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "dislike") : console.log("ok")}}>
                                     <span className="icon"><i className="fa fa-thumbs-down"></i> ({comment.dislikes.length})</span>
                                 </a>
                             </div>
@@ -249,11 +261,15 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     }
 
     renderNotification = () => {
+        if(this.state.notifications == null){
+            return;
+        }
+
         return this.state.notifications.map((notification: Notification) => {
             return <React.Fragment key={notification.id}>
                 <div className="notification is-danger">
                     <button className="delete" onClick={() => { this.handleNotification(notification.id) }}></button>
-                    {notification.message}
+                    {notification.content}
                 </div>
              </React.Fragment>
         })
@@ -318,184 +334,6 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                                 <div className="columns reverse-columns">
 
                                     <div className="column is-two-thirds">
-
-                                        <div className="box is-shawowless">
-
-                                            <div className="level is-mobile">
-                                                <div className="level-left">
-                                                    <div className="ml-2">
-                                                        <p className="image is-64x64">
-                                                            <img src={pfp1} className="is-rounded" alt="pfp" />
-                                                        </p>
-                                                    </div>
-                                                    <div className="ml-2">
-                                                        <p><strong className="is-size-4">Name</strong> <small>time</small></p>
-                                                    </div>
-                                                </div>
-                                                <div className="level-item">
-                                                    <p className="title">titel</p>
-                                                </div>
-                                            </div>
-
-                                            <div className="image has-image-sized container">
-                                                <img src={pfp1} />
-                                            </div>
-
-
-                                            <div className="columns border is-mobile mt-1">
-                                                <div className="column has-text-centered">
-                                                    <a className="icon-text">
-                                                        <span className="icon"><i className="fa fa-reply fa-lg"></i></span>
-                                                        <span> Reply</span>
-                                                    </a>
-                                                </div>
-                                                <div className="column has-text-centered">
-                                                    <a className="icon-text">
-                                                        <span className="icon"><i className="fa fa-thumbs-up fa-lg"></i></span>
-                                                        <span> Like</span>
-                                                    </a>
-                                                </div>
-                                                <div className="column has-text-centered">
-                                                    <a className="icon-text">
-                                                        <span className="icon"><i className="fa fa-thumbs-down fa-lg"></i></span>
-                                                        <span> Dislike</span>
-                                                    </a>
-                                                </div>
-                                            </div>
-
-                                            {this.renderReply(0)}
-
-                                            <details>
-                                                <summary>
-                                                <div className="media ml-5">
-
-                                                    <div className="media-left">
-                                                        <p className="image is-48x48">
-                                                            <img src={pfp1} className="is-rounded" alt="pfp" />
-                                                        </p>
-                                                    </div>
-                                                    <div className="media-content">
-                                                        <p><strong className="is-size-5">Name</strong> <small>time</small></p>
-                                                        <p className="comment">foivnsifenvinsringielvuihseingihrtiuhbihrnginbsrtibiubsreibsiehfpawheiueriughilsdhilerhdsnbieshrifusberiuhgisuernbostghiueriueiubebgeoihrivegusenvnigsirnilsehriogugieng
-                                                        s
-                                                    </p>
-
-                                                        <div className="level">
-                                                            <div className="level-left">
-                                                                <a className="ml-2">
-                                                                    <span className="icon"><i className="fa fa-thumbs-up"></i> (4)</span>
-                                                                </a>
-                                                                <a className="ml-2">
-                                                                    <span className="icon"><i className="fa fa-thumbs-down"></i></span>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-
-                                                </div>
-                                                </summary>
-                                            </details>
-
-                                        </div>
-
-                                        <div className="box is-shawowless">
-
-                                            <div className="level">
-                                                <div className="level-left">
-                                                    <div className="ml-2">
-                                                        <p className="image is-48x48">
-                                                            <img src={pfp1} className="is-rounded" alt="pfp" />
-                                                        </p>
-                                                    </div>
-                                                    <div className="ml-2">
-                                                        <p><strong className="is-size-4">Name</strong> <small>time</small></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="image has-image-sized container">
-                                                <img src={pfp1} />
-                                            </div>
-
-                                            <div className="columns border is-mobile mt-1">
-                                                <div className="column has-text-centered">
-                                                    <a className="icon-text">
-                                                        <span className="icon"><i className="fa fa-reply fa-lg"></i></span>
-                                                        <span> Reply</span>
-                                                    </a>
-                                                </div>
-                                                <div className="column has-text-centered">
-                                                    <a className="icon-text">
-                                                        <span className="icon"><i className="fa fa-thumbs-up fa-lg"></i></span>
-                                                        <span> Like</span>
-                                                    </a>
-                                                </div>
-                                                <div className="column has-text-centered">
-                                                    <a className="icon-text">
-                                                        <span className="icon"><i className="fa fa-thumbs-down fa-lg"></i></span>
-                                                        <span> Dislike</span>
-                                                    </a>
-                                                </div>
-                                            </div>
-
-                                            <div className="media ml-5 style">
-                                                <div className="media-left">
-                                                    <p className="image is-24x24">
-                                                        <img src={pfp1} className="is-rounded" alt="pfp" />
-                                                    </p>
-                                                </div>
-                                                <div className="media-content">
-                                                    <div className="field">
-                                                        <p className="control">
-                                                            <textarea className="textarea is-danger" placeholder="Add a comment..."></textarea>
-                                                        </p>
-                                                    </div>
-                                                    <div className="field">
-                                                        <p className="control">
-                                                            <button className="button">Post comment</button>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="">
-
-
-                                                <div className="comment">
-
-                                                    <div className="media ml-5">
-
-                                                        <div className="media-left">
-                                                            <p className="image is-24x24">
-                                                                <img src={pfp1} className="is-rounded" alt="pfp" />
-                                                            </p>
-                                                        </div>
-                                                        <div className="media-content">
-                                                            <p><strong className="is-size-5">Name</strong> <small>time</small></p>
-                                                            <p>foivnsifenvinsringielvuihseingihrtiuhbihrnginbsrtibiubsreibsiehfpawheiueriughilsdhilerhdsnbieshrifusberiuhgisuernbostghiueriueiubebgeoihrivegusenvnigsirnilsehriogugieng
-                                                            s
-                                                            </p>
-                                                        </div>
-
-                                                        <div className="level is-mobile">
-                                                            <div className="level-left">
-                                                                <a className="ml-2">
-                                                                    <span className="icon"><i className="fa fa-thumbs-up"></i></span>
-                                                                </a>
-                                                                <a className="ml-2">
-                                                                    <span className="icon"><i className="fa fa-thumbs-down"></i></span>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-
-                                                </div>
-
-                                            </div>
-
-                                        </div>
 
                                         {this.renderDoodles()}
 

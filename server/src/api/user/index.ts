@@ -60,6 +60,14 @@ router.get("/doodles", async (req: Request, res: Response) => {
     return res.status(200).json({ data: doodles, message: "", success: true });
 });
 
+router.get("/notifications/", async (req: Request, res: Response) => {
+    const id = req.user!.id;
+    
+    const notifications = await Notification.findAll({where: {user_id: id} });
+
+    return res.status(200).json({data: notifications, message: 'Successfully found notifications!', success: true});
+});
+
 // GET /api/users/:id
 router.get("/:id", async (req: Request, res: Response) => {
     let userId = req.params.id;
@@ -256,15 +264,11 @@ router.post("/@me/channels", async (req: Request, res: Response) => {
 router.get("/following/:id", async (req: Request, res: Response) => {
     let id = req.params.id;
 
-    let following: User[] = await User.findAll({
-        include: [
-            {
-                model: Follower,
-                required: true,
-                where: { user_id: id },
-            },
-        ],
-    });
+    console.log(id);
+
+    const following: any[] = await sequelize.query(`SELECT followers.user_id, followers.follower_id, users.* FROM users INNER JOIN followers ON users.id = followers.follower_id WHERE followers.user_id = ${id};`, {
+        type: QueryTypes.SELECT
+      });
 
     return res.status(200).json({ data: following, message: "", success: true });
 });
@@ -312,27 +316,40 @@ router.patch("/:user_id/profile", async (req: Request, res: Response) => {
     }
 });
 
-// GET /api/users/notifications
-router.get("/notifications", async (req: Request, res: Response) => {
-    const id = req.user!.id;
-    
-    const notifications = await Notification.findAll({where: {user_id: id}, include: [
-        {
-            model: User,
-            required: true,
-            attributes: {
-                exclude: ['password']
-            }
-        },
-    ]});
-
-    return res.status(200).json({data: notifications, message: 'Successfully found notifications!', success: true});
-});
-
 // DELETE /api/users/notifications/:id
 router.delete("/notifications/:id", async (req: Request, res: Response) => {
     const notifiId = req.params.id;
     await Notification.destroy({where: {id: notifiId, user_id: req.user!.id}});
 
     return res.status(200).json({data: null, message: 'Successfully deleted notifcation!', success: true});
+});
+
+// GET /api/users/:id/doodles
+router.get("/:id/doodles", async (req: Request, res: Response) => {
+    let userId = req.params.user;
+    const attributes = ["username", "avatar", "id"];
+
+    let doodles: Doodle[] = await Doodle.findAll({
+        include: [
+            {
+                model: Comment,
+                include: [{
+                    model: User,
+                    required: true,
+                    attributes,
+                    as: 'user'
+                }],
+                as: 'comments'
+            },
+            {
+                model: User,
+                required: true,
+                where: { user_id: userId },
+                attributes,
+                as: "user"
+            },
+        ],
+    });
+
+    return res.status(200).json({ data: doodles, message: "", success: true });
 });
