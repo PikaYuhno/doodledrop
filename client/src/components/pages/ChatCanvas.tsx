@@ -60,13 +60,13 @@ class ChatCanvas extends React.Component<ChatCanvasProps, ChatCanvasState> {
         if (!this.canvasRef.current) return;
         switch (tool) {
             case Tools.REDO:
-                this.canvasRef.current.onRedo();
+                this.canvasRef.current.triggerAction("REDO");
                 break;
             case Tools.UNDO:
-                this.canvasRef.current.onUndo();
+                this.canvasRef.current.triggerAction("UNDO");
                 break;
             case Tools.CLEAR:
-                this.canvasRef.current.onClear();
+                this.canvasRef.current.triggerAction("CLEAR");
                 break;
             case Tools.UPLOAD:
                 this.setState({openModal: true});
@@ -75,18 +75,6 @@ class ChatCanvas extends React.Component<ChatCanvasProps, ChatCanvasState> {
                 this.canvasRef.current.leave();
                 this.props.leaveDrawing();
                 break;
-            /*case Tools.PEN:
-                this.setState({currentTool: tool, fill: '#000000'});
-                break;
-            case Tools.ERASER:
-                this.setState({currentTool: tool, fill: '#ffffff'});
-                break;
-            case Tools.COLOR:
-                this.setState({currentTool: tool});
-                break;
-            case Tools.STROKE:
-                this.setState({currentTool: tool});
-                break;*/
         }
         this.setState({currentTool: tool});
     }
@@ -164,7 +152,7 @@ class ChatCanvas extends React.Component<ChatCanvasProps, ChatCanvasState> {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        leaveDrawing: () => {dispatch(leaveDrawing())}
+        leaveDrawing: () => dispatch(leaveDrawing())
     }
 }
 

@@ -79,12 +79,13 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
 
     componentDidMount() {
         console.log("Mounted");
+        const {socket} = this.props;
         if (!this.props.multiplayer && this.canvasRef.current) {
             new P5(this.sketch, this.canvasRef.current);
+            return;
         }
-        if (this.props.socket && this.props.multiplayer) {
-            this.props.socket.on('drawing-response', (data: any) => {
-                console.log("Got back", data);
+        if (socket) {
+            socket.on('drawing-response', (data: any) => {
                 if (data.users.length === 2) {
                     this.setState({blocked: false})
                 } else {
@@ -94,12 +95,11 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
 
                 }
             });
-            this.props.socket.on('drawing', (data: {line: Line, room_id: string}) => {
-                console.log("Got data");
+            socket.on('drawing', (data: {line: Line, room_id: string}) => {
                 this.userHistory.undo.push(data.line);
             });
 
-            this.props.socket.on('drawing-action', (data: {action: DrawingActions, room_id: string}) => {
+            socket.on('drawing-action', (data: {action: DrawingActions, room_id: string}) => {
                 console.log(data);
                 switch (data.action) {
                     case DrawingActions.UNDO:
@@ -149,26 +149,22 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         historyObject.redo.splice(0, historyObject.redo.length);
     }
 
-    onUndo = () => {
-        this.undoAction();
-        if (!this.props.socket) return;
-        if (this.props.multiplayer) {
-            this.props.socket.emit("drawing-action", {action: DrawingActions.UNDO, room_id: this.props.drawingRoom});
-        }
+    triggerAction = (action: "UNDO" | "REDO" | "CLEAR") => {
+        switch (action) {
+            case "UNDO":
+                this.undoAction();
+                break;
+            case "REDO":
+                this.redoAction();
+                break;
+            case "CLEAR":
+                this.clearAction();
+                break;
 
-    }
-    onRedo = () => {
-        this.redoAction();
-        if (!this.props.socket) return;
-        if (this.props.multiplayer) {
-            this.props.socket.emit("drawing-action", {action: DrawingActions.REDO, room_id: this.props.drawingRoom});
         }
-    }
-    onClear = () => {
-        this.clearAction();
         if (!this.props.socket) return;
         if (this.props.multiplayer) {
-            this.props.socket.emit("drawing-action", {action: DrawingActions.CLEAR, room_id: this.props.drawingRoom});
+            this.props.socket.emit("drawing-action", {action: DrawingActions[action], room_id: this.props.drawingRoom});
         }
     }
 
@@ -243,7 +239,7 @@ class Canvas extends React.Component<CanvasProps, CanvasState> {
         return (
             <React.Fragment>
                 {!this.state.blocked ?
-                    <div id="canvas-wrapper" onWheel={() => {}} ref={this.canvasRef} style={this.props.style}></div>
+                    <div id="canvas-wrapper" ref={this.canvasRef} style={this.props.style}></div>
                     :
                     <h1 className="title" style={{textAlign: 'center'}}>Waiting...</h1>
                 }

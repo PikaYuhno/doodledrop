@@ -1,6 +1,6 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {Channel, ActionCreator, JWTPayload} from '../../../../global';
+import {connect, ConnectedProps} from 'react-redux';
+import {Channel} from '../../../../global';
 import {channelConnected, updateChannelNotfi, channelDisconnected, enterDrawing} from '../../../../store/chat/actions';
 import {alert} from '../../../../store/alert/actions';
 import {RootReducer} from '../../../../store/root-reducer';
@@ -14,21 +14,30 @@ type DMChannelProps = {
     latestMessage: string;
     roomId: string;
     notfi: boolean;
-    channels: Channel[];
-    socket: SocketIOClient.Socket | null;
-    currentChannel: Channel | null;
-    user: JWTPayload | null;
-    drawingRoom: string | null;
-} & DispatchProps;
+} & PropsFromStore;
 
-
-type DispatchProps = {
-    channelConnected: (...args: Parameters<typeof channelConnected>) => void;
-    updateChannelNotfi: (...args: Parameters<typeof updateChannelNotfi>) => void;
-    channelDisconnected: ActionCreator<typeof channelDisconnected>;
-    enterDrawing: ActionCreator<typeof enterDrawing>;
-    alert: ActionCreator<typeof alert>;
+const mapStateToProps = (state: RootReducer) => {
+    return {
+        currentChannel: state.chat.currentChannel,
+        channels: state.chat.channels,
+        socket: state.chat.socket,
+        user: state.auth.user,
+        drawingRoom: state.chat.drawingRoom
+    }
 }
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        channelConnected: (id: Channel) => {dispatch(channelConnected(id))},
+        channelDisconnected: () => {dispatch(channelDisconnected())},
+        updateChannelNotfi: (...args: Parameters<typeof updateChannelNotfi>) => {dispatch(updateChannelNotfi(...args))},
+        enterDrawing: (...args: Parameters<typeof enterDrawing>) => {dispatch(enterDrawing(...args))},
+        alert: (...args: Parameters<typeof alert>) => {dispatch(alert(...args))}
+    }
+}
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromStore = ConnectedProps<typeof connector>;
 
 class DMChannel extends React.Component<DMChannelProps> {
     constructor(props: DMChannelProps) {
@@ -91,24 +100,5 @@ class DMChannel extends React.Component<DMChannelProps> {
     }
 }
 
-const mapStateToProps = (state: RootReducer) => {
-    return {
-        currentChannel: state.chat.currentChannel,
-        channels: state.chat.channels,
-        socket: state.chat.socket,
-        user: state.auth.user,
-        drawingRoom: state.chat.drawingRoom
-    }
-}
 
-const mapDispatchToProps = (dispatch: any) => {
-    return {
-        channelConnected: (id: Channel) => {dispatch(channelConnected(id))},
-        channelDisconnected: () => {dispatch(channelDisconnected())},
-        updateChannelNotfi: (...args: Parameters<typeof updateChannelNotfi>) => {dispatch(updateChannelNotfi(...args))},
-        enterDrawing: (...args: Parameters<typeof enterDrawing>) => {dispatch(enterDrawing(...args))},
-        alert: (...args: Parameters<typeof alert>) => {dispatch(alert(...args))}
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(DMChannel);
+export default connector(DMChannel);

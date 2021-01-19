@@ -1,10 +1,10 @@
 import React, {RefObject} from 'react';
 import Message from './Message';
 import moment from 'moment';
-import {connect} from 'react-redux';
-import {channelDisconnected, recieveMessages, messageAdded, channelUpdated} from '../../../../store/chat/actions';
+import {connect, ConnectedProps} from 'react-redux';
+import {channelDisconnected, recieveMessages, messageAdded} from '../../../../store/chat/actions';
 import {RootReducer} from '../../../../store/root-reducer';
-import {Channel, Message as Msg, JWTPayload as AuthUser} from '../../../../global';
+import {Message as Msg} from '../../../../global';
 
 type ChatState = {
     message: string;
@@ -13,17 +13,27 @@ type ChatState = {
 type ChatProps = {
     imgSrc: string;
     name: string;
-    socket: SocketIOClient.Socket | null;
-    currentChannel: Channel | null;
-    messages: Msg[];
-    user: AuthUser | null;
-} & DispatchProps;
+} & PropsFromStore;
 
-type DispatchProps = {
-    channelDisconnected: (...args: Parameters<typeof channelDisconnected>) => void;
-    recieveMessages: (...args: Parameters<typeof recieveMessages>) => void;
-    messageAdded: (...args: Parameters<typeof messageAdded>) => void;
+const mapStateToProps = (state: RootReducer) => {
+    return {
+        socket: state.chat.socket,
+        currentChannel: state.chat.currentChannel,
+        messages: state.chat.messages,
+        user: state.auth.user
+    }
 }
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        channelDisconnected: (...args: Parameters<typeof channelDisconnected>) => {dispatch(channelDisconnected(...args))},
+        recieveMessages: (...args: Parameters<typeof recieveMessages>) => {dispatch(recieveMessages(...args))},
+        messageAdded: (...args: Parameters<typeof messageAdded>) => {dispatch(messageAdded(...args))},
+    }
+}
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromStore = ConnectedProps<typeof connector>;
 
 class Chat extends React.Component<ChatProps, ChatState> {
     messageContainerRef: RefObject<HTMLDivElement>;
@@ -79,7 +89,6 @@ class Chat extends React.Component<ChatProps, ChatState> {
 
     postMessage = async () => {
         if (!this.props.currentChannel) return;
-        //http://localhost:4000
         const promise = await fetch(`/api/channels/${this.props.currentChannel.room_id}/messages`, {
             method: 'POST',
             headers: {
@@ -92,7 +101,6 @@ class Chat extends React.Component<ChatProps, ChatState> {
             })
         });
         const resJson = await promise.json();
-        console.log(resJson);
     }
 
     render() {
@@ -132,21 +140,5 @@ class Chat extends React.Component<ChatProps, ChatState> {
     }
 }
 
-const mapStateToProps = (state: RootReducer) => {
-    return {
-        socket: state.chat.socket,
-        currentChannel: state.chat.currentChannel,
-        messages: state.chat.messages,
-        user: state.auth.user
-    }
-}
 
-const mapDispatchToProps = (dispatch: any) => {
-    return {
-        channelDisconnected: (...args: Parameters<typeof channelDisconnected>) => {dispatch(channelDisconnected())},
-        recieveMessages: (...args: Parameters<typeof recieveMessages>) => {dispatch(recieveMessages(...args))},
-        messageAdded: (...args: Parameters<typeof messageAdded>) => {dispatch(messageAdded(...args))},
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Chat);
+export default connector(Chat);
