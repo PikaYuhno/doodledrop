@@ -3,7 +3,7 @@ import '../../styles/landing/register.scss';
 import PressPlay from '../../assets/press_play.png';
 import {Link, Redirect, withRouter} from 'react-router-dom';
 import {register} from '../../store/auth/actions';
-import {connect} from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import {RootReducer} from '../../store/root-reducer';
 import {History} from 'history';
 import {alert} from '../../store/alert/actions';
@@ -18,18 +18,21 @@ export type UserRegister = {
     confirmPassword?: string,
 }
 
-
-type DispatchProps = {
-    register: (user: UserRegister) => void;
-    alert: (...args: Parameters<typeof alert>) => void;
-}
-
 type RegisterProps = {
     isAuthenticated: boolean;
     history?: History;
+} & PropsFromStore
+
+const mapStateToProps = (state: RootReducer) => {
+    return {
+        isAuthenticated: state.auth.isAuthenticated,
+    }
 }
 
-const Register: React.FC<RegisterProps & DispatchProps> = (props) => {
+const connector = connect(mapStateToProps, {register, alert});
+type PropsFromStore = ConnectedProps<typeof connector>;
+
+const Register: React.FC<RegisterProps> = (props) => {
     const [user, setUser] = useState<UserRegister>({
         username: '',
         email: '',
@@ -149,9 +152,4 @@ const Register: React.FC<RegisterProps & DispatchProps> = (props) => {
     );
 }
 
-const mapStateToProps = (state: RootReducer) => {
-    return {
-        isAuthenticated: state.auth.isAuthenticated,
-    }
-}
-export default withRouter(connect(mapStateToProps, {register, alert})(Register));
+export default withRouter(connector(Register));

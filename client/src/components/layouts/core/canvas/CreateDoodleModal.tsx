@@ -6,7 +6,7 @@ import {AlertType} from '../../../../store/alert/types';
 
 type CreateDoodleModalProps = {
     open: boolean;
-    onClose: () => any;
+    onClose: () => void;
     imgStr: string;
 } & DispatchProps;
 
@@ -63,7 +63,7 @@ const CreateDoodleModal: React.FC<CreateDoodleModalProps> = ({open, onClose, img
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        alert: (...args: Parameters<typeof alert>) => {dispatch(alert(...args))}
+        alert: (...args: Parameters<typeof alert>) => dispatch(alert(...args))
     }
 }
 

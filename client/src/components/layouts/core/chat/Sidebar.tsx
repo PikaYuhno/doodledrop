@@ -1,27 +1,36 @@
 import React from 'react';
 import DMChannel from './DMChannel';
 import moment from 'moment';
-import {connect} from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import {RootReducer} from '../../../../store/root-reducer';
-import {Channel, Message, JWTPayload} from '../../../../global';
-import {loadChannels, connectSocket, addMessage, channelUpdated} from '../../../../store/chat/actions';
+import {Channel, Message} from '../../../../global';
+import {loadChannels, addMessage, channelUpdated} from '../../../../store/chat/actions';
 import CreateChannelModal from './CreateChannelModal';
 
 type SidebarState = {
     openModal: boolean;
 }
-type SidebarProps = {
-    channels: Channel[];
-    socket: SocketIOClient.Socket | null;
-    user: JWTPayload | null;
-} & DispatchProps
 
+type SidebarProps = PropsFromStore;
 
-type DispatchProps = {
-    loadChannels: any;
-    addMessage: (...args: Parameters<typeof addMessage>) => void;
-    channelUpdated: (...args: Parameters<typeof channelUpdated>) => void;
+const mapStateToProps = (state: RootReducer) => {
+    return {
+        channels: state.chat.channels,
+        socket: state.chat.socket,
+        user: state.auth.user
+    }
 }
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        loadChannels: () => {dispatch(loadChannels())},
+        addMessage: (...args: Parameters<typeof addMessage>) => {dispatch(addMessage(...args))},
+        channelUpdated: (...args: Parameters<typeof channelUpdated>) => {dispatch(channelUpdated(...args))}
+    }
+}
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromStore = ConnectedProps<typeof connector>;
 
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
     constructor(props: SidebarProps) {
@@ -31,15 +40,9 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
         }
     }
 
-
     componentDidMount() {
         this.props.loadChannels();
-        const {socket} = this.props;
-        console.log(socket ? true : false);
-        if (!socket) return;
-        console.log("HERE");
     }
-
 
     updateChannel = async (message: Message) => {
         await fetch(`/api/channels/${message.room_id}/latestMessage`, {
@@ -54,14 +57,14 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
         });
     }
 
-    openModal = (e: React.MouseEvent<HTMLElement>) => {
+    openModal = () => {
         this.setState({openModal: true});
     }
 
     renderChannels = () => {
         return this.props.channels && this.props.channels.map((channel: Channel) => {
             let recipient = channel.recipients[0];
-            return (<DMChannel key={channel.id} notfi={channel.notfi} id={channel.id} imgSrc={recipient.avatar} date={moment().format('hh:mm a')} latestMessage={channel.last_message || "No message sent"} name={recipient.username} roomId={channel.room_id}/>);
+            return (<DMChannel key={channel.id} notfi={channel.notfi} id={channel.id} imgSrc={recipient.avatar} date={moment().format('hh:mm a')} latestMessage={channel.last_message || "No message sent"} name={recipient.username} roomId={channel.room_id} />);
         });
     }
 
@@ -98,20 +101,4 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     }
 }
 
-const mapStateToProps = (state: RootReducer) => {
-    return {
-        channels: state.chat.channels,
-        socket: state.chat.socket,
-        user: state.auth.user
-    }
-}
-
-const mapDispatchToProps = (dispatch: any) => {
-    return {
-        loadChannels: () => {dispatch(loadChannels())},
-        addMessage: (...args: Parameters<typeof addMessage>) => {dispatch(addMessage(...args))},
-        channelUpdated: (...args: Parameters<typeof channelUpdated>) => {dispatch(channelUpdated(...args))}
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);
+export default connector(Sidebar);

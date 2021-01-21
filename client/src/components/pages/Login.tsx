@@ -1,9 +1,9 @@
-import React, {FC, useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import styles from '../../styles/landing/login.module.scss';
 import PressPlay from '../../assets/press_play.png';
 import {login} from '../../store/auth/actions';
 import {alert} from '../../store/alert/actions';
-import {connect} from "react-redux";
+import {connect, ConnectedProps} from "react-redux";
 import {Redirect, Link} from 'react-router-dom';
 import {RootReducer} from '../../store/root-reducer';
 import {AlertType} from '../../store/alert/types';
@@ -13,16 +13,20 @@ export type UserLogin = {
     password: string;
 }
 
-type DispatchProps = {
-    login: (user: UserLogin) => void;
-    alert: (...args: Parameters<typeof alert>) => void;
-}
-
 type LoginProps = {
     isAuthenticated: boolean;
+} & PropsFromStore;
+
+const mapStateToProps = (state: RootReducer) => {
+    return {
+        isAuthenticated: state.auth.isAuthenticated,
+    }
 }
 
-const Login: React.FC<LoginProps & DispatchProps> = (props) => {
+const connector = connect(mapStateToProps, {login, alert});
+type PropsFromStore = ConnectedProps<typeof connector>;
+
+const Login: React.FC<LoginProps> = (props) => {
     const [user, setUser] = useState<UserLogin>({email: '', password: ''});
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,11 +95,4 @@ const Login: React.FC<LoginProps & DispatchProps> = (props) => {
     );
 }
 
-const mapStateToProps = (state: RootReducer) => {
-    return {
-        isAuthenticated: state.auth.isAuthenticated,
-    }
-}
-
-
-export default connect(mapStateToProps, {login, alert})(Login);
+export default connector(Login);

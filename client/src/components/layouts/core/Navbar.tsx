@@ -2,16 +2,28 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import styles from '../../../styles/core/navbar.module.scss';
 import {logout} from '../../../store/auth/actions';
-import {connect} from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import {disconnectSocket, channelLogout} from '../../../store/chat/actions';
 import {RootReducer} from '../../../store/root-reducer';
 
-type NavbarProps = {
-    socket?: SocketIOClient.Socket | null;
-    logout: () => void;
-    disconnectSocket: (...args: Parameters<typeof disconnectSocket>) => void;
-    channelLogout: () => void;
+type NavbarProps = PropsFromStore;
+
+const mapStateToProps = (state: RootReducer) => {
+    return {
+        socket: state.chat.socket
+    }
 }
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        logout: () => {dispatch(logout())},
+        disconnectSocket: (...args: Parameters<typeof disconnectSocket>) => {dispatch(disconnectSocket(...args))},
+        channelLogout: (...args: Parameters<typeof channelLogout>) => {dispatch(channelLogout(...args))}
+    }
+}
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromStore = ConnectedProps<typeof connector>;
 
 const Navbar: React.FC<NavbarProps> = (props) => {
 
@@ -78,18 +90,5 @@ const Navbar: React.FC<NavbarProps> = (props) => {
         </React.Fragment>
     );
 }
-const mapStateToProps = (state: RootReducer) => {
-    return {
-        socket: state.chat.socket
-    }
-}
 
-const mapDispatchToProps = (dispatch: any) => {
-    return {
-        logout: () => {dispatch(logout())},
-        disconnectSocket: (...args: Parameters<typeof disconnectSocket>) => {dispatch(disconnectSocket(...args))},
-        channelLogout: (...args: Parameters<typeof channelLogout>) => {dispatch(channelLogout())}
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
+export default connector(Navbar);
