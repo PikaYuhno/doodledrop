@@ -1,5 +1,8 @@
 import {v4 as uuidv4} from 'uuid';
 import {AlertType} from './types';
+import {Action, ActionCreator} from "redux";
+import {ThunkAction} from "redux-thunk";
+import {RootReducer} from "../root-reducer";
 
 export const setAlert = (msg: string, alertType: AlertType, id: string, timeout = 3) => {
     return {
@@ -21,7 +24,7 @@ export const removeAlert = (id: string) => {
     };
 }
 
-export const alert = (msg: string, alertType: AlertType, timeout: number) => (dispatch: (arg: ReturnType<typeof setAlert | typeof removeAlert>) => void) => {
+export const alert: ActionCreator<ThunkAction<void, RootReducer, unknown, Action>> = (msg: string, alertType: AlertType, timeout: number) => (dispatch) => {
     const id = uuidv4();
     dispatch(setAlert(msg, alertType, id, timeout));
     setTimeout(() => {

@@ -58,3 +58,18 @@
     background-color: white;
     border-radius: 5px;
 }
+
+.tool-is-active {
+    background-color: rgb(181, 177, 177);
+    border-radius: 50%
+}
+
+.icon-is-active {
+    color: white
+}
+
+.center-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -3,7 +3,7 @@ import P5 from 'p5';
 import {connect} from 'react-redux';
 import {RootReducer} from '../../../../store/root-reducer';
 import {JWTPayload} from '../../../../global';
-import {Tools} from '../../../pages/ChatCanvas';
+import {Tools} from './CanvasWrapper';
 
 type Line = {
     x: number;

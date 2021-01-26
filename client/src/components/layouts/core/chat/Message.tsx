@@ -8,10 +8,6 @@ type MessageProps = {
 }
 
 class Message extends React.Component<MessageProps> {
-    constructor(props: MessageProps) {
-        super(props);
-    }
-
     render() {
         return (
             <React.Fragment>

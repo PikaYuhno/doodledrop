@@ -9,9 +9,6 @@ type AlertProps = {
 }
 
 class Alert extends React.Component<AlertProps> {
-    constructor(props: AlertProps) {
-        super(props);
-    }
     render() {
         let alerts = this.props.alerts;
         return (

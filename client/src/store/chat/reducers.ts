@@ -1,9 +1,8 @@
-import {ChatState, ChatActionTypes} from "./types";
+import * as types from "./types";
 import {Channel} from '../../global';
 
 
-// TODO: Implement messagse, maybe add isLoaded
-const initialState: ChatState = {
+const initialState: types.ChatState = {
     channels: [],
     currentChannel: null,
     socket: null,
@@ -11,80 +10,80 @@ const initialState: ChatState = {
     drawingRoom: null
 }
 
-export default (state = initialState, action: ChatActionTypes): ChatState => {
+const reducer = (state = initialState, action: types.ChatActionTypes): types.ChatState => {
     switch(action.type) {
-        case "CHANNELS_LOADED":
+        case types.CHANNELS_LOADED:
             return {
                 ...state,
-                channels: action.payload.channels
+                channels: action.payload!.channels
             }
-        case "CHANNEL_CONNECTED":
+        case types.CHANNEL_CONNECTED:
             return {
                 ...state,
-                currentChannel: action.payload.channel
+                currentChannel: action.payload!.channel
             }
-        case "CHANNEL_DISCONNECTED":
+        case types.CHANNEL_DISCONNECTED:
             return {
                 ...state,
                 currentChannel: null
             }
-        case "CHANNEL_UPDATE_LATEST_MSG":
+        case types.CHANNEL_UPDATE_LATEST_MSG:
              
             return {
                 ...state,
-                channels: state.channels.map((channel: Channel) => channel.room_id === action.payload.message.room_id ? {
+                channels: state.channels.map((channel: Channel) => channel.room_id === action.payload!.message.room_id ? {
                     ...channel, 
-                    last_message: action.payload.message.body,
-                    date: action.payload.message.created_at,
-                    notfi: action.payload.notfi
+                    last_message: action.payload!.message.body,
+                    date: action.payload!.message.created_at,
+                    notfi: action.payload!.notfi
                 } : channel)
             }
 
-        case "CHANNEL_UPDATE_NOTFI":
+        case types.CHANNEL_UPDATE_NOTFI:
             return {
                 ...state,
-                channels: state.channels.map((channel: Channel) => channel.room_id === action.payload.room_id ? {
+                channels: state.channels.map((channel: Channel) => channel.room_id === action.payload!.room_id ? {
                     ...channel, 
                     notfi: false
                 } : channel)
             }
-        case "CHANNEL_ADDED":
+        case types.CHANNEL_ADDED:
             return {
                 ...state,
-                channels: [...state.channels, action.payload.channel]
+                channels: [...state.channels, action.payload!.channel]
             }
-        case "CHANNEL_LOGOUT":
+        case types.CHANNEL_LOGOUT:
             return {
                 ...state,
                 currentChannel: null,
             }
-        case "SOCKET_CONNECTED":
+        case types.SOCKET_CONNECTED:
             return {
                 ...state,
-                socket: action.payload.socket
+                socket: action.payload!.socket
             }
-        case "SOCKET_DISCONNECTED":
+        case types.SOCKET_DISCONNECTED:
             return {
                 ...state,
                 socket: null
             }
-        case "MESSAGES_RECIEVED":
+        case types.MESSAGES_RECIEVED:
             return {
                 ...state,
-                messages: action.payload.messages
+                messages: action.payload!.messages
             }
-        case "MESSAGE_ADDED":
+        case types.MESSAGE_ADDED:
             return {
                 ...state,
-                messages: [...state.messages, action.payload.message]
+                messages: [...state.messages, action.payload!.message]
             }
 
-        case "ENTER_DRAWING":
+        case types.ENTER_DRAWING:
             return {
                 ...state,
-                drawingRoom: action.payload.room_id 
+                drawingRoom: action.payload!.room_id 
             }
-        case "LEAVE_DRAWING":
+        case types.LEAVE_DRAWING:
             return {
                 ...state,
                 drawingRoom: null
@@ -93,3 +92,4 @@ export default (state = initialState, action: ChatActionTypes): ChatState => {
             return state;
     }
 }
+export default reducer;

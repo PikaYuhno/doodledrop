@@ -40,10 +40,9 @@ class Navbar extends React.Component<{}, NavbarState> {
                                 <span style={{color: "#542c44"}}>drop</span>
                             </div>
                         </div>
-                        {/*<div className="column is-one-fifth"></div>*/}
                         <div className="column" id="navbar-elements">
                             <ul className="nav-bar-list">
-                            <a href="/"><li className="nav-bar-item">Home</li></a>
+                                <a href="/"><li className="nav-bar-item">Home</li></a>
                                 <li className="nav-bar-item">Blank</li>
                                 <a href="About"><li className="nav-bar-item">About</li></a>
                                 <a href="/coutributors"><li className="nav-bar-item">Contributors</li></a>

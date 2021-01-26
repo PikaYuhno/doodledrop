@@ -1,4 +1,4 @@
-import {JWTPayload as AuthUser} from '../../global';
+import {Action, JWTPayload as AuthUser} from '../../global';
 import {UserRegister} from '../../components/pages/Register';
 import {APIResponse} from '../../global';
 import {UserLogin} from '../../components/pages/Login';
@@ -16,7 +16,6 @@ export const loginSuccess = (token: string) => {
     }
 }
 
-
 export const userLoaded = (user: AuthUser) => {
     return {
         type: "USER_LOADED",
@@ -26,12 +25,11 @@ export const userLoaded = (user: AuthUser) => {
     }
 }
 
-export const logout = () => {
+export const logout = (): Action<"LOGOUT"> => {
     return {
         type: 'LOGOUT',
     }
 }
-
 
 export const loadUser = (socket: SocketIOClient.Socket) => async (dispatch: (arg: ReturnType<typeof userLoaded | typeof logout>) => void) => {
     let token = localStorage.getItem("token");
@@ -53,7 +51,6 @@ export const loadUser = (socket: SocketIOClient.Socket) => async (dispatch: (arg
     if(jsonRes.success) {
         dispatch(userLoaded(jsonRes.data));
         socket.emit("join-room", jsonRes.data.id);
-        console.log("Joined room - user-room-", jsonRes.data.id);
     } else {
         dispatch(logout());
     }

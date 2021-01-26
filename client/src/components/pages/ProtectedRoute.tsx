@@ -5,7 +5,10 @@ import {connect, ConnectedComponent, ConnectedProps} from 'react-redux';
 import jwtDecode from 'jwt-decode';
 import {JWTPayload} from "../../global";
 import {loadUser, logout} from "../../store/auth/actions";
+import {ThunkDispatch} from 'redux-thunk';
 import {connectSocket} from "../../store/chat/actions";
+import {AuthActionTypes} from '../../store/auth/types';
+import {ChatActionTypes} from '../../store/chat/types';
 
 type Props = {
     component: React.ComponentClass<any, any> | ConnectedComponent<any, any>;
@@ -28,11 +31,11 @@ const mapStateToProps = (state: RootReducer) => {
     }
 }
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootReducer, unknown, ChatActionTypes | AuthActionTypes>) => {
     return {
-        logout: () => {dispatch(logout())},
-        loadUser: (socket: SocketIOClient.Socket) => {dispatch(loadUser(socket))},
-        connectSocket: () => {dispatch(connectSocket())},
+        logout: () => dispatch(logout()),
+        loadUser: (socket: SocketIOClient.Socket) => dispatch(loadUser(socket)),
+        connectSocket: () => dispatch(connectSocket()),
     }
 }
 

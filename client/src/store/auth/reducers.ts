@@ -1,22 +1,21 @@
-import {AuthActionTypes, AuthState} from "./types";
+import * as types from "./types";
 
-const initialState: AuthState = {
+const initialState: types.AuthState = {
     isAuthenticated: localStorage.getItem("token") ? true : false,
     isLoaded: false,
     token: localStorage.getItem("token") || null,
     user: null,
 }
 
-
-export default (state = initialState, action: AuthActionTypes): AuthState => {
+const reducer = (state = initialState, action: types.AuthActionTypes): types.AuthState => {
     switch(action.type) {
-        case 'LOGIN_SUCCESS': 
+        case types.LOGIN_SUCCESS: 
             return {
                 ...state,
                 isAuthenticated: true,
-                token: action.payload.token,
+                token: action.payload!.token,
             }
-        case 'LOGOUT':
+        case types.LOGOUT:
             localStorage.removeItem("token");
             return {
                 ...state,
@@ -25,14 +24,15 @@ export default (state = initialState, action: AuthActionTypes): AuthState => {
                 token: null,
                 user: null,
             }
-        case 'USER_LOADED':
+        case types.USER_LOADED:
             return {
                 ...state,
                 isAuthenticated: true,
                 isLoaded: true,
-                user: action.payload.user,
+                user: action.payload!.user,
             }
         default:
             return state;
     }
 }
+export default reducer;

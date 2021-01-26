@@ -1,4 +1,4 @@
-import React, {CSSProperties, RefObject} from "react";
+import React from "react";
 import {connect} from "react-redux";
 import {JWTPayload as AuthUser, User, ActionCreator} from "../../global";
 import Navbar from '../layouts/core/Navbar';
@@ -39,10 +39,8 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
 
     }
 
-
     async componentDidMount() {
-        console.log("User-Profile: ", this.props);
-        this.fetchUser();
+        await this.fetchUser();
     }
 
     fetchUser = async () => {
@@ -66,7 +64,6 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
-        console.log("Changed - value: ", e.target.value);
         let updatedUser = {
             ...this.state.updatedUser,
             [e.target.name]: e.target.value,
@@ -102,7 +99,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
         }
     };
 
-    handleCancel = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    handleCancel = () => {
         this.setState({
             updatedUser: {
                 ...this.state.updatedUser,
@@ -132,7 +129,6 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     render() {
         if (!this.state.user)
             return (null);
-        console.log("User", this.state.user);
         const user = this.state.updatedUser || null;
         return (
             <React.Fragment>
@@ -150,7 +146,7 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                                         />
                                         <img
                                             src={this.state.user.avatar}
-                                            alt="User Profile Image"
+                                            alt="User Profile pic"
                                             height="150"
                                             width="150"
                                             id="avatar_img"

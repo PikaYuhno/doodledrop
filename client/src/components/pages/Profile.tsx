@@ -53,7 +53,6 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
 
 
     componentDidMount = () => {
-        console.log("Profile - Props", this.props);
         this.handleLoad(this.props.id);
         this.loadFollowers();
         this.loadFollowing();

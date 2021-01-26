@@ -1,17 +1,19 @@
-import {AlertState, AlertActionTypes} from "./types";
+import * as types from "./types";
 
-const initialState: AlertState[] = [];
+const initialState: types.AlertState[] = [];
 
-export default (state = initialState, action: AlertActionTypes): AlertState[] => {
+const reducer = (state = initialState, action: types.AlertActionTypes): types.AlertState[] => {
     switch(action.type) {
-        case "SET_ALERT":
+        case types.SET_ALERT:
             return [
                 ...state,
-                action.payload
+                action.payload!
             ]
-        case "REMOVE_ALERT":
-            return state.filter(alerts => alerts.id !== action.payload.id);
+        case types.REMOVE_ALERT:
+            return state.filter(alerts => alerts.id !== action.payload!.id);
         default:
             return state;
     }
 }
+
+export default reducer;

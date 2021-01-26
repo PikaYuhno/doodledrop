@@ -93,7 +93,7 @@ class CreateChannelModal extends React.Component<CreateChannelModalProps, Create
                                 </div>
                             </div>
                             <div className="card-main">
-                                {this.state.users.length > 0 ? this.renderUsers() : <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}><img src={VoidImg} height="128" width="128" /></div>}
+                                {this.state.users.length > 0 ? this.renderUsers() : <div className="center-img"><img src={VoidImg} height="128" width="128" alt="void" /></div>}
                             </div>
                             <div className="card-footer">
                                 <button className="button is-fullwidth is-danger is-outline" onClick={this.handleCreateDM}>Create DM</button>
@@ -109,7 +109,7 @@ class CreateChannelModal extends React.Component<CreateChannelModalProps, Create
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        channelAdded: (...args: Parameters<typeof channelAdded>) => {dispatch(channelAdded(...args))}
+        channelAdded: (...args: Parameters<typeof channelAdded>) => dispatch(channelAdded(...args))
     }
 }
 

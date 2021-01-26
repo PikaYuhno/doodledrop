@@ -42,16 +42,15 @@
   display: flex;
   padding: 5px;
   border-top: 0.1px solid #c9ccd1;
-}
 
-.dm-channel:last-child {
-  border-bottom: 0.1px solid #c9ccd1;
-}
-
-.dm-channel:hover {
-  background-color: white;
-  border-right: 3px solid #db2444;
-  cursor: pointer;
+  &:last-child {
+      border-bottom: 0.1px solid #c9ccd1;
+  }
+  &:hover {
+      background-color: white;
+      border-right: 3px solid #db2444;
+      cursor: pointer;
+  }
 }
 
 .dm-channel .info {
@@ -246,10 +245,10 @@
 
 .card-footer {
     padding: 1rem;
-}
 
-.card-footer:last-child {
-    margin-top: auto;
+    &:last-child {
+        margin-top: auto;
+    }
 }
 
 .card-main {
@@ -261,11 +260,11 @@
     display: flex; 
     align-items: center;
     padding: 0.3rem;
-}
 
-.user-select:hover {
-    background-color: #dcddde;
-    border-radius: 3px;
+    &:hover {
+        background-color: #dcddde;
+        border-radius: 3px;
+    }
 }
 
 .user-select .username {

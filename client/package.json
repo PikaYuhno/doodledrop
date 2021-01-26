@@ -17,20 +17,19 @@
         "redux-devtools-extension": "^2.13.8",
         "redux-thunk": "^2.3.0",
         "socket.io-client": "^2.3.0",
-        "uuid": "^8.3.2",
-        "web-vitals": "^0.2.4"
+        "uuid": "^8.3.2"
     },
     "devDependencies": {
-        "@types/node": "^12.19.5",
+        "@types/node": "^12.0.0",
         "@types/p5": "^0.9.1",
-        "@types/react": "^16.9.56",
+        "@types/react": "^16.9.53",
         "@types/react-color": "^3.0.4",
-        "@types/react-dom": "^16.9.9",
+        "@types/react-dom": "^16.9.8",
         "@types/react-redux": "^7.1.13",
         "@types/react-router-dom": "^5.1.6",
         "@types/socket.io-client": "^1.4.34",
         "@types/uuid": "^8.3.0",
-        "typescript": "^3.7.5"
+        "typescript": "^4.0.3"
     },
     "proxy": "http://localhost:4000",
     "scripts": {
@@ -49,6 +48,12 @@
             "last 1 chrome version",
             "last 1 firefox version",
             "last 1 safari version"
+        ]
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
         ]
     }
 }

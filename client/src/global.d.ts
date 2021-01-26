@@ -14,7 +14,7 @@ export interface JWTPayload {
 
 export type Action<T extends string, P = undefined> = {
     type: T;
-    payload: P;
+    payload?: P;
 };
 
 export type Channel = {
@@ -72,3 +72,4 @@ export type Comment = {
     like: Array<number>;
     dislikes: Array<number>;
 }
+

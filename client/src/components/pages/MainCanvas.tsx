@@ -1,5 +1,5 @@
 import React from 'react';
-import ChatCanvas from './ChatCanvas';
+import CanvasWrapper from '../layouts/core/canvas/CanvasWrapper';
 import Navbar from '../layouts/core/Navbar';
 
 class MainCanvas extends React.Component {
@@ -8,7 +8,7 @@ class MainCanvas extends React.Component {
             <React.Fragment>
                 <Navbar />
                 <main>
-                    <ChatCanvas multiplayer={false} styles={{padding: '0rem 10rem'}} />
+                    <CanvasWrapper multiplayer={false} styles={{padding: '0rem 10rem'}} />
                 </main>
             </React.Fragment>
         );

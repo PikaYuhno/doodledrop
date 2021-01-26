@@ -6,9 +6,11 @@ import '../../styles/core/chat.scss';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootReducer} from '../../store/root-reducer';
 import Empty from '../../assets/empty.png';
-import {Channel, Message, Action} from '../../global';
+import {Channel, Message} from '../../global';
 import {addMessage, channelUpdated, updateChannelLatestMsg} from '../../store/chat/actions';
 import ChatCanvas from './ChatCanvas';
+import {ThunkDispatch} from 'redux-thunk';
+import {ChatActionTypes} from '../../store/chat/types';
 
 type ChatBaseProps = {
     channels: Channel[];
@@ -24,7 +26,7 @@ const mapStateToProps = (state: RootReducer) => {
     }
 }
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootReducer, unknown, ChatActionTypes>) => {
     return {
         addMessage: (...args: Parameters<typeof addMessage>) => dispatch(addMessage(...args)),
         channelUpdated: (...args: Parameters<typeof channelUpdated>) => dispatch(channelUpdated(...args)),
@@ -36,7 +38,8 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromStore = ConnectedProps<typeof connector>;
 
 class ChatBase extends React.Component<ChatBaseProps> {
-    listeningOnMessages: boolean;
+    private listeningOnMessages: boolean;
+
     constructor(props: ChatBaseProps) {
         super(props);
         this.listeningOnMessages = false;
@@ -47,12 +50,10 @@ class ChatBase extends React.Component<ChatBaseProps> {
     }
 
     onMessage = () => {
-        console.log("Socket exists?", this.props.socket);
         if (this.props.socket && !this.listeningOnMessages) {
             this.listeningOnMessages = true;
             this.props.socket.on("message", async (m: Message) => {
-                console.log("Got data -", m);
-                this.props.addMessage(m, this.props.channels);
+                this.props.addMessage(m);
                 this.props.updateChannelLatestMsg(m, this.props.currentChannel);
             });
         }
