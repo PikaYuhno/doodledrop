@@ -60,6 +60,14 @@ router.get("/doodles", async (req: Request, res: Response) => {
     return res.status(200).json({ data: doodles, message: "", success: true });
 });
 
+router.get("/notifications/", async (req: Request, res: Response) => {
+    const id = req.user!.id;
+    
+    const notifications = await Notification.findAll({where: {user_id: id} });
+
+    return res.status(200).json({data: notifications, message: 'Successfully found notifications!', success: true});
+});
+
 // GET /api/users/:id
 router.get("/:id", async (req: Request, res: Response) => {
     let userId = req.params.id;
@@ -254,9 +262,22 @@ router.post("/@me/channels", async (req: Request, res: Response) => {
 
 // GET  /api/users/following/:id
 router.get("/following/:id", async (req: Request, res: Response) => {
-    let id = req.params.id || req.user!.id;
+    let id = req.params.id;
 
-    let following: User[] = await User.findAll({
+    console.log(id);
+
+    const following: any[] = await sequelize.query(`SELECT followers.user_id, followers.follower_id, users.* FROM users INNER JOIN followers ON users.id = followers.follower_id WHERE followers.user_id = ${id};`, {
+        type: QueryTypes.SELECT
+      });
+
+    return res.status(200).json({ data: following, message: "", success: true });
+});
+
+// GET /api/users/followers/:id
+router.get("/followers/:id", async (req: Request, res: Response) => {
+    const id = req.params.id; 
+
+    let followers: User[] = await User.findAll({
         include: [
             {
                 model: Follower,
@@ -266,30 +287,7 @@ router.get("/following/:id", async (req: Request, res: Response) => {
         ],
     });
 
-    return res.status(200).json({ data: following, message: "", success: true });
-});
-
-// GET /api/users/followers/:id
-router.get("/followers/:id", async (req: Request, res: Response) => {
-    const id = req.params.id || req.user!.id; 
-
-    let followers: User[] = await User.findAll({
-        include: [
-            {
-                model: Follower,
-                required: true,
-                where: { user_id: id },
-            },
-        ],
-    });
-
-    let ifollow=false;
-    followers.forEach((follower: User) => {
-        if(follower.id == req.user!.id){
-            ifollow=true;
-        }
-    });
-    return res.status(200).json({ data: followers, message: ifollow, success: true });
+    return res.status(200).json({ data: followers, message: "", success: true });
 });
 
 // PATCH /api/users/:id/profile 
@@ -318,27 +316,40 @@ router.patch("/:user_id/profile", async (req: Request, res: Response) => {
     }
 });
 
-// GET /api/users/notifications
-router.get("/notifications", async (req: Request, res: Response) => {
-    const id = req.user!.id;
-    
-    const notifications = await Notification.findAll({where: {user_id: id}, include: [
-        {
-            model: User,
-            required: true,
-            attributes: {
-                exclude: ['password']
-            }
-        },
-    ]});
-
-    return res.status(200).json({data: notifications, message: 'Successfully found notifications!', success: true});
-});
-
 // DELETE /api/users/notifications/:id
 router.delete("/notifications/:id", async (req: Request, res: Response) => {
     const notifiId = req.params.id;
     await Notification.destroy({where: {id: notifiId, user_id: req.user!.id}});
 
     return res.status(200).json({data: null, message: 'Successfully deleted notifcation!', success: true});
+});
+
+// GET /api/users/:id/doodles
+router.get("/:id/doodles", async (req: Request, res: Response) => {
+    let userId = req.params.id;
+    const attributes = ["username", "avatar", "id"];
+
+    let doodles: Doodle[] = await Doodle.findAll({
+        include: [
+            {
+                model: Comment,
+                include: [{
+                    model: User,
+                    required: true,
+                    attributes,
+                    as: 'user'
+                }],
+                as: 'comments'
+            },
+            {
+                model: User,
+                required: true,
+                where: { id: userId },
+                attributes,
+                as: "user"
+            },
+        ],
+    });
+
+    return res.status(200).json({ data: doodles, message: "", success: true });
 });

@@ -56,11 +56,13 @@ export type User = {
 
 export type Doodle = {
     id: number;
-    user_id: number;
+    user: User;
+    title: string;
+    created_at: Date;
     image_path: string;
     likes: Array<number>;
     dislikes: Array<number>;
-    comments?: Array<Comment>
+    comments?: Array<Comment>;
 }
 
 export type Comment = {
@@ -71,5 +73,10 @@ export type Comment = {
     created_at: Date;
     like: Array<number>;
     dislikes: Array<number>;
+    user: User;
 }
 
+export type Notification = {
+    id: number;
+    content: string;
+}

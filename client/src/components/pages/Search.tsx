@@ -43,26 +43,36 @@ class Search extends React.Component<{}, SearchState> {
     }
 
     renderUsers = () => {
-        return this.state.users.map((user: User) => {
-            return <React.Fragment key={user.id}>
-                <div className="user-list-item box">
-                    <div className="list-item-content">
-                        <div className="user-avatar">
-                            <figure className="image is-48x48">
-                                <img src={user.avatar} alt="avatar" className="is-rounded" />
-                            </figure>
-                        </div>
-                        <div className="user-info">
-                            <span className="user-name title is-size-5">{user.username}</span>
-                            <span className="user-bio subtitle is-size-6">{user.bio}</span>
-                        </div>
-                        <div className="actions">
-                            <Link to={`profile/${user.id}`}><button className="button is-info is-light">View Profile</button></Link>
+        if(this.state.users.length){
+            return this.state.users.map((user: User) => {
+                return <React.Fragment key={user.id}>
+                    <div className="user-list-item box">
+                        <div className="list-item-content">
+                            <div className="user-avatar">
+                                <figure className="image is-48x48">
+                                    <img src={user.avatar} alt="avatar" className="is-rounded" />
+                                </figure>
+                            </div>
+                            <div className="user-info">
+                                <span className="user-name title is-size-5">{user.username}</span>
+                                <span className="user-bio subtitle is-size-6">{user.bio}</span>
+                            </div>
+                            <div className="actions">
+                                <Link to={`profile/${user.id}`}><button className="button is-info is-danger is-outlined">View Profile</button></Link>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </React.Fragment>
+            });
+        }
+        else{
+            return <React.Fragment>
+                <figure className="image resize container">
+                    <img src="https://media.discordapp.net/attachments/757688756454293545/800387540489469972/unknown.png"/>
+                </figure>
             </React.Fragment>
-        });
+        }
+        
 
     }
 
@@ -91,22 +101,7 @@ class Search extends React.Component<{}, SearchState> {
                         </div>
 
                         <div className="users section">
-                            <div className="user-list-item box">
-                                <div className="list-item-content">
-                                    <div className="user-avatar">
-                                        <figure className="image is-48x48">
-                                            <img src={pfp1} alt="avatar" className="is-rounded" />
-                                        </figure>
-                                    </div>
-                                    <div className="user-info">
-                                        <span className="user-name title is-size-5">Max Mustermann</span>
-                                        <span className="user-bio subtitle is-size-6">This is a status</span>
-                                    </div>
-                                    <div className="actions">
-                                        <Link to={"profile/1"}><button className="button is-info is-danger is-outlined">View Profile</button></Link>
-                                    </div>
-                                </div>
-                            </div>
+                            
 
                             {this.renderUsers()}
 

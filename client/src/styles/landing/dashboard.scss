@@ -1,7 +1,3 @@
-body{
-    overflow: auto;
-}
-
 .has-image-sized {
     width: 50%;
     height: auto;
@@ -12,7 +8,8 @@ body{
     border-bottom: 1px solid black;
 }
 
-@media(max-width: 767px) {
+@media(max-width: 768
+px) {
     .reverse-columns {
       flex-direction: column-reverse;
       display: flex;
