@@ -7,6 +7,7 @@ import '../../styles/core/user-profile.scss';
 import {alert} from '../../store/alert/actions';
 import {AlertType} from "../../store/alert/types";
 import Options from '../../utils/RegionList';
+import { Link } from 'react-router-dom';
 
 type UserProfileProps = StoreProps & DispatchProps;
 
@@ -172,12 +173,14 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
                                     </div>
 
                                     <div className="user-info-button">
+                                        <Link to={`/profile/${this.state.user.id}`}>
                                         <button className="button is-danger is-light">
                                             <span className="icon is-small">
                                                 <i className="fa fa-user"></i>
                                             </span>
                                             <span>View Profile</span>
                                         </button>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

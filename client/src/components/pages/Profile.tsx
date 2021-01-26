@@ -1,15 +1,11 @@
 import React, { ReactComponentElement } from 'react';
 import Navbar from '../layouts/core/Navbar';
-
 import '../../styles/landing/dashboard.scss';
 import { Doodle, User, Comment } from '../../global';
 import { Link } from 'react-router-dom';
 import { JWTPayload as AuthUser } from '../../global';
 import { connect } from 'react-redux';
 import { RootReducer } from '../../store/root-reducer';
-import doodle1 from "../../assets/pfp/58c0e3c4-c2b6-4206-a521-b95cca9a4b60.png";
-import doodle2 from "../../assets/pfp/864101fb-417d-4b6f-9096-aacd892f26b8.png";
-import pfp1 from '../../assets/pfp/pfp1.png';
 
 type ProfileState = {
     user: User;
@@ -85,8 +81,6 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
         const data = await resp.json();
 
         this.setState({ user: data.data });
-
-
     }
 
     handleFollow = async () => {
@@ -178,12 +172,10 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
 
         this.setState({ doodles: data.data });
 
+        console.log(data.data);
     }
 
     renderDoodles = () => {
-        if(this.state.doodles == null){
-            return;
-        }
 
         return this.state.doodles.map((doodle: Doodle) => {
             return <React.Fragment key={doodle.id}>
@@ -193,7 +185,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                         <div className="level-left">
                             <div className="ml-2">
                                 <p className="image is-64x64">
-                                    <Link to={`profile/${doodle.user.id}`}><img src={doodle.user.avatar} className="is-rounded" alt="pfp" /></Link>
+                                    <Link to={`/profile/${doodle.user.id}`}><img src={`/${doodle.user.avatar}`} className="is-rounded" alt="pfp" /></Link>
                                 </p>
                             </div>
                             <div className="ml-2">
@@ -209,7 +201,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                     </div>
 
                     <div className="image has-image-sized container">
-                        <img src={`${doodle.image_path}`} />
+                        <img src={`/${doodle.image_path}`} />
                     </div>
 
 
@@ -280,7 +272,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
 
                     <div className="media-left">
                         <p className="image is-48x48">
-                            <Link to={`profile/${comment.user_id}`}><img src={comment.user.avatar} className="is-rounded" alt="pfp" /></Link>
+                            <Link to={`profile/${comment.user_id}`}><img src={`/${comment.user.avatar}`} className="is-rounded" alt="pfp" /></Link>
                         </p>
                     </div>
                     <div className="media-content">
@@ -289,11 +281,11 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
 
                         <div className="level">
                             <div className="level-left">
-                                <a className="ml-2" style={ (comment.like.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={ () => { (comment.like.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "like") : console.log("ok")}}>
-                                    <span className="icon"><i className="fa fa-thumbs-up"></i> ({comment.like.length})</span>
+                                <a className="ml-2" style={ (comment.like?.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={ () => { (comment.like?.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "like") : console.log("ok")}}>
+                                    <span className="icon"><i className="fa fa-thumbs-up"></i> ({comment.like?.length})</span>
                                 </a>
-                                <a className="ml-2" style={ (comment.dislikes.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={ () => { (comment.dislikes.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "dislike") : console.log("ok")}}>
-                                    <span className="icon"><i className="fa fa-thumbs-down"></i> ({comment.dislikes.length})</span>
+                                <a className="ml-2" style={ (comment.dislikes?.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={ () => { (comment.dislikes?.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "dislike") : console.log("ok")}}>
+                                    <span className="icon"><i className="fa fa-thumbs-down"></i> ({comment.dislikes?.length})</span>
                                 </a>
                             </div>
                         </div>
@@ -314,7 +306,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                     <div className="media-left">
                         <div className="">
                             <p className="image is-48x48">
-                                <img src={follow.avatar} className="is-rounded" alt="pfp" />
+                                <img src={`/${follow.avatar}`} className="is-rounded" />
                             </p>
                         </div>
                     </div>
@@ -337,7 +329,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                 <div className="media ml-5 style">
                     <div className="media-left">
                         <p className="image is-48x48">
-                            <img src={user.avatar} className="is-rounded" alt="pfp" />
+                            <img src={`/${user.avatar}`} className="is-rounded" alt="pfp" />
                         </p>
                     </div>
                     <div className="media-content mb-5">
@@ -390,13 +382,15 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     }
 
     handleDelete = async (id: number) => {
-        await fetch(`/api/doodle/${id}`, {
+        await fetch(`/api/doodles/${id}`, {
             method: "DELETE",
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",
                 "Content-Type": "application/json"
             },
         });
+
+        this.loadDoodles();
     }
 
     renderDelete = (id: number) => {
@@ -435,7 +429,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                         <div className="media">
                             <div className="media-left mt-5">
                                 <div className="image is-128x128">
-                                    <img src={this.state.user.avatar} className="is-rounded" />
+                                    <img src={`/${this.state.user.avatar}`} className="is-rounded" />
                                 </div>
                                 <div className="mt-3 has-text-centered">
                                     {this.renderButton()}

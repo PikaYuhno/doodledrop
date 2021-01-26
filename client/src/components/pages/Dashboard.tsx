@@ -1,15 +1,12 @@
 import React, { TextareaHTMLAttributes } from 'react';
 import Navbar from '../layouts/core/Navbar';
 import '../../styles/landing/dashboard.scss';
-import pfp1 from '../../assets/pfp/pfp1.png';
 import { Doodle, User, Comment, Notification } from '../../global';
 import { History } from "history";
 import { JWTPayload as AuthUser } from '../../global';
 import { connect } from 'react-redux';
 import { RootReducer } from '../../store/root-reducer';
 import { Link } from 'react-router-dom';
-import doodle1 from "../../assets/pfp/58c0e3c4-c2b6-4206-a521-b95cca9a4b60.png";
-import doodle2 from "../../assets/pfp/864101fb-417d-4b6f-9096-aacd892f26b8.png";
 
 type DashboardState = {
     doodles: Array<Doodle>;
@@ -46,11 +43,16 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     componentDidMount = () => {
         this.loadDoodles();
         this.loadNotifications();
+        if(this.props.user != null){
+            this.loadFollowing();
+        }
     }
 
     componentDidUpdate = (prevProps: DashboardProps) => {
         if(prevProps.user != this.props.user){
-            this.loadFollowing();      
+            this.loadFollowing();
+            this.loadDoodles();
+            this.loadNotifications();  
         }       
     }
 
@@ -111,14 +113,13 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     }
 
     postComment = async (doodleid: number) => {
-        console.log("comment");
         await fetch(`/api/doodles/${doodleid}/comments`, {
             method: "POST",
             headers: {
                 "Authorization": localStorage.getItem("token") || "token",
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ doodle_id: doodleid, content: this.state.comment })
+            body: JSON.stringify({content: this.state.comment })
         });
     }
 
@@ -217,7 +218,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
                     <div className="">
 
-                        
+                        {this.renderComments(doodle.comments)}
                         
                     </div>
 
@@ -227,28 +228,28 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     }
 
     renderComments = (comments: Array<Comment> | undefined) => {
-        
+        if(!comments) return;
 
-        return comments?.map((comment: Comment) => {
+        return comments.map((comment: Comment) => {
             return <React.Fragment key={comment.id}>
                 <div className="media ml-5">
 
                     <div className="media-left">
                         <p className="image is-48x48">
-                            <Link to={`profile/${comment.user_id}`}><img src={pfp1} className="is-rounded" alt="pfp" /></Link>
+                            <Link to={`profile/${comment.user_id}`}><img src={comment.user.avatar} className="is-rounded" alt="pfp" /></Link>
                         </p>
                     </div>
                     <div className="media-content">
-                        <p><strong className="is-size-5">{comment.user_id}</strong> <small>{comment.created_at}</small></p>
+                        <p><strong className="is-size-5">{comment.user.username}</strong> <small>{comment.created_at}</small></p>
                         <p className="comment">{comment.content}</p>
 
-                        <div className="level">
+                        <div className="level is-mobile">
                             <div className="level-left">
-                                <a className="ml-2" style={ (comment.like.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={ () => { (comment.like.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "like") : console.log("ok")}}>
-                                    <span className="icon"><i className="fa fa-thumbs-up"></i> ({comment.like.length})</span>
+                                <a className="ml-2" style={ (comment.like?.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={ () => { (comment.like?.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "like") : console.log("ok")}}>
+                                    <span className="icon"><i className="fa fa-thumbs-up"></i> ({comment.like?.length})</span>
                                 </a>
-                                <a className="ml-2" style={ (comment.dislikes.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={ () => { (comment.dislikes.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "dislike") : console.log("ok")}}>
-                                    <span className="icon"><i className="fa fa-thumbs-down"></i> ({comment.dislikes.length})</span>
+                                <a className="ml-2" style={ (comment.dislikes?.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={ () => { (comment.dislikes?.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "dislike") : console.log("ok")}}>
+                                    <span className="icon"><i className="fa fa-thumbs-down"></i> ({comment.dislikes?.length})</span>
                                 </a>
                             </div>
                         </div>
@@ -276,6 +277,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     }
 
     handleNotification = async (id: number) => {
+        console.log("delete");
         await fetch(`/api/users/notifications/${id}`, {
             method: "DELETE",
             headers: {
@@ -283,6 +285,8 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                 "Content-Type": "application/json",
             },
         });
+
+        this.loadNotifications();
     }
 
     renderFollowing = () => {

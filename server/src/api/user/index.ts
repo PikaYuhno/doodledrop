@@ -326,7 +326,7 @@ router.delete("/notifications/:id", async (req: Request, res: Response) => {
 
 // GET /api/users/:id/doodles
 router.get("/:id/doodles", async (req: Request, res: Response) => {
-    let userId = req.params.user;
+    let userId = req.params.id;
     const attributes = ["username", "avatar", "id"];
 
     let doodles: Doodle[] = await Doodle.findAll({
@@ -344,7 +344,7 @@ router.get("/:id/doodles", async (req: Request, res: Response) => {
             {
                 model: User,
                 required: true,
-                where: { user_id: userId },
+                where: { id: userId },
                 attributes,
                 as: "user"
             },
