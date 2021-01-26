@@ -51,11 +51,11 @@ router.post("/:id/comments", async (req: Request, res: Response) => {
         const value = await commentSchema.validateAsync(body); 
         const created = await Comment.create({doodle_id: doodle.id, user_id: req.user!.id, content: value.content, created_at: new Date()});
 
-        await Notification.create({user_id: doodle.user_id, doodle_id: doodle.id, content: `${req.user!.username} commented on your doodle "${doodle.title}"`})
+        //await Notification.create({user_id: doodle.user_id, doodle_id: doodle.id, content: `${req.user!.username} commented on your doodle "${doodle.title}"`})
          
         return res.status(200).json({data: created, message: 'Successfully created Comment!', success:true});
     } catch (error) {
-        return res.status(400).json({data: null, message: error.details[0].message, success: false}); 
+        return res.status(400).json({data: null, message: error|| error.details[0].message, success: false}); 
     }    
 });
 
