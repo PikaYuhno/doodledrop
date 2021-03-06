@@ -1,11 +1,11 @@
-import React, { ReactComponentElement } from 'react';
+import React from 'react';
 import Navbar from '../layouts/core/Navbar';
 import '../../styles/landing/dashboard.scss';
-import { Doodle, User, Comment } from '../../global';
-import { Link } from 'react-router-dom';
-import { JWTPayload as AuthUser } from '../../global';
-import { connect } from 'react-redux';
-import { RootReducer } from '../../store/root-reducer';
+import {Doodle, User, Comment} from '../../global';
+import {Link} from 'react-router-dom';
+import {JWTPayload as AuthUser} from '../../global';
+import {connect} from 'react-redux';
+import {RootReducer} from '../../store/root-reducer';
 
 type ProfileState = {
     user: User;
@@ -37,7 +37,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     constructor(props: ProfileProps) {
         super(props);
         this.state = {
-            user: { id: 0, username: "", avatar: "", bio: "", location: "" },
+            user: {id: 0, username: "", avatar: "", bio: "", location: ""},
             doodles: [],
             following: [],
             followers: [],
@@ -59,14 +59,14 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     }
 
     componentDidUpdate(prevProps: ProfileProps) {
-        if(prevProps.id != this.props.id) {
+        if (prevProps.id != this.props.id) {
             this.handleLoad(this.props.id);
             this.loadFollowers();
             this.loadFollowing();
             this.setState({doodles: []})
             this.loadDoodles();
         }
-      } 
+    }
 
     handleLoad = async (id: number) => {
 
@@ -79,7 +79,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
         });
         const data = await resp.json();
 
-        this.setState({ user: data.data });
+        this.setState({user: data.data});
     }
 
     handleFollow = async () => {
@@ -92,7 +92,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                     "Content-Type": "application/json"
                 },
             });
-            
+
             this.setState({ifollow: false});
         }
         else {
@@ -113,14 +113,14 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     handleTabs = (following: boolean) => {
         if (following) {
             if (this.state.followingClass != "is-active") {
-                this.setState({ followingClass: "is-active" })
-                this.setState({ followersClass: "" })
+                this.setState({followingClass: "is-active"})
+                this.setState({followersClass: ""})
             }
         }
         else {
             if (this.state.followersClass != "is-active") {
-                this.setState({ followersClass: "is-active" })
-                this.setState({ followingClass: "" })
+                this.setState({followersClass: "is-active"})
+                this.setState({followingClass: ""})
             }
         }
     }
@@ -135,7 +135,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
         });
         const data = await resp.json();
 
-        this.setState({ following: data.data });
+        this.setState({following: data.data});
     }
 
     loadFollowers = async () => {
@@ -148,11 +148,11 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
         });
         const data = await resp.json();
 
-        this.setState({ followers: data.data });
+        this.setState({followers: data.data});
 
         this.setState({ifollow: false})
-        for(var i=0; i< this.state.followers.length; i++){
-            if(this.state.followers[i].id === this.props.user?.id){
+        for (var i = 0; i < this.state.followers.length; i++) {
+            if (this.state.followers[i].id === this.props.user?.id) {
                 this.setState({ifollow: true})
             }
         }
@@ -169,7 +169,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
         });
         const data = await resp.json();
 
-        this.setState({ doodles: data.data });
+        this.setState({doodles: data.data});
 
         console.log(data.data);
     }
@@ -206,19 +206,19 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
 
                     <div className="columns border is-mobile mt-1">
                         <div className="column has-text-centered">
-                            <a className="icon-text" onClick={() => { this.handleReply(doodle.id) }}>
+                            <a className="icon-text" onClick={() => {this.handleReply(doodle.id)}}>
                                 <span className="icon"><i className="fa fa-reply fa-lg"></i></span>
                                 <span> Reply</span>
                             </a>
                         </div>
                         <div className="column has-text-centered">
-                            <a className="icon-text" style={ (doodle.likes.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={() => { (doodle.likes.includes(this.props.user?.id)) ? console.log("ok") :  this.handleFeedback(doodle.id, true, "like")}}>
+                            <a className="icon-text" style={(doodle.likes.includes(this.props.user?.id)) ? {color: "grey"} : {}} onClick={() => {(doodle.likes.includes(this.props.user?.id)) ? console.log("ok") : this.handleFeedback(doodle.id, true, "like")}}>
                                 <span className="icon"><i className="fa fa-thumbs-up fa-lg"></i></span>
                                 <span> Like ({doodle.likes.length})</span>
                             </a>
                         </div>
                         <div className="column has-text-centered">
-                            <a className="icon-text" style={ (doodle.dislikes.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={() => { (doodle.dislikes.includes(this.props.user?.id)) ? console.log("ok") : this.handleFeedback(doodle.id, true, "dislike") }}>
+                            <a className="icon-text" style={(doodle.dislikes.includes(this.props.user?.id)) ? {color: "grey"} : {}} onClick={() => {(doodle.dislikes.includes(this.props.user?.id)) ? console.log("ok") : this.handleFeedback(doodle.id, true, "dislike")}}>
                                 <span className="icon"><i className="fa fa-thumbs-down fa-lg"></i></span>
                                 <span> Dislike ({doodle.dislikes.length})</span>
                             </a>
@@ -239,7 +239,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     }
 
     handleReply = (doodle_id: number) => {
-        this.setState({ reply: doodle_id })
+        this.setState({reply: doodle_id})
     }
 
     handleFeedback = async (id: number, doodle: boolean, like: string) => {
@@ -280,10 +280,10 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
 
                         <div className="level">
                             <div className="level-left">
-                                <a className="ml-2" style={ (comment.like?.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={ () => { (comment.like?.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "like") : console.log("ok")}}>
+                                <a className="ml-2" style={(comment.like?.includes(this.props.user?.id)) ? {color: "grey"} : {}} onClick={() => {(comment.like?.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "like") : console.log("ok")}}>
                                     <span className="icon"><i className="fa fa-thumbs-up"></i> ({comment.like?.length})</span>
                                 </a>
-                                <a className="ml-2" style={ (comment.dislikes?.includes(this.props.user?.id)) ? {color:"grey"} : {} } onClick={ () => { (comment.dislikes?.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "dislike") : console.log("ok")}}>
+                                <a className="ml-2" style={(comment.dislikes?.includes(this.props.user?.id)) ? {color: "grey"} : {}} onClick={() => {(comment.dislikes?.includes(this.props.user?.id)) ? this.handleFeedback(comment.id, false, "dislike") : console.log("ok")}}>
                                     <span className="icon"><i className="fa fa-thumbs-down"></i> ({comment.dislikes?.length})</span>
                                 </a>
                             </div>
@@ -339,7 +339,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                         </div>
                         <div className="field">
                             <p className="control">
-                                <button className="button" onClick={() => { this.postComment(doodle_id) }}>Post Comment</button>
+                                <button className="button" onClick={() => {this.postComment(doodle_id)}}>Post Comment</button>
                             </p>
                         </div>
                     </div>
@@ -349,7 +349,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     }
 
     handleComment = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        this.setState({ comment: e.target.value })
+        this.setState({comment: e.target.value})
     }
 
     postComment = async (doodleid: number) => {
@@ -359,12 +359,12 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                 "Authorization": localStorage.getItem("token") || "token",
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ doodle_id: doodleid, content: this.state.comment })
+            body: JSON.stringify({doodle_id: doodleid, content: this.state.comment})
         });
     }
 
     renderButton = () => {
-        if(this.state.user.id === this.props.user?.id){
+        if (this.state.user.id === this.props.user?.id) {
             return;
         }
 
@@ -395,7 +395,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
     renderDelete = (id: number) => {
         if (this.props.user?.id === this.state.user.id) {
             return <React.Fragment>
-                <button className="button" onClick={() => { this.setState({ delete: id }) }}>
+                <button className="button" onClick={() => {this.setState({delete: id})}}>
                     <div className="icon">
                         <span className="icon is-medium"><i className="fa fa-trash"></i></span>
                     </div>
@@ -408,8 +408,8 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                             <p className="modal-card-title">Are you sure you want to delete this doodle?</p>
                         </div>
                         <div className="modal-card-foot">
-                            <button className="button" onClick={() => { this.handleDelete(id) }}>Delete</button>
-                            <button className="button" onClick={() => { this.setState({ delete: 0 }) }}>Close</button>
+                            <button className="button" onClick={() => {this.handleDelete(id)}}>Delete</button>
+                            <button className="button" onClick={() => {this.setState({delete: 0})}}>Close</button>
                         </div>
                     </div>
                 </div>
@@ -473,7 +473,7 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                         <div className="columns reverse-columns">
 
                             <div className="column is-two-thirds">
-                                
+
 
                                 {this.renderDoodles()}
                             </div>
@@ -483,8 +483,8 @@ class Profile extends React.Component<ProfileProps, ProfileState>{
                                 <div className="box">
                                     <div className="tabs is-large is-centered is-boxed">
                                         <ul>
-                                            <li className={this.state.followersClass} onClick={() => { this.handleTabs(false) }}><a>Followers</a></li>
-                                            <li className={this.state.followingClass} onClick={() => { this.handleTabs(true) }}><a>Following</a></li>
+                                            <li className={this.state.followersClass} onClick={() => {this.handleTabs(false)}}><a>Followers</a></li>
+                                            <li className={this.state.followingClass} onClick={() => {this.handleTabs(true)}}><a>Following</a></li>
                                         </ul>
                                     </div>
 
